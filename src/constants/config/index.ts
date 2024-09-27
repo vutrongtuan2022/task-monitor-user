@@ -1,3 +1,4 @@
+import {Buildings2, Data, DocumentText1, ElementEqual, Receipt21, ReceiptItem, TagUser, UserOctagon} from 'iconsax-react';
 import icons from '../images/icons';
 import {TYPE_DATE} from './enum';
 
@@ -15,26 +16,29 @@ export enum PATH {
 	Any = 'any',
 
 	Login = '/auth/login',
+	ForgotPassword = '/auth/forgot-password',
+
+	ChangePassword = '/change-password',
+	Profile = '/profile',
 
 	Home = '/',
 }
 
 export const Menu: {
 	title: string;
-	group: {
-		path: string;
-		pathActive?: string;
-		title: string;
-		icon: any;
-	}[];
+	path: string;
+	pathActive?: string;
+	icon: any;
 }[] = [
 	{
-		title: 'overview',
-		group: [{title: 'Tổng quan', icon: icons.tongQuan, path: PATH.Home}],
+		title: 'Tổng quan',
+		path: PATH.Home,
+		pathActive: PATH.Home,
+		icon: ElementEqual,
 	},
 ];
 
-export const KEY_STORE = 'task-monitor-admin';
+export const KEY_STORE = 'task-monitor-user';
 
 export const ListOptionTimePicker: {
 	name: string;
