@@ -14,7 +14,6 @@ import FilterCustom from '~/components/common/FilterCustom';
 import GridColumn from '~/components/layouts/GridColumn';
 import Progress from '~/components/common/Progress';
 import {clsx} from 'clsx';
-import Link from 'next/link';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -25,23 +24,13 @@ import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import Moment from 'react-moment';
 import projectFundServices from '~/services/projectFundServices';
-
-const generateYearsArray = (): number[] => {
-	const currentYear = new Date().getFullYear();
-	const startYear = currentYear - 15;
-	const endYear = currentYear + 15;
-
-	const years = [];
-	for (let year = startYear; year <= endYear; year++) {
-		years.push(year);
-	}
-	return years;
-};
+import {generateYearsArray} from '~/common/funcs/selectDate';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const years = generateYearsArray();
+
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const {_uuid, _page, _pageSize, _approved, _year, _month} = router.query;

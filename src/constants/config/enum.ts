@@ -3,8 +3,11 @@ export enum QUERY_KEY {
 	table_list_activity_project,
 	table_list_contractor_project,
 	table_list_project_fund,
+	table_list_work,
+	table_list_report_work,
 
 	dropdown_branches,
+	dropdown_project,
 	dropdown_task_cat,
 	dropdown_user,
 	dropdown_manager,
@@ -81,4 +84,22 @@ export enum STATUS_DISBURSEMENT_PROJECT {
 	NOT_APPROVED,
 	APPROVED,
 	REJECTED,
+}
+
+export enum STATE_REPORT_WORK {
+	NOT_PROCESSED,
+	PROCESSING,
+	COMPLETED,
+}
+
+export enum STATE_REPORT {
+	REJECTED,
+	REPORTED,
+	PLANNING,
+}
+
+export enum STATE_COMPLETE_REPORT {
+	NOT_DONE,
+	ON_SCHEDULE,
+	SLOW_PROGRESS,
 }

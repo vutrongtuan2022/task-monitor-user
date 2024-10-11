@@ -1,17 +1,4 @@
-import {
-	Buildings2,
-	Data,
-	DocumentForward,
-	DocumentText1,
-	ElementEqual,
-	Moneys,
-	Note,
-	Receipt21,
-	ReceiptItem,
-	TagUser,
-	UserOctagon,
-} from 'iconsax-react';
-import icons from '../images/icons';
+import {DocumentForward, DocumentText1, ElementEqual, Moneys, Note} from 'iconsax-react';
 import {TYPE_DATE} from './enum';
 
 export const MAXIMUM_FILE = 10; //MB
@@ -48,6 +35,7 @@ export enum PATH {
 	Work = '/work',
 
 	ReportWork = '/report-work',
+	ReportWorkCreate = '/report-work/create',
 
 	ReportDisbursement = '/report-disbursement',
 }

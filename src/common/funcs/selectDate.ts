@@ -134,3 +134,15 @@ export function arrWeekOfYear() {
 
 	return weeksArray;
 }
+
+export const generateYearsArray = (): number[] => {
+	const currentYear = new Date().getFullYear();
+	const startYear = currentYear - 15;
+	const endYear = currentYear + 15;
+
+	const years = [];
+	for (let year = startYear; year <= endYear; year++) {
+		years.push(year);
+	}
+	return years;
+};
