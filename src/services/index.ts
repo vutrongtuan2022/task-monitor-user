@@ -54,9 +54,6 @@ export const httpRequest = async ({
 	showMessageSuccess = false,
 	showMessageFailed = false,
 	onError,
-	isList = false,
-	isDropdown = false,
-	isData = false,
 }: {
 	http: any;
 	setLoading?: (any: any) => void;
@@ -64,9 +61,6 @@ export const httpRequest = async ({
 	showMessageSuccess?: boolean;
 	showMessageFailed?: boolean;
 	msgSuccess?: string;
-	isList?: boolean;
-	isDropdown?: boolean;
-	isData?: boolean;
 }) => {
 	setLoading && setLoading(() => true);
 	try {
@@ -77,20 +71,6 @@ export const httpRequest = async ({
 			showMessageSuccess && msgSuccess && toastSuccess({msg: msgSuccess || res?.error?.message});
 			setLoading && setLoading(() => false);
 
-			if (isDropdown) {
-				return res?.items || [];
-			}
-
-			if (isList) {
-				return {
-					...res?.data,
-					items: res?.items || [],
-					pagination: res?.pagination,
-				};
-			}
-			if (isData) {
-				return res;
-			}
 			return res.data || true;
 		} else {
 			setLoading && setLoading(() => false);

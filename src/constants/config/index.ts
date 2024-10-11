@@ -1,4 +1,16 @@
-import {Buildings2, Data, DocumentText1, ElementEqual, Receipt21, ReceiptItem, TagUser, UserOctagon} from 'iconsax-react';
+import {
+	Buildings2,
+	Data,
+	DocumentForward,
+	DocumentText1,
+	ElementEqual,
+	Moneys,
+	Note,
+	Receipt21,
+	ReceiptItem,
+	TagUser,
+	UserOctagon,
+} from 'iconsax-react';
 import icons from '../images/icons';
 import {TYPE_DATE} from './enum';
 
@@ -22,6 +34,22 @@ export enum PATH {
 	Profile = '/profile',
 
 	Home = '/',
+	Project = '/project',
+	ProjectCreate = '/project/create',
+	ProjectInfo = '/project/infor-project',
+	ProjectContractor = '/project/infor-contractor',
+	ProjectDisbursementProgress = '/project/disbursement-progress',
+	ProjectWorkReport = '/project/work-report',
+
+	UpdateInfoProject = '/project/update/infor-project',
+	UpdateInfoCapital = '/project/update/info-capital',
+	UpdateInfoContractor = '/project/update/infor-contractor',
+
+	Work = '/work',
+
+	ReportWork = '/report-work',
+
+	ReportDisbursement = '/report-disbursement',
 }
 
 export const Menu: {
@@ -35,6 +63,30 @@ export const Menu: {
 		path: PATH.Home,
 		pathActive: PATH.Home,
 		icon: ElementEqual,
+	},
+	{
+		title: 'Quản lý dự án',
+		path: PATH.Project,
+		pathActive: PATH.Project,
+		icon: DocumentText1,
+	},
+	{
+		title: 'Công việc cần làm',
+		path: PATH.Work,
+		pathActive: PATH.Work,
+		icon: Note,
+	},
+	{
+		title: 'Báo cáo công việc',
+		path: PATH.ReportWork,
+		pathActive: PATH.ReportWork,
+		icon: DocumentForward,
+	},
+	{
+		title: 'Báo cáo giải ngân',
+		path: PATH.ReportDisbursement,
+		pathActive: PATH.ReportDisbursement,
+		icon: Moneys,
 	},
 ];
 
