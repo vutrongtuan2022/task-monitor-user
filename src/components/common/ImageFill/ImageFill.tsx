@@ -11,7 +11,7 @@ function ImageFill({src, className, ...props}: {src: any; className?: string; [p
 	return (
 		<div className={styles.container}>
 			<div className={clsx(styles.main, className, styleClass)}>
-				<ImageWithFallback src={src} layout='fill' alt={props.alt || 'task-monitor-admin'} {...props} />
+				<ImageWithFallback src={src} layout='fill' alt={props.alt || 'task-monitor-user'} {...props} />
 			</div>
 		</div>
 	);
