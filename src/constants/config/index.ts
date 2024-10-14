@@ -21,13 +21,13 @@ export enum PATH {
 	Profile = '/profile',
 
 	Home = '/',
+
 	Project = '/project',
 	ProjectCreate = '/project/create',
 	ProjectInfo = '/project/infor-project',
 	ProjectContractor = '/project/infor-contractor',
 	ProjectDisbursementProgress = '/project/disbursement-progress',
 	ProjectWorkReport = '/project/work-report',
-
 	UpdateInfoProject = '/project/update/infor-project',
 	UpdateInfoCapital = '/project/update/info-capital',
 	UpdateInfoContractor = '/project/update/infor-contractor',

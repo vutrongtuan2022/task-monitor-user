@@ -99,6 +99,10 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 									id: STATE_REPORT.PLANNING,
 									name: 'Lên kế hoạch',
 								},
+								{
+									id: STATE_REPORT.PENDING_APPROVAL,
+									name: 'Chờ duyệt',
+								},
 							]}
 						/>
 					</div>
@@ -216,6 +220,12 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 												text: 'Đã báo cáo',
 												textColor: '#fff',
 												backgroundColor: '#16C1F3',
+											},
+											{
+												state: STATE_REPORT.PENDING_APPROVAL,
+												text: 'Chờ duyệt',
+												textColor: '#fff',
+												backgroundColor: '#FF852C',
 											},
 										]}
 									/>
