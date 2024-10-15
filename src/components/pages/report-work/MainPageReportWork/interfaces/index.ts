@@ -1,8 +1,17 @@
 export interface PropsMainPageReportWork {}
 
 export interface IReportWork {
-	nameProject: string;
-	nameReporter: string;
+	project: {
+		code: string;
+		name: string;
+		state: number;
+		uuid: string;
+	};
+	reporter: {
+		fullname: string;
+		code: string;
+		uuid: string;
+	};
 	month: number;
 	year: number;
 	completed: string;

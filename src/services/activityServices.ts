@@ -48,6 +48,37 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getActivityLastMonth: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			projectUuid: string;
+			state: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-page-list-user-activity-last-month`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getActivityRegister: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			projectUuid: string;
+			state: number | null;
+			stage: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-page-list-project-activities-for-register`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default activityServices;

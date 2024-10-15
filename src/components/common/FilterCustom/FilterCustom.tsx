@@ -9,7 +9,7 @@ import {removeVietnameseTones} from '~/common/funcs/optionConvert';
 import {GrSearch} from 'react-icons/gr';
 import {IoIosArrowDown} from 'react-icons/io';
 
-function FilterCustom({listFilter, name, query, isSearch, disabled = false}: PropsFilterCustom) {
+function FilterCustom({listFilter, name, query = '_query', isSearch, disabled = false, data, onSetData}: PropsFilterCustom) {
 	const router = useRouter();
 	const {[query]: queryStr, ...rest} = router.query;
 
@@ -41,29 +41,33 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 					<div className={styles.overflow}>
 						<div
 							className={clsx(styles.option, {
-								[styles.option_active]: !queryStr,
+								[styles.option_active]: data == null && !queryStr,
 							})}
 							onClick={() => {
 								setOpen(false);
-								router.replace(
-									{
-										query: {
-											...rest,
+								if (onSetData) {
+									return onSetData(null);
+								} else {
+									return router.replace(
+										{
+											query: {
+												...rest,
+											},
 										},
-									},
-									undefined,
-									{
-										scroll: false,
-									}
-								);
+										undefined,
+										{
+											scroll: false,
+										}
+									);
+								}
 							}}
 						>
 							<p>{'Tất cả'}</p>
-							{!queryStr && (
+							{data == null && !queryStr ? (
 								<div className={styles.icon_check}>
 									<BiCheck fontSize={18} fontWeight={600} />
 								</div>
-							)}
+							) : null}
 						</div>
 						{listFilter
 							?.filter((v) => removeVietnameseTones(v.name)?.includes(keyword ? removeVietnameseTones(keyword) : ''))
@@ -71,29 +75,33 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 								<div
 									key={i}
 									className={clsx(styles.option, {
-										[styles.option_active]: (queryStr as string) == v.id,
+										[styles.option_active]: data == v.id || (queryStr as string) == v.id,
 									})}
 									onClick={() => {
 										setOpen(false);
-										router.replace(
-											{
-												...router,
-												query: {
-													...router.query,
-													[query]: v.id,
+										if (onSetData) {
+											return onSetData(v?.id);
+										} else {
+											return router.replace(
+												{
+													...router,
+													query: {
+														...router.query,
+														[query]: v.id,
+													},
 												},
-											},
-											undefined,
-											{scroll: false}
-										);
+												undefined,
+												{scroll: false}
+											);
+										}
 									}}
 								>
 									<p>{v.name}</p>
-									{(queryStr as string) == v.id && (
+									{data == v.id || (queryStr as string) == v.id ? (
 										<div className={styles.icon_check}>
 											<BiCheck fontSize={20} fontWeight={600} />
 										</div>
-									)}
+									) : null}
 								</div>
 							))}
 					</div>
@@ -113,7 +121,7 @@ function FilterCustom({listFilter, name, query, isSearch, disabled = false}: Pro
 			>
 				<div className={styles.value}>
 					<p className={styles.name}>{name && `${name}:`}</p>
-					<p className={styles.text}>{getNameMethod(listFilter, queryStr as string)}</p>
+					<p className={styles.text}>{getNameMethod(listFilter, data != null ? data : (queryStr as string))}</p>
 				</div>
 				<div className={styles.icon_arrow}>
 					<IoIosArrowDown size={16} />

@@ -134,25 +134,25 @@ function Pagination({total, pageSize, currentPage, onSetPage, onSetpageSize, dep
 	}, []);
 
 	useEffect(() => {
-		if (!!onSetpageSize) {
-			onSetpageSize(() => 20);
-		} else {
-			if (!firstLoad) {
-				if (Object.keys(router.query).length > 0) {
-					router.replace(
-						{
-							...router,
-							query: {
-								...router.query,
-								_pageSize: 20,
-							},
-						},
-						undefined,
-						{scroll: false}
-					);
-				}
-			}
-		}
+		// if (!!onSetpageSize) {
+		// 	onSetpageSize(() => 20);
+		// } else {
+		// 	if (!firstLoad) {
+		// 		if (Object.keys(router.query).length > 0) {
+		// 			router.replace(
+		// 				{
+		// 					...router,
+		// 					query: {
+		// 						...router.query,
+		// 						_pageSize: 20,
+		// 					},
+		// 				},
+		// 				undefined,
+		// 				{scroll: false}
+		// 			);
+		// 		}
+		// 	}
+		// }
 
 		if (!!onSetPage) {
 			onSetPage(() => 1);

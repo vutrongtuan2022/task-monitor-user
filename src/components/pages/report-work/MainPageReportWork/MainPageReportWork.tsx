@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IReportWork, PropsMainPageReportWork} from './interfaces';
 import styles from './MainPageReportWork.module.scss';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_REPORT, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import reportServices from '~/services/reportServices';
@@ -21,16 +21,21 @@ import Image from 'next/image';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
-import {DocumentForward, Edit, Trash} from 'iconsax-react';
+import {DocumentForward, Edit, Eye, Trash} from 'iconsax-react';
 import Moment from 'react-moment';
+import Loading from '~/components/common/Loading';
+import Dialog from '~/components/common/Dialog';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState} = router.query;
+
+	const [uuidDelete, setUuidDelete] = useState<string>('');
 
 	const listReportWork = useQuery([QUERY_KEY.table_list_report_work, _page, _pageSize, _keyword, _year, _month, _state, _completeState], {
 		queryFn: () =>
@@ -51,9 +56,28 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 		},
 	});
 
+	const funcDeleteReportWork = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa báo cáo thành công!',
+				http: reportServices.userDeleteReport({
+					uuid: uuidDelete,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidDelete('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report_work]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
-			{/* <Loading loading={funcDeleteProject.isLoading} /> */}
+			<Loading loading={funcDeleteReportWork.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -172,7 +196,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IReportWork) => <>{data?.nameProject}</>,
+								render: (data: IReportWork) => <>{data?.project?.name}</>,
 							},
 							{
 								title: 'Số công việc thực hiện',
@@ -265,28 +289,33 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								fixedRight: true,
 								render: (data: IReportWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										{data?.state == STATE_REPORT.PLANNING || data?.state == STATE_REPORT.REJECTED ? (
+											<>
+												<IconCustom
+													color='#16C1F3'
+													icon={<DocumentForward fontSize={20} fontWeight={600} />}
+													tooltip='Gửi báo cáo'
+													// onClick={() => setUuidApprove(data?.uuid)}
+												/>
+												<IconCustom
+													type='edit'
+													icon={<Edit fontSize={20} fontWeight={600} />}
+													tooltip='Chỉnh sửa'
+													href={`${PATH.ReportWorkUpdate}?_uuid=${data?.uuid}`}
+												/>
+												<IconCustom
+													type='delete'
+													icon={<Trash fontSize={20} fontWeight={600} />}
+													tooltip='Xóa bỏ'
+													onClick={() => setUuidDelete(data?.uuid)}
+												/>
+											</>
+										) : null}
 										<IconCustom
-											color='#16C1F3'
-											icon={<DocumentForward fontSize={20} fontWeight={600} />}
-											tooltip='Gửi báo cáo'
-											// disnable={data?.state == STATE_PROJECT.FINISH}
-											// href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
-										/>
-										<IconCustom
-											type='edit'
-											icon={<Edit fontSize={20} fontWeight={600} />}
-											tooltip='Chỉnh sửa'
-											// disnable={data?.state == STATE_PROJECT.FINISH}
-											// href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
-										/>
-										<IconCustom
-											type='delete'
-											icon={<Trash fontSize={20} fontWeight={600} />}
-											tooltip='Xóa bỏ'
-											// disnable={data?.state == STATE_PROJECT.DO}
-											// onClick={() => {
-											// 	setDeleteProject(data);
-											// }}
+											color='#005994'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+											href={`${PATH.ReportWork}/${data?.uuid}`}
 										/>
 									</div>
 								),
@@ -301,6 +330,15 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 					dependencies={[_pageSize, _keyword, _year, _month, _state, _completeState]}
 				/>
 			</WrapperScrollbar>
+
+			<Dialog
+				type='error'
+				open={!!uuidDelete}
+				onClose={() => setUuidDelete('')}
+				title={'Xóa báo cáo'}
+				note={'Bạn có chắc chắn muốn xóa báo cáo này không?'}
+				onSubmit={funcDeleteReportWork.mutate}
+			/>
 		</div>
 	);
 }

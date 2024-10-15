@@ -4,7 +4,9 @@ export enum QUERY_KEY {
 	table_list_contractor_project,
 	table_list_project_fund,
 	table_list_work,
+	table_list_work_project,
 	table_list_report_work,
+	table_list_report_work_last_month,
 
 	dropdown_branches,
 	dropdown_project,

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {PropsMainCreateReportWork} from './interfaces';
+import {IActivityRegister, PropsMainCreateReportWork} from './interfaces';
 import styles from './MainCreateReportWork.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
@@ -13,10 +13,20 @@ import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import TextArea from '~/components/common/Form/components/TextArea';
+import clsx from 'clsx';
+import TabNavLink from '~/components/common/TabNavLink';
+import {useRouter} from 'next/router';
+import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
+import TableReportWorkCurrent from '../TableReportWorkCurrent';
+import {CreateReportWork} from '../context';
 
 function MainCreateReportWork({}: PropsMainCreateReportWork) {
+	const router = useRouter();
+
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+	const {_type} = router.query;
 
 	const [form, setForm] = useState<any>({
 		year: null,
@@ -24,6 +34,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		projectUuid: '',
 		description: '',
 	});
+	const [listActivity, setListActivity] = useState<IActivityRegister[]>([]);
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -162,6 +173,41 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 							<div className={styles.mt}>
 								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
 							</div>
+						</div>
+					</div>
+					<div className={clsx(styles.mt, styles.form_list_task)}>
+						<div className={styles.main_tab}>
+							<TabNavLink
+								query='_type'
+								listHref={[
+									{
+										pathname: PATH.ProjectCreate,
+										query: null,
+										title: 'Báo cáo tháng trước',
+									},
+									{
+										pathname: PATH.ProjectCreate,
+										query: 'report',
+										title: 'Báo cáo hiện tại',
+									},
+								]}
+							/>
+						</div>
+						<div className={styles.line}></div>
+						<div className={styles.head}>
+							<h4>Danh sách công việc</h4>
+						</div>
+						<div className={styles.main_table}>
+							<CreateReportWork.Provider
+								value={{
+									projectUuid: form.projectUuid,
+									listActivity: listActivity,
+									setListActivity: setListActivity,
+								}}
+							>
+								{!_type && <TableReportWorkLastMonth projectUuid={form.projectUuid} />}
+								{_type == 'report' && <TableReportWorkCurrent />}
+							</CreateReportWork.Provider>
 						</div>
 					</div>
 				</Form>

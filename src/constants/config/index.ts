@@ -36,6 +36,7 @@ export enum PATH {
 
 	ReportWork = '/report-work',
 	ReportWorkCreate = '/report-work/create',
+	ReportWorkUpdate = '/report-work/update',
 
 	ReportDisbursement = '/report-disbursement',
 }
