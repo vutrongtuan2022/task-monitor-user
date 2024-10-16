@@ -7,9 +7,9 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import branchesServices from '~/services/branchesServices';
 import Select, {Option} from '~/components/common/Select';
@@ -26,6 +26,7 @@ import Loading from '~/components/common/Loading';
 import moment from 'moment';
 import {toastWarn} from '~/common/funcs/toast';
 import GridColumn from '~/components/layouts/GridColumn';
+import {status} from 'nprogress';
 
 function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	const router = useRouter();
@@ -50,7 +51,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 		description: '',
 	});
 
-	useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
+	const {data: detailInfoProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.detailInfoProject({
@@ -80,6 +81,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					code: v?.code,
 				}))
 			);
+		},
+		select(data) {
+			return data;
 		},
 		enabled: !!_uuid,
 	});
@@ -235,56 +239,62 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcUpdateGeneralProject.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.Project,
-						title: 'Danh sách dự án',
-					},
-					{
-						path: '',
-						title: 'Chỉnh sửa dự án',
-					},
-				]}
-			/>
-			<LayoutPages
-				listPages={[
-					{
-						title: 'Thông tin chung',
-						path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin kế hoạch vốn',
-						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
-					},
-					{
-						title: 'Thông tin nhà thầu',
-						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button p_14_24 rounded_8 blueLinear onClick={handleUpdateGeneralProject}>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			>
-				<div className={styles.main}>
-					<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm} onSubmit={handleUpdateGeneralProject}>
+			<div className={styles.container}>
+				<Loading loading={funcUpdateGeneralProject.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.Project,
+							title: 'Danh sách dự án',
+						},
+						{
+							path: '',
+							title: 'Chỉnh sửa dự án',
+						},
+					]}
+				/>
+				<LayoutPages
+					listPages={[
+						{
+							title: 'Thông tin chung',
+							path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin kế hoạch vốn',
+							path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
+						},
+						{
+							title: 'Thông tin nhà thầu',
+							path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
+											Lưu lại
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				>
+					<div className={styles.main}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
 								<h4>Thông tin cơ bản</h4>
@@ -341,6 +351,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											name='name'
 											value={form?.name}
 											isRequired={true}
+											max={255}
 											blur={true}
 										/>
 									</div>
@@ -354,6 +365,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 										name='type'
 										value={form.type}
 										placeholder='Chọn'
+										readOnly={detailInfoProject?.state === STATE_PROJECT.DO}
 									>
 										{listTasks?.map((v: any) => (
 											<Option
@@ -427,11 +439,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian bắt đầu dự kiến <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian bắt đầu dự kiến</span>}
 										name='expectStart'
 										value={form.expectStart}
 										placeholder='Chọn thời gian bắt đầu dự kiến'
@@ -445,11 +453,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian kết thúc dự kiến <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian kết thúc dự kiến</span>}
 										name='expectEnd'
 										value={form.expectEnd}
 										placeholder='Chọn thời gian kết thúc dự kiến'
@@ -463,11 +467,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 									<DatePicker
 										onClean={true}
 										icon={true}
-										label={
-											<span>
-												Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Thời gian bắt đầu dự án được phê duyệt</span>}
 										name='realStart'
 										value={form.realStart}
 										placeholder='Chọn thời gian bắt đầu dự án được phê duyệt'
@@ -541,15 +541,21 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
-									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' max={255} blur />
+									<TextArea
+										name='description'
+										placeholder='Nhập quy mô công trình'
+										label='Quy mô công trình'
+										max={255}
+										blur
+									/>
 								</GridColumn>
 							</div>
 						</div>
-					</Form>
-				</div>
-			</LayoutPages>
-		</div>
+					</div>
+				</LayoutPages>
+			</div>
+		</Form>
 	);
 }
 

@@ -67,6 +67,8 @@ function FormPassword({}: PropsFormPassword) {
 						name='password'
 						value={context?.form?.password}
 						placeholder='Nhập mật khẩu mới'
+						max={255}
+						blur
 						onClean
 						isRequired
 						label={
@@ -82,6 +84,8 @@ function FormPassword({}: PropsFormPassword) {
 						value={context?.form?.rePassword}
 						valueConfirm={context?.form?.password}
 						placeholder='Nhập lại mật khẩu'
+						max={255}
+						blur
 						onClean
 						isRequired
 						label={
