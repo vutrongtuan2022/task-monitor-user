@@ -4,7 +4,7 @@ import {IFormCreateProject, PropsCreateProject} from './interfaces';
 import styles from './CreateProject.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
-import Form, {Input} from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
@@ -240,57 +240,58 @@ function CreateProject({}: PropsCreateProject) {
 		if (!form.managerUuid) {
 			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
 		}
+
 		// if (listContractor?.some((v) => v.uuidContractor == '')) {
 		// 	return toastWarn({msg: 'Chọn đầy đủ nhà thầu!'});
 		// }
-		if (!form?.expectStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
-		}
-		if (!form?.expectEnd) {
-			return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
-		}
-		if (!form?.realStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
+		if (moment(form?.expectStart).isAfter(moment(form?.expectEnd))) {
+			return toastWarn({msg: 'Thời gian bắt đầu dự kiến phải nhỏ hơn thời gian kết thúc dự kiến!'});
 		}
 
 		return funcCreateProject.mutate();
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcCreateProject.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.Project,
-						title: 'Danh sách dự án',
-					},
-					{
-						path: '',
-						title: 'Thêm mới dự án',
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button p_14_24 rounded_8 blueLinear onClick={handleCreateProject}>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			/>
-			<div className={styles.main}>
-				<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm} onSubmit={handleCreateProject}>
+			<div className={styles.container}>
+				<Loading loading={funcCreateProject.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.Project,
+							title: 'Danh sách dự án',
+						},
+						{
+							path: '',
+							title: 'Thêm mới dự án',
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
+											Lưu lại
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				/>
+				<div className={styles.main}>
 					<div className={styles.grid}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
@@ -349,6 +350,7 @@ function CreateProject({}: PropsCreateProject) {
 										name='name'
 										value={form?.name}
 										isRequired={true}
+										max={255}
 										blur={true}
 									/>
 									<Select
@@ -468,6 +470,20 @@ function CreateProject({}: PropsCreateProject) {
 								<Input
 									label={
 										<span>
+											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
+										</span>
+									}
+									placeholder='Nhập tổng mức đầu tư dự án'
+									type='text'
+									isMoney
+									isRequired={true}
+									name='totalInvest'
+									value={form?.totalInvest}
+									unit='VND'
+								/>
+								<Input
+									label={
+										<span>
 											Tổng dự toán <span style={{color: 'red'}}>*</span>
 										</span>
 									}
@@ -480,6 +496,7 @@ function CreateProject({}: PropsCreateProject) {
 									blur={true}
 									unit='VND'
 								/>
+
 								<Input
 									label={
 										<span>
@@ -495,19 +512,6 @@ function CreateProject({}: PropsCreateProject) {
 									blur={true}
 									unit='VND'
 								/>
-								<Input
-									label={
-										<span>
-											Tổng mức đầu tư dự án <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập tổng mức đầu tư dự án'
-									type='text'
-									isMoney
-									name='totalInvest'
-									value={form?.totalInvest}
-									unit='VND'
-								/>
 							</div>
 						</div>
 					</div>
@@ -520,11 +524,7 @@ function CreateProject({}: PropsCreateProject) {
 								<DatePicker
 									onClean={true}
 									icon={true}
-									label={
-										<span>
-											Thời gian bắt đầu dự kiến <span style={{color: 'red'}}>*</span>
-										</span>
-									}
+									label={<span>Thời gian bắt đầu dự kiến</span>}
 									name='expectStart'
 									value={form.expectStart}
 									placeholder='Chọn thời gian bắt đầu dự kiến'
@@ -538,11 +538,7 @@ function CreateProject({}: PropsCreateProject) {
 								<DatePicker
 									onClean={true}
 									icon={true}
-									label={
-										<span>
-											Thời gian kết thúc dự kiến <span style={{color: 'red'}}>*</span>
-										</span>
-									}
+									label={<span>Thời gian kết thúc dự kiến</span>}
 									name='expectEnd'
 									value={form.expectEnd}
 									placeholder='Chọn thời gian kết thúc dự kiến'
@@ -556,11 +552,7 @@ function CreateProject({}: PropsCreateProject) {
 								<DatePicker
 									onClean={true}
 									icon={true}
-									label={
-										<span>
-											Thời gian bắt đầu dự án được phê duyệt <span style={{color: 'red'}}>*</span>
-										</span>
-									}
+									label={<span>Thời gian bắt đầu dự án được phê duyệt</span>}
 									name='realStart'
 									value={form.realStart}
 									placeholder='Chọn thời gian bắt đầu dự án được phê duyệt'
@@ -642,15 +634,21 @@ function CreateProject({}: PropsCreateProject) {
 							</div>
 							<div className={clsx(styles.mt)}>
 								<GridColumn col_2>
-									<TextArea name='address' placeholder='Nhập địa chỉ' label='Địa chỉ' />
-									<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
+									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' max={255} blur />
+									<TextArea
+										name='description'
+										placeholder='Nhập quy mô công trình'
+										label='Quy mô công trình'
+										max={255}
+										blur
+									/>
 								</GridColumn>
 							</div>
 						</div>
 					</div>
-				</Form>
+				</div>
 			</div>
-		</div>
+		</Form>
 	);
 }
 
