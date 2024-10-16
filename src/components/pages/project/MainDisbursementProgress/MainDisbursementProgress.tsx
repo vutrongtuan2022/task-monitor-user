@@ -19,7 +19,7 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATUS_DISBURSEMENT_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import Moment from 'react-moment';
@@ -271,15 +271,15 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										query='_approved'
 										listFilter={[
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.NOT_APPROVED,
+												id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
 												name: 'Chưa duyệt',
 											},
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.APPROVED,
+												id: STATE_REPORT_DISBURSEMENT.APPROVED,
 												name: 'Đã duyệt',
 											},
 											{
-												id: STATUS_DISBURSEMENT_PROJECT.REJECTED,
+												id: STATE_REPORT_DISBURSEMENT.REJECTED,
 												name: 'Bị từ chối',
 											},
 										]}

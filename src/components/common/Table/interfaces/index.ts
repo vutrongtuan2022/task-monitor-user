@@ -12,7 +12,6 @@ export interface PropsTable {
 	fixedHeader?: boolean;
 
 	// Props checked data
-	listDataChecked?: any[];
 	handleCheckedAll?: (e: any) => void;
 	isCheckedAll?: boolean;
 	handleCheckedRow?: (e: any, data: any) => void;

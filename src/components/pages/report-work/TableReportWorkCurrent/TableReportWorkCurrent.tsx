@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {PropsTableReportWorkCurrent} from './interfaces';
 import styles from './TableReportWorkCurrent.module.scss';
@@ -17,27 +17,38 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import PositionContainer from '~/components/common/PositionContainer';
 import {useRouter} from 'next/router';
-import TableListWork from '../TableListWork';
+import TableListWorkChecked from '../TableListWorkChecked';
+import {removeVietnameseTones} from '~/common/funcs/optionConvert';
+import useDebounce from '~/common/hooks/useDebounce';
+import TableListWorkAdditional from '../TableListWorkAdditional';
+import IconCustom from '~/components/common/IconCustom';
+import {Trash} from 'iconsax-react';
 
 function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 	const router = useRouter();
 
 	const {_action} = router.query;
 
-	const {listActivity} = useContext<ICreateReportWork>(CreateReportWork);
+	const {listActivity, projectUuid, setListActivity} = useContext<ICreateReportWork>(CreateReportWork);
+
+	const [keyword, setKeyword] = useState<string>('');
+	const [state, setState] = useState<number | null>(null);
+
+	const debounce = useDebounce(keyword, 600);
 
 	return (
 		<div className={styles.main_table}>
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc' />
+						<Search data={keyword} onSetData={setKeyword} placeholder='Tìm kiếm theo tên công việc' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
 							name='Trạng thái'
-							query='_state'
+							data={state}
+							onSetData={setState}
 							listFilter={[
 								{
 									id: STATE_WORK_PROJECT.NOT_PROCESSED,
@@ -47,22 +58,34 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 									id: STATE_WORK_PROJECT.PROCESSING,
 									name: 'Đang xử lý',
 								},
-								{
-									id: STATE_WORK_PROJECT.COMPLETED,
-									name: 'Đã hoàn thành',
-								},
 							]}
 						/>
 					</div>
 				</div>
 				<div className={styles.btn}>
-					<Button p_10_24 rounded_8 light-blue icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}>
+					<Button
+						p_10_24
+						rounded_8
+						light-blue
+						disable={!projectUuid}
+						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+						onClick={() => {
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...router.query,
+									_action: 'create-additional',
+								},
+							});
+						}}
+					>
 						Công việc phát sinh
 					</Button>
 					<Button
 						p_10_24
 						rounded_8
 						light-blue
+						disable={!projectUuid}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 						onClick={() => {
 							router.replace({
@@ -79,7 +102,9 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 				</div>
 			</div>
 			<DataWrapper
-				data={listActivity}
+				data={listActivity
+					?.filter((v) => removeVietnameseTones(v.name)?.includes(debounce ? removeVietnameseTones(debounce) : ''))
+					?.filter((x) => state == null || x?.state == state)}
 				loading={false}
 				noti={
 					<Noti
@@ -90,6 +115,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 								p_10_24
 								rounded_8
 								light-blue
+								disable={!projectUuid}
 								icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								onClick={() => {
 									router.replace({
@@ -108,7 +134,9 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 				}
 			>
 				<Table
-					data={listActivity}
+					data={listActivity
+						?.filter((v) => removeVietnameseTones(v.name)?.includes(debounce ? removeVietnameseTones(debounce) : ''))
+						?.filter((x) => state == null || x?.state == state)}
 					column={[
 						{
 							title: 'STT',
@@ -119,6 +147,14 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 							render: (data: IActivityRegister) => (
 								<Tippy content={data?.name}>
 									<p className={styles.name}>{data?.name || '---'}</p>
+								</Tippy>
+							),
+						},
+						{
+							title: 'Thuộc nhóm công việc',
+							render: (data: IActivityRegister) => (
+								<Tippy content={data?.parent?.name || '---'}>
+									<p className={styles.group_task}>{data?.parent?.name || '---'}</p>
 								</Tippy>
 							),
 						},
@@ -138,8 +174,8 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 							title: 'Loại công việc',
 							render: (data: IActivityRegister) => (
 								<>
-									{data?.isInWorkFlow && 'Phát sinh'}
-									{!data?.isInWorkFlow && 'Có kế hoạch'}
+									{data?.isInWorkFlow && 'Có kế hoạch'}
+									{!data?.isInWorkFlow && 'Phát sinh'}
 								</>
 							),
 						},
@@ -175,6 +211,22 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 								/>
 							),
 						},
+						{
+							title: 'Hành động',
+							fixedRight: true,
+							render: (data: IActivityRegister, index: number) => (
+								<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+									<IconCustom
+										type='delete'
+										icon={<Trash fontSize={20} fontWeight={600} />}
+										tooltip='Xóa bỏ'
+										onClick={() => {
+											setListActivity(listActivity?.filter((_v, i) => i != index));
+										}}
+									/>
+								</div>
+							),
+						},
 					]}
 				/>
 			</DataWrapper>
@@ -192,7 +244,34 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 					});
 				}}
 			>
-				<TableListWork
+				<TableListWorkChecked
+					onClose={() => {
+						const {_action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<PositionContainer
+				open={_action == 'create-additional'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<TableListWorkAdditional
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 

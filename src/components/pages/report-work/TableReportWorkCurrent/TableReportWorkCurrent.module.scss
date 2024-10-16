@@ -22,9 +22,10 @@
 	}
 }
 
-.name {
+.name,
+.group_task {
 	width: fit-content;
-	max-width: 400px;
+	max-width: 460px;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
@@ -37,6 +38,10 @@
 	&:hover {
 		opacity: 0.8;
 	}
+}
+
+.group_task {
+	max-width: 280px;
 }
 
 .btn {

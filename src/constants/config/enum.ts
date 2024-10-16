@@ -5,8 +5,10 @@ export enum QUERY_KEY {
 	table_list_project_fund,
 	table_list_work,
 	table_list_work_project,
+	table_list_work_report,
 	table_list_report_work,
 	table_list_report_work_last_month,
+	table_list_report_disbursement,
 
 	dropdown_branches,
 	dropdown_project,
@@ -27,6 +29,7 @@ export enum QUERY_KEY {
 	detail_progress_project,
 	detail_update_contractor_project,
 	detail_progress_fund_project,
+	detail_report_disbursement,
 }
 
 export enum TYPE_DATE {
@@ -82,7 +85,7 @@ export enum TYPE_OF_WORK {
 	HAVE_PLAN,
 }
 
-export enum STATUS_DISBURSEMENT_PROJECT {
+export enum STATE_REPORT_DISBURSEMENT {
 	NOT_APPROVED,
 	APPROVED,
 	REJECTED,
@@ -99,6 +102,7 @@ export enum STATE_REPORT {
 	REPORTED,
 	PLANNING,
 	PENDING_APPROVAL,
+	IN_PROGRESS,
 }
 
 export enum STATE_COMPLETE_REPORT {

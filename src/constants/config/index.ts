@@ -39,6 +39,8 @@ export enum PATH {
 	ReportWorkUpdate = '/report-work/update',
 
 	ReportDisbursement = '/report-disbursement',
+	ReportDisbursementCreate = '/report-disbursement/create',
+	ReportDisbursementUpdate = '/report-disbursement/update',
 }
 
 export const Menu: {

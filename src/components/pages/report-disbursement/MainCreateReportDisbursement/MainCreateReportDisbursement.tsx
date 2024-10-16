@@ -1,48 +1,42 @@
 import React, {useState} from 'react';
 
-import {IActivityRegister, PropsMainCreateReportWork} from './interfaces';
-import styles from './MainCreateReportWork.module.scss';
+import {PropsMainCreateReportDisbursement} from './interfaces';
+import styles from './MainCreateReportDisbursement.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Select, {Option} from '~/components/common/Select';
 import {generateYearsArray} from '~/common/funcs/selectDate';
-import Form from '~/components/common/Form';
+import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import TextArea from '~/components/common/Form/components/TextArea';
-import clsx from 'clsx';
-import TabNavLink from '~/components/common/TabNavLink';
+import projectFundServices from '~/services/projectFundServices';
+import {price} from '~/common/funcs/convertCoin';
 import {useRouter} from 'next/router';
-import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
-import TableReportWorkCurrent from '../TableReportWorkCurrent';
-import {CreateReportWork} from '../context';
-import {toastWarn} from '~/common/funcs/toast';
-import activityServices from '~/services/activityServices';
 import Loading from '~/components/common/Loading';
 
-function MainCreateReportWork({}: PropsMainCreateReportWork) {
+function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 	const router = useRouter();
 
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_type} = router.query;
-
 	const [form, setForm] = useState<{
 		year: number | null;
 		month: number | null;
 		projectUuid: string;
+		budget: number;
 		description: string;
 	}>({
 		year: null,
 		month: null,
 		projectUuid: '',
+		budget: 0,
 		description: '',
 	});
-	const [listActivity, setListActivity] = useState<IActivityRegister[]>([]);
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -57,20 +51,18 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		},
 	});
 
-	const funcRegisterActivitieWithMonth = useMutation({
+	const funcCreateProjectFund = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Thêm báo cáo thành công!',
-				http: activityServices.registerActivitieWithMonth({
-					reportTitle: '',
-					branchFeedback: '',
+				http: projectFundServices.createProjectFund({
 					year: form.year!,
 					month: form.month!,
 					projectUuid: form.projectUuid,
-					reportNote: form.description,
-					listActivityForMonthlyRegister: listActivity,
+					budget: price(form.budget),
+					note: form.description,
 				}),
 			});
 		},
@@ -82,54 +74,55 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 	});
 
 	const handleSubmit = () => {
-		if (listActivity.length == 0) {
-			return toastWarn({msg: 'Vui lòng thêm công việc báo cáo!'});
-		}
-
-		return funcRegisterActivitieWithMonth.mutate();
+		return funcCreateProjectFund.mutate();
 	};
 
 	return (
-		<div className={styles.container}>
-			<Loading loading={funcRegisterActivitieWithMonth.isLoading} />
-			<Breadcrumb
-				listUrls={[
-					{
-						path: PATH.ReportWork,
-						title: 'Danh sách báo cáo',
-					},
-					{
-						path: '',
-						title: 'Thêm mới báo cáo',
-					},
-				]}
-				action={
-					<div className={styles.group_btn}>
-						<Button
-							p_14_24
-							rounded_8
-							light-red
-							onClick={(e) => {
-								e.preventDefault();
-								window.history.back();
-							}}
-						>
-							Hủy bỏ
-						</Button>
-						<Button
-							p_14_24
-							rounded_8
-							blueLinear
-							disable={!form.year || !form.month || !form.projectUuid}
-							onClick={handleSubmit}
-						>
-							Lưu lại
-						</Button>
-					</div>
-				}
-			/>
-			<div className={styles.main}>
-				<Form form={form} setForm={setForm}>
+		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
+			<div className={styles.container}>
+				<Loading loading={funcCreateProjectFund.isLoading} />
+				<Breadcrumb
+					listUrls={[
+						{
+							path: PATH.ReportDisbursement,
+							title: 'Báo cáo giải ngân',
+						},
+						{
+							path: '',
+							title: 'Thêm mới báo cáo',
+						},
+					]}
+					action={
+						<div className={styles.group_btn}>
+							<Button
+								p_14_24
+								rounded_8
+								light-red
+								onClick={(e) => {
+									e.preventDefault();
+									window.history.back();
+								}}
+							>
+								Hủy bỏ
+							</Button>
+							<FormContext.Consumer>
+								{({isDone}) => (
+									<div className={styles.btn}>
+										<Button
+											p_14_24
+											rounded_8
+											blueLinear
+											disable={!isDone || !form.year || !form.month || !form.projectUuid}
+										>
+											Gửi báo cáo
+										</Button>
+									</div>
+								)}
+							</FormContext.Consumer>
+						</div>
+					}
+				/>
+				<div className={styles.main}>
 					<div className={styles.basic_info}>
 						<div className={styles.head}>
 							<h4>Thông tin cơ bản</h4>
@@ -211,56 +204,37 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 													...prev,
 													projectUuid: v?.uuid,
 												}));
-												setListActivity([]);
 											}}
 										/>
 									))}
 								</Select>
 							</div>
 							<div className={styles.mt}>
+								<Input
+									label={
+										<span>
+											Số tiền giải ngân <span style={{color: 'red'}}>*</span>
+										</span>
+									}
+									placeholder='Nhập số tiền giải ngân'
+									type='text'
+									isMoney
+									name='budget'
+									value={form?.budget}
+									isRequired={true}
+									blur={true}
+									unit='VND'
+								/>
+							</div>
+							<div className={styles.mt}>
 								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
 							</div>
 						</div>
 					</div>
-					<div className={clsx(styles.mt, styles.form_list_task)}>
-						<div className={styles.main_tab}>
-							<TabNavLink
-								query='_type'
-								listHref={[
-									{
-										pathname: PATH.ProjectCreate,
-										query: null,
-										title: 'Báo cáo tháng trước',
-									},
-									{
-										pathname: PATH.ProjectCreate,
-										query: 'report',
-										title: 'Báo cáo hiện tại',
-									},
-								]}
-							/>
-						</div>
-						<div className={styles.line}></div>
-						<div className={styles.head}>
-							<h4>Danh sách công việc</h4>
-						</div>
-						<div className={styles.main_table}>
-							<CreateReportWork.Provider
-								value={{
-									projectUuid: form.projectUuid,
-									listActivity: listActivity,
-									setListActivity: setListActivity,
-								}}
-							>
-								{!_type && <TableReportWorkLastMonth projectUuid={form.projectUuid} />}
-								{_type == 'report' && <TableReportWorkCurrent />}
-							</CreateReportWork.Provider>
-						</div>
-					</div>
-				</Form>
+				</div>
 			</div>
-		</div>
+		</Form>
 	);
 }
 
-export default MainCreateReportWork;
+export default MainCreateReportDisbursement;

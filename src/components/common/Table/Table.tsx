@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import {PropsTable} from './interfaces';
 import clsx from 'clsx';

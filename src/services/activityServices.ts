@@ -79,6 +79,43 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	registerActivitieWithMonth: (
+		data: {
+			projectUuid: string;
+			reportTitle: string;
+			reportNote: string;
+			branchFeedback: string;
+			year: number;
+			month: number;
+			listActivityForMonthlyRegister: {
+				activityUuid: string;
+				name: string;
+				parent: {
+					uuid: string;
+					name: string;
+				};
+				stage: number;
+				megaType: string;
+				isInWorkFlow: boolean;
+				state: number;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/register-activities-with-month`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getAllActivityReport: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-all-activity-in-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default activityServices;

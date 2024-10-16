@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
 
-import {PropsTableListWork} from './interfaces';
-import styles from './TableListWork.module.scss';
+import {PropsTableListWorkChecked} from './interfaces';
+import styles from './TableListWorkChecked.module.scss';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
 import Search from '~/components/common/Search';
@@ -22,11 +22,13 @@ import {IActivityRegister} from '../MainCreateReportWork/interfaces';
 import Tippy from '@tippyjs/react';
 import useDebounce from '~/common/hooks/useDebounce';
 
-function TableListWork({onClose}: PropsTableListWork) {
+function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 	const router = useRouter();
+	const {_action} = router.query;
+
 	const {projectUuid, listActivity, setListActivity} = useContext<ICreateReportWork>(CreateReportWork);
 
-	const {_action} = router.query;
+	const [listWorkChecked, setListWorkChecked] = useState<IActivityRegister[]>(listActivity);
 
 	const [page, setPage] = useState<number>(1);
 	const [pageSize, setPageSize] = useState<number>(20);
@@ -36,6 +38,7 @@ function TableListWork({onClose}: PropsTableListWork) {
 
 	const debounce = useDebounce(keyword, 600);
 
+	// Data reponsive api
 	const {data: listWork, isLoading} = useQuery([QUERY_KEY.table_list_work_project, page, pageSize, debounce, state, stage, projectUuid], {
 		queryFn: () =>
 			httpRequest({
@@ -55,14 +58,15 @@ function TableListWork({onClose}: PropsTableListWork) {
 		enabled: !!projectUuid && _action == 'create',
 	});
 
+	// Xử lý check all ==> Thêm tất cả dữ liệu api trả về vào mảng state
 	const handleCheckedAll = useCallback(
 		(e: any) => {
 			const {checked} = e.target;
 
 			if (checked) {
-				setListActivity((prev: any) => [...prev, ...listWork?.items]);
+				setListWorkChecked((prev: any) => [...prev, ...listWork?.items]);
 			} else {
-				setListActivity((prev: any) => {
+				setListWorkChecked((prev: any) => {
 					return prev?.filter((v: any) => listWork?.items?.every((x: any) => x?.activityUuid != v?.activityUuid));
 				});
 			}
@@ -70,27 +74,36 @@ function TableListWork({onClose}: PropsTableListWork) {
 		[listWork?.items]
 	);
 
+	// Xử lý check row (item)
 	const handleCheckedRow = (e: any, data: any) => {
 		const {checked} = e.target;
 
 		if (checked) {
-			setListActivity((prev: any) => [...prev, data]);
+			setListWorkChecked((prev: any) => [...prev, data]);
 		} else {
-			setListActivity((prev: any) => {
+			setListWorkChecked((prev: any) => {
 				return prev?.filter((v: any) => v?.activityUuid != data?.activityUuid);
 			});
 		}
 	};
 
+	// Xử lý trạng thái checked của row (item)
 	const handleIsCheckedRow = (data: any) => {
-		return listActivity.some((v) => v?.activityUuid == data?.activityUuid);
+		return listWorkChecked.some((v) => v?.activityUuid == data?.activityUuid);
 	};
 
+	// Xử lý trạng thái checked all
 	const isCheckedAll = useMemo(() => {
 		return listWork?.items.every((v: any) => {
-			return listActivity?.some((x: any) => x?.activityUuid == v?.activityUuid);
+			return listWorkChecked?.some((x: any) => x?.activityUuid == v?.activityUuid);
 		});
-	}, [listWork?.items, listActivity]);
+	}, [listWork?.items, listWorkChecked]);
+
+	// Lưu dữ liệu vào context
+	const handleSaveWorks = () => {
+		setListActivity(listWorkChecked);
+		onClose();
+	};
 
 	return (
 		<div className={styles.container}>
@@ -104,7 +117,14 @@ function TableListWork({onClose}: PropsTableListWork) {
 					</div>
 
 					<div className={styles.btn}>
-						<Button p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
+						<Button
+							p_12_20
+							primary
+							rounded_6
+							disable={listWorkChecked.length == 0}
+							icon={<FolderOpen size={18} color='#fff' />}
+							onClick={handleSaveWorks}
+						>
 							Lưu lại
 						</Button>
 					</div>
@@ -169,7 +189,6 @@ function TableListWork({onClose}: PropsTableListWork) {
 							handleCheckedAll={handleCheckedAll}
 							handleCheckedRow={handleCheckedRow}
 							handleIsCheckedRow={handleIsCheckedRow}
-							listDataChecked={listActivity}
 							data={listWork?.items || []}
 							column={[
 								{
@@ -187,6 +206,14 @@ function TableListWork({onClose}: PropsTableListWork) {
 									),
 								},
 								{
+									title: 'Thuộc nhóm công việc',
+									render: (data: IActivityRegister) => (
+										<Tippy content={data?.parent?.name || '---'}>
+											<p className={styles.group_task}>{data?.parent?.name || '---'}</p>
+										</Tippy>
+									),
+								},
+								{
 									title: 'Giai đoạn thực hiện',
 									render: (data: IActivityRegister) => (
 										<>
@@ -194,16 +221,6 @@ function TableListWork({onClose}: PropsTableListWork) {
 											{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 											{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
 											{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
-										</>
-									),
-								},
-
-								{
-									title: 'Loại công việc',
-									render: (data: IActivityRegister) => (
-										<>
-											{data?.isInWorkFlow && 'Có kế hoạch'}
-											{!data?.isInWorkFlow && 'Phát sinh'}
 										</>
 									),
 								},
@@ -256,4 +273,4 @@ function TableListWork({onClose}: PropsTableListWork) {
 	);
 }
 
-export default TableListWork;
+export default TableListWorkChecked;

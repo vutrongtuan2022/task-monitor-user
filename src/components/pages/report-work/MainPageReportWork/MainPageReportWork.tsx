@@ -25,6 +25,8 @@ import {DocumentForward, Edit, Eye, Trash} from 'iconsax-react';
 import Moment from 'react-moment';
 import Loading from '~/components/common/Loading';
 import Dialog from '~/components/common/Dialog';
+import PositionContainer from '~/components/common/PositionContainer';
+import TableListWorkDigitize from '../TableListWorkDigitize';
 
 function MainPageReportWork({}: PropsMainPageReportWork) {
 	const router = useRouter();
@@ -33,7 +35,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _state, _completeState, _uuidDigitize} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
 
@@ -116,16 +118,16 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 									name: 'Bị từ chối',
 								},
 								{
-									id: STATE_REPORT.REPORTED,
-									name: 'Đã báo cáo',
-								},
-								{
 									id: STATE_REPORT.PLANNING,
 									name: 'Lên kế hoạch',
 								},
 								{
-									id: STATE_REPORT.PENDING_APPROVAL,
-									name: 'Chờ duyệt',
+									id: STATE_REPORT.REPORTED,
+									name: 'Đã báo cáo',
+								},
+								{
+									id: STATE_REPORT.IN_PROGRESS,
+									name: 'Đang thực hiện',
 								},
 							]}
 						/>
@@ -246,8 +248,8 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 												backgroundColor: '#16C1F3',
 											},
 											{
-												state: STATE_REPORT.PENDING_APPROVAL,
-												text: 'Chờ duyệt',
+												state: STATE_REPORT.IN_PROGRESS,
+												text: 'Đang thực hiện',
 												textColor: '#fff',
 												backgroundColor: '#FF852C',
 											},
@@ -289,28 +291,44 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								fixedRight: true,
 								render: (data: IReportWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data?.state == STATE_REPORT.PLANNING || data?.state == STATE_REPORT.REJECTED ? (
-											<>
-												<IconCustom
-													color='#16C1F3'
-													icon={<DocumentForward fontSize={20} fontWeight={600} />}
-													tooltip='Gửi báo cáo'
-													// onClick={() => setUuidApprove(data?.uuid)}
-												/>
-												<IconCustom
-													type='edit'
-													icon={<Edit fontSize={20} fontWeight={600} />}
-													tooltip='Chỉnh sửa'
-													href={`${PATH.ReportWorkUpdate}?_uuid=${data?.uuid}`}
-												/>
-												<IconCustom
-													type='delete'
-													icon={<Trash fontSize={20} fontWeight={600} />}
-													tooltip='Xóa bỏ'
-													onClick={() => setUuidDelete(data?.uuid)}
-												/>
-											</>
+										{/* Trạng thái Đang thực hiện + Đã từ chối */}
+										{data?.state == STATE_REPORT.IN_PROGRESS || data?.state == STATE_REPORT.REJECTED ? (
+											<IconCustom
+												color='#16C1F3'
+												icon={<DocumentForward fontSize={20} fontWeight={600} />}
+												tooltip='Gửi báo cáo'
+												onClick={() => {
+													router.replace({
+														pathname: router.pathname,
+														query: {
+															...router.query,
+															_uuidDigitize: data?.uuid,
+														},
+													});
+												}}
+											/>
 										) : null}
+
+										{/* Trạng thái Đang lên kế hoạch + Đã từ chối */}
+										{data?.state == STATE_REPORT.PLANNING || data?.state == STATE_REPORT.REJECTED ? (
+											<IconCustom
+												type='edit'
+												icon={<Edit fontSize={20} fontWeight={600} />}
+												tooltip='Chỉnh sửa'
+												href={`${PATH.ReportWorkUpdate}?_uuid=${data?.uuid}`}
+											/>
+										) : null}
+
+										{/* Trạng thái Đang lên kế hoạch */}
+										{data?.state == STATE_REPORT.PLANNING && (
+											<IconCustom
+												type='delete'
+												icon={<Trash fontSize={20} fontWeight={600} />}
+												tooltip='Xóa bỏ'
+												onClick={() => setUuidDelete(data?.uuid)}
+											/>
+										)}
+
 										<IconCustom
 											color='#005994'
 											icon={<Eye fontSize={20} fontWeight={600} />}
@@ -339,6 +357,33 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 				note={'Bạn có chắc chắn muốn xóa báo cáo này không?'}
 				onSubmit={funcDeleteReportWork.mutate}
 			/>
+
+			<PositionContainer
+				open={!!_uuidDigitize}
+				onClose={() => {
+					const {_uuidDigitize, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<TableListWorkDigitize
+					onClose={() => {
+						const {_uuidDigitize, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
 		</div>
 	);
 }

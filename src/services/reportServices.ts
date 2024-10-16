@@ -40,6 +40,20 @@ const reportServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	userSendReport: (
+		data: {
+			reportUuid: string;
+			activityDigitalState: {
+				activityUuid: string;
+				stateNote: number;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Report/user-send-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default reportServices;
