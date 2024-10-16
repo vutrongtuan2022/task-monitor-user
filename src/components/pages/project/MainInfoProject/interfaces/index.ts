@@ -33,6 +33,7 @@ export interface IDetailInfoProject {
 	realBudget: number;
 	reserveBudget: number;
 	remainReserveBudget: number;
+	annualAccumAmount: number;
 	accumAmount: number;
 	annualBudget: number;
 	address: string;
