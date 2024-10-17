@@ -69,6 +69,16 @@ const projectFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	sendProjectFund: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ProjectFund/send-fund`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default projectFundServices;

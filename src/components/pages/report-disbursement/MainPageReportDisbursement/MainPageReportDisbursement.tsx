@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IProjectFundAll, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
@@ -9,7 +9,7 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
@@ -25,13 +25,19 @@ import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
+import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
+
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 	const {_page, _pageSize, _keyword, _year, _month, _approved} = router.query;
+
+	const [uuidSendBack, setUuidSendBack] = useState<string>('');
 
 	const listProjectFundAll = useQuery([QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _approved, _year, _month], {
 		queryFn: () =>
@@ -51,8 +57,27 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 		},
 	});
 
+	const funcSendBackReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Gửi lại báo cáo thành công!',
+				http: projectFundServices.sendProjectFund({
+					uuid: uuidSendBack,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setUuidSendBack('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcSendBackReport.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -205,6 +230,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 													type='edit'
 													icon={<DocumentForward fontSize={20} fontWeight={600} />}
 													tooltip='Gửi lại'
+													onClick={() => setUuidSendBack(data.uuid)}
 												/>
 												<IconCustom
 													color='#16C1F3'
@@ -234,6 +260,16 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 					dependencies={[_pageSize, _keyword]}
 				/>
 			</WrapperScrollbar>
+
+			<Dialog
+				type='primary'
+				open={!!uuidSendBack}
+				icon={icons.question_1}
+				onClose={() => setUuidSendBack('')}
+				title={'Gửi lại báo cáo'}
+				note={'Bạn có chắc chắn muốn xác nhận gửi lại báo cáo này không?'}
+				onSubmit={funcSendBackReport.mutate}
+			/>
 		</div>
 	);
 }
