@@ -123,11 +123,15 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								},
 								{
 									id: STATE_REPORT.REPORTED,
-									name: 'Đã báo cáo',
+									name: 'Đã duyệt',
 								},
 								{
 									id: STATE_REPORT.IN_PROGRESS,
 									name: 'Đang thực hiện',
+								},
+								{
+									id: STATE_REPORT.PENDING_APPROVAL,
+									name: 'Đã báo cáo',
 								},
 							]}
 						/>
@@ -243,7 +247,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											},
 											{
 												state: STATE_REPORT.REPORTED,
-												text: 'Đã báo cáo',
+												text: 'Đã duyệt',
 												textColor: '#fff',
 												backgroundColor: '#16C1F3',
 											},
@@ -252,6 +256,12 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 												text: 'Đang thực hiện',
 												textColor: '#fff',
 												backgroundColor: '#FF852C',
+											},
+											{
+												state: STATE_REPORT.PENDING_APPROVAL,
+												text: 'Đã báo cáo',
+												textColor: '#fff',
+												backgroundColor: '#06D7A0',
 											},
 										]}
 									/>

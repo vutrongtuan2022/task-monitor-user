@@ -15,6 +15,7 @@ import Table from '~/components/common/Table';
 import Tippy from '@tippyjs/react';
 import {useCallback, useMemo, useState} from 'react';
 import reportServices from '~/services/reportServices';
+import Loading from '~/components/common/Loading';
 
 function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 	const router = useRouter();
@@ -74,12 +75,12 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 
 	// Xử lý trạng thái checked của row (item)
 	const handleIsCheckedRow = (data: any) => {
-		return listWorkChecked.some((v) => v?.activityUuid == data?.activityUuid);
+		return listWorkChecked?.some((v) => v?.activityUuid == data?.activityUuid);
 	};
 
 	// Xử lý trạng thái checked all
 	const isCheckedAll = useMemo(() => {
-		return listWorkReport.every((v: any) => {
+		return listWorkReport?.every((v: any) => {
 			return listWorkChecked?.some((x: any) => x?.activityUuid == v?.activityUuid);
 		});
 	}, [listWorkReport, listWorkChecked]);
@@ -92,9 +93,9 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 				msgSuccess: 'Xác nhận báo cáo thành công!',
 				http: reportServices.userSendReport({
 					reportUuid: _uuidDigitize as string,
-					activityDigitalState: listWorkChecked?.map((v) => ({
+					activityDigitalState: listWorkReport?.map((v: any) => ({
 						activityUuid: v?.activityUuid,
-						stateNote: 1,
+						stateNote: listWorkChecked.some((x) => x.activityUuid == v.activityUuid) ? 1 : 0,
 					})),
 				}),
 			});
@@ -109,6 +110,7 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcSendReport.isLoading} />
 			<div className={styles.head}>
 				<h4 className={styles.title}>Xác nhận báo cáo công việc</h4>
 				<div className={styles.group_button}>
@@ -119,7 +121,7 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 					</div>
 
 					<div className={styles.btn}>
-						<Button p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
+						<Button p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />} onClick={funcSendReport.mutate}>
 							Xác nhận
 						</Button>
 					</div>

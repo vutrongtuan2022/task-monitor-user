@@ -30,6 +30,7 @@ export enum QUERY_KEY {
 	detail_update_contractor_project,
 	detail_progress_fund_project,
 	detail_report_disbursement,
+	detail_report_work,
 }
 
 export enum TYPE_DATE {
@@ -98,11 +99,11 @@ export enum STATE_REPORT_WORK {
 }
 
 export enum STATE_REPORT {
-	REJECTED,
-	REPORTED,
-	PLANNING,
-	PENDING_APPROVAL,
-	IN_PROGRESS,
+	REJECTED, // Từ chối
+	REPORTED, // Đã duyệt
+	PLANNING, // Lên kế hoạch
+	PENDING_APPROVAL, // Đã báo cáo
+	IN_PROGRESS, // Đang thực hiện
 }
 
 export enum STATE_COMPLETE_REPORT {
