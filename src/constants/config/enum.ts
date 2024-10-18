@@ -9,6 +9,9 @@ export enum QUERY_KEY {
 	table_list_report_work,
 	table_list_report_work_last_month,
 	table_list_report_disbursement,
+	table_overview_report,
+	table_work_report_overview,
+	table_next_plan_report_overview,
 
 	dropdown_branches,
 	dropdown_project,
@@ -31,6 +34,9 @@ export enum QUERY_KEY {
 	detail_progress_fund_project,
 	detail_report_disbursement,
 	detail_report_work,
+	detail_report_overview,
+	detail_project_report_overview,
+	detail_disbursement_report_overview,
 }
 
 export enum TYPE_DATE {

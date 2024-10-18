@@ -79,6 +79,18 @@ const projectFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getProjectFundOverviewReport: (
+		data: {
+			projectUuid: string;
+			month: number;
+			year: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ProjectFund/get-project-fund-for-overview-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default projectFundServices;

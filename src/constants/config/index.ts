@@ -1,4 +1,4 @@
-import {DocumentForward, DocumentText1, ElementEqual, Moneys, Note} from 'iconsax-react';
+import {ArchiveBook, DocumentForward, DocumentText1, ElementEqual, Moneys, Note} from 'iconsax-react';
 import {TYPE_DATE} from './enum';
 
 export const MAXIMUM_FILE = 10; //MB
@@ -41,6 +41,9 @@ export enum PATH {
 	ReportDisbursement = '/report-disbursement',
 	ReportDisbursementCreate = '/report-disbursement/create',
 	ReportDisbursementUpdate = '/report-disbursement/update',
+
+	ReportOverview = '/report-overview',
+	ReportOverviewCreate = '/report-overview/create',
 }
 
 export const Menu: {
@@ -78,6 +81,12 @@ export const Menu: {
 		path: PATH.ReportDisbursement,
 		pathActive: PATH.ReportDisbursement,
 		icon: Moneys,
+	},
+	{
+		title: 'Báo cáo tổng hợp',
+		path: PATH.ReportOverview,
+		pathActive: PATH.ReportOverview,
+		icon: ArchiveBook,
 	},
 ];
 
