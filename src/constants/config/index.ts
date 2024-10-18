@@ -17,8 +17,8 @@ export enum PATH {
 	Login = '/auth/login',
 	ForgotPassword = '/auth/forgot-password',
 
-	ChangePassword = '/change-password',
 	Profile = '/profile',
+	ChangePassword = '/profile?_action=change-password',
 
 	Home = '/',
 
