@@ -198,9 +198,9 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					employeeUuid: users?.map((v: any) => v?.uuid),
 					managerUuid: form?.managerUuid,
 					description: form?.description,
-					expectStart: moment(form?.expectStart).format('YYYY-MM-DD'),
-					expectEnd: moment(form?.expectEnd).format('YYYY-MM-DD'),
-					realStart: moment(form?.realStart).format('YYYY-MM-DD'),
+					expectStart: form.expectStart ? moment(form?.expectStart).format('YYYY-MM-DD') : null,
+					expectEnd: form.expectEnd ? moment(form?.expectEnd).format('YYYY-MM-DD') : null,
+					realStart: form.realStart ? moment(form?.realStart).format('YYYY-MM-DD') : null,
 					matp: form?.matp,
 					maqh: form?.maqh,
 					xaid: form?.xaid,
@@ -225,15 +225,15 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 		if (!form.managerUuid) {
 			return toastWarn({msg: 'Chọn lãnh đạo phụ trách!'});
 		}
-		if (!form?.expectStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
-		}
-		if (!form?.expectEnd) {
-			return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
-		}
-		if (!form?.realStart) {
-			return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
-		}
+		// if (!form?.expectStart) {
+		// 	return toastWarn({msg: 'Chọn thời gian bắt đầu dự kiến!'});
+		// }
+		// if (!form?.expectEnd) {
+		// 	return toastWarn({msg: 'Chọn thời gian kết thúc dự kiến!'});
+		// }
+		// if (!form?.realStart) {
+		// 	return toastWarn({msg: 'Chọn thời gian bắt đầu dự án được phê duyệt!'});
+		// }
 
 		return funcUpdateGeneralProject.mutate();
 	};
@@ -495,7 +495,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-
 									<div>
 										<Select
 											isSearch
