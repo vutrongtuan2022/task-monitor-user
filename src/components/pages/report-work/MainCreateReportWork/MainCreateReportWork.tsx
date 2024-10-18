@@ -25,6 +25,7 @@ import Loading from '~/components/common/Loading';
 
 function MainCreateReportWork({}: PropsMainCreateReportWork) {
 	const router = useRouter();
+	const today = new Date();
 
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -37,7 +38,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		projectUuid: string;
 		description: string;
 	}>({
-		year: null,
+		year: today.getFullYear(),
 		month: null,
 		projectUuid: '',
 		description: '',
