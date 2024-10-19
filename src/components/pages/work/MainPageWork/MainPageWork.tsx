@@ -361,6 +361,15 @@ function MainPageWork({}: PropsMainPageWork) {
 								),
 							},
 							{
+								title: 'Số hóa',
+								render: (data: IWork) => (
+									<>
+										{data?.digitalizedState == 0 && 'Chưa số hóa'}
+										{data?.digitalizedState == 1 && 'Đã số hóa'}
+									</>
+								),
+							},
+							{
 								title: 'Hành động',
 								fixedRight: true,
 								render: (data: IWork) => (

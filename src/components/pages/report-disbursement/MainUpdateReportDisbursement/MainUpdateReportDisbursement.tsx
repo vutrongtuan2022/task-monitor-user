@@ -134,7 +134,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 											blueLinear
 											disable={!isDone || !form.year || !form.month || !form.projectUuid}
 										>
-											Cập nhật
+											Lưu và gửi báo cáo
 										</Button>
 									</div>
 								)}

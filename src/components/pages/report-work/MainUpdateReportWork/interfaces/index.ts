@@ -1,4 +1,4 @@
-export interface PropsMainCreateReportWork {}
+export interface PropsMainUpdateReportWork {}
 
 export interface IActivityRegister {
 	activityUuid: string;

@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 
-import {IActivityRegister, PropsMainCreateReportWork} from './interfaces';
-import styles from './MainCreateReportWork.module.scss';
+import {IActivityRegister, PropsMainUpdateReportWork} from './interfaces';
+import styles from './MainUpdateReportWork.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Select, {Option} from '~/components/common/Select';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import Form from '~/components/common/Form';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
@@ -22,16 +22,20 @@ import {CreateReportWork} from '../context';
 import {toastWarn} from '~/common/funcs/toast';
 import activityServices from '~/services/activityServices';
 import Loading from '~/components/common/Loading';
+import reportServices from '~/services/reportServices';
 
-function MainCreateReportWork({}: PropsMainCreateReportWork) {
+function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
+
 	const today = new Date();
 
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_type} = router.query;
+	const {_type, _uuid} = router.query;
 
+	const [listActivity, setListActivity] = useState<IActivityRegister[]>([]);
 	const [form, setForm] = useState<{
 		year: number | null;
 		month: number | null;
@@ -43,7 +47,44 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		projectUuid: '',
 		description: '',
 	});
-	const [listActivity, setListActivity] = useState<IActivityRegister[]>([]);
+
+	useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: activityServices.getAllActivityReport({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setListActivity(data);
+			}
+		},
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
+
+	useQuery([QUERY_KEY.detail_report_work, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: reportServices.detailReport({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setForm({
+					year: data?.year || today.getFullYear(),
+					month: data?.month || null,
+					projectUuid: data?.project?.uuid || '',
+					description: data?.note || '',
+				});
+			}
+		},
+		enabled: !!_uuid,
+	});
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -58,20 +99,21 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		},
 	});
 
-	const funcRegisterActivitieWithMonth = useMutation({
+	const funcUpdateActivitieWithMonth = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm báo cáo thành công!',
-				http: activityServices.registerActivitieWithMonth({
+				msgSuccess: 'Chỉnh sửa báo cáo thành công!',
+				http: activityServices.updateActivitieWithMonth({
+					reportUuid: _uuid as string,
 					reportTitle: '',
 					branchFeedback: '',
 					year: form.year!,
 					month: form.month!,
 					projectUuid: form.projectUuid,
 					reportNote: form.description,
-					listActivityForMonthlyRegister: listActivity?.map((v) => ({
+					listActivityForModify: listActivity?.map((v) => ({
 						...v,
 						parentTaskUuid: v?.parentTaskUuid || null,
 					})),
@@ -80,7 +122,9 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 		},
 		onSuccess(data) {
 			if (data) {
-				router.back();
+				queryClient.invalidateQueries([QUERY_KEY.table_list_modify_work_report]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_report_work]);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report_work_last_month]);
 			}
 		},
 	});
@@ -90,12 +134,12 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 			return toastWarn({msg: 'Vui lòng thêm công việc báo cáo!'});
 		}
 
-		return funcRegisterActivitieWithMonth.mutate();
+		return funcUpdateActivitieWithMonth.mutate();
 	};
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcRegisterActivitieWithMonth.isLoading} />
+			<Loading loading={funcUpdateActivitieWithMonth.isLoading} />
 			<Breadcrumb
 				listUrls={[
 					{
@@ -104,7 +148,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 					},
 					{
 						path: '',
-						title: 'Thêm mới báo cáo',
+						title: 'Chỉnh sửa báo cáo',
 					},
 				]}
 				action={
@@ -127,7 +171,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 							disable={!form.year || !form.month || !form.projectUuid}
 							onClick={handleSubmit}
 						>
-							Lưu lại
+							Cập nhật
 						</Button>
 					</div>
 				}
@@ -267,4 +311,4 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 	);
 }
 
-export default MainCreateReportWork;
+export default MainUpdateReportWork;

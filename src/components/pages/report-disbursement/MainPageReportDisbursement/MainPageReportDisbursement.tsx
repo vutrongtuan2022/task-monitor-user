@@ -91,7 +91,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							listFilter={[
 								{
 									id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
-									name: 'Chưa xử lý',
+									name: 'Đã báo cáo',
 								},
 								{
 									id: STATE_REPORT_DISBURSEMENT.APPROVED,
@@ -225,13 +225,13 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										{data.approved == STATE_REPORT_DISBURSEMENT.REJECTED ? (
 											<>
-												<IconCustom
+												{/* <IconCustom
 													color='#FF852C'
 													type='edit'
 													icon={<DocumentForward fontSize={20} fontWeight={600} />}
 													tooltip='Gửi lại'
 													onClick={() => setUuidSendBack(data.uuid)}
-												/>
+												/> */}
 												<IconCustom
 													color='#16C1F3'
 													type='edit'

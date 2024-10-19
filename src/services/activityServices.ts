@@ -49,21 +49,6 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	getActivityLastMonth: (
-		data: {
-			pageSize: number;
-			page: number;
-			keyword: string;
-			status: number;
-			projectUuid: string;
-			state: number | null;
-		},
-		tokenAxios?: any
-	) => {
-		return axiosClient.post(`/Activity/get-page-list-user-activity-last-month`, data, {
-			cancelToken: tokenAxios,
-		});
-	},
 	getActivityRegister: (
 		data: {
 			pageSize: number;
@@ -107,6 +92,34 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	updateActivitieWithMonth: (
+		data: {
+			reportUuid: string;
+			projectUuid: string;
+			reportTitle: string;
+			reportNote: string;
+			branchFeedback: string;
+			year: number;
+			month: number;
+			listActivityForModify: {
+				activityUuid: string;
+				name: string;
+				parent: {
+					uuid: string;
+					name: string;
+				};
+				stage: number;
+				megaType: string;
+				isInWorkFlow: boolean;
+				state: number;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/modify-activities-in-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	getAllActivityReport: (
 		data: {
 			uuid: string;
@@ -117,7 +130,22 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	listActyvityLastMonth: (
+	listActivityLastMonthByProject: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number | null;
+			state: number | null;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-page-list-user-activity-last-month-by-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	listActivityLastMonth: (
 		data: {
 			pageSize: number;
 			page: number;
@@ -157,10 +185,23 @@ const activityServices = {
 			projectUuid: string;
 			month: number | null;
 			year: number | null;
+			type: 0 | 1;
 		},
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Activity/get-page-list-activity-last-month`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	categoryTaskByProject: (
+		data: {
+			status: number;
+			stage: number;
+			projectUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/category-task-by-project-uuid`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

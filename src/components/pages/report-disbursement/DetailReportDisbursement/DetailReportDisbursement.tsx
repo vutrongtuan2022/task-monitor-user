@@ -63,7 +63,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									},
 									{
 										state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
-										text: 'Chưa xử lý',
+										text: 'Đã báo cáo',
 										textColor: '#FFFFFF',
 										backgroundColor: '#4BC9F0',
 									},

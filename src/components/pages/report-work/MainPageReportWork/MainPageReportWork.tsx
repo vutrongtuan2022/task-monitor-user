@@ -320,7 +320,9 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 										) : null}
 
 										{/* Trạng thái Đang lên kế hoạch + Đã từ chối */}
-										{data?.state == STATE_REPORT.PLANNING || data?.state == STATE_REPORT.REJECTED ? (
+										{data?.state == STATE_REPORT.PLANNING ||
+										data?.state == STATE_REPORT.IN_PROGRESS ||
+										data?.state == STATE_REPORT.REJECTED ? (
 											<IconCustom
 												type='edit'
 												icon={<Edit fontSize={20} fontWeight={600} />}

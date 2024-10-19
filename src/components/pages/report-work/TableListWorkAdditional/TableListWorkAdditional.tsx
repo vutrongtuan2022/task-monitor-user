@@ -9,10 +9,13 @@ import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import {CreateReportWork, ICreateReportWork} from '../context';
-import {STATE_WORK_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_WORK_PROJECT, STATUS_CONFIG} from '~/constants/config/enum';
+import {useQuery} from '@tanstack/react-query';
+import activityServices from '~/services/activityServices';
+import {httpRequest} from '~/services';
 
 function TableListWorkAdditional({onClose}: PropsTableListWorkAdditional) {
-	const {listActivity, setListActivity} = useContext<ICreateReportWork>(CreateReportWork);
+	const {listActivity, setListActivity, projectUuid} = useContext<ICreateReportWork>(CreateReportWork);
 
 	const stages = [
 		{
@@ -28,12 +31,32 @@ function TableListWorkAdditional({onClose}: PropsTableListWorkAdditional) {
 			name: 'Giai đoạn kết thúc đầu tư',
 		},
 	];
+
 	const [form, setForm] = useState<{
 		stage: number | null;
 		name: string;
+		parentTaskUuid: string;
+		parentTaskName: string;
 	}>({
 		stage: null,
 		name: '',
+		parentTaskUuid: '',
+		parentTaskName: '',
+	});
+
+	const {data: listTasks} = useQuery([QUERY_KEY.dropdown_task_report, form.stage, projectUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: activityServices.categoryTaskByProject({
+					status: STATUS_CONFIG.ACTIVE,
+					stage: form.stage!,
+					projectUuid: projectUuid,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!projectUuid && !!form.stage,
 	});
 
 	const handleSaveWork = () => {
@@ -41,7 +64,11 @@ function TableListWorkAdditional({onClose}: PropsTableListWorkAdditional) {
 			{
 				activityUuid: '',
 				name: form?.name,
-				parent: null,
+				parent: {
+					uuid: form.parentTaskUuid,
+					name: form.parentTaskName,
+				},
+				parentTaskUuid: form.parentTaskUuid,
 				stage: form?.stage,
 				megaType: '',
 				isInWorkFlow: false,
@@ -77,6 +104,33 @@ function TableListWorkAdditional({onClose}: PropsTableListWorkAdditional) {
 									setForm((prev) => ({
 										...prev,
 										stage: v.stage,
+									}))
+								}
+							/>
+						))}
+					</Select>
+					<Select
+						isSearch={true}
+						label={
+							<span>
+								Thuộc công việc cha (task) <span style={{color: 'red'}}>*</span>
+							</span>
+						}
+						name='parentTaskUuid'
+						value={form.parentTaskUuid}
+						placeholder='Chọn'
+						readOnly={!form.stage}
+					>
+						{listTasks?.map((v: any) => (
+							<Option
+								key={v.uuid}
+								value={v.uuid}
+								title={v.name}
+								onClick={() =>
+									setForm((prev) => ({
+										...prev,
+										parentTaskUuid: v?.uuid,
+										parentTaskName: v?.name,
 									}))
 								}
 							/>

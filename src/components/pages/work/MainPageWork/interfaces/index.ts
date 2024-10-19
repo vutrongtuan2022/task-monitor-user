@@ -26,4 +26,5 @@ export interface IWork {
 	deadlineState: number;
 	dayDelayed: number;
 	stage: number;
+	digitalizedState: number;
 }
