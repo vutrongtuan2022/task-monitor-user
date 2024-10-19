@@ -220,6 +220,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 										type='delete'
 										icon={<Trash fontSize={20} fontWeight={600} />}
 										tooltip='Xóa bỏ'
+										disnable={data.state == STATE_WORK_PROJECT.PROCESSING}
 										onClick={() => {
 											setListActivity(listActivity?.filter((_v, i) => i != index));
 										}}

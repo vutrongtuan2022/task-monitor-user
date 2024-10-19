@@ -24,6 +24,7 @@ import PlanReportOverview from './components/PlanReportOverview';
 
 function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 	const router = useRouter();
+	const today = new Date();
 
 	const {_type} = router.query;
 
@@ -35,7 +36,7 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 		month: number | null;
 		projectUuid: string;
 	}>({
-		year: null,
+		year: today.getFullYear(),
 		month: null,
 		projectUuid: '',
 	});
