@@ -107,7 +107,7 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	});
 
 	const updateBudgetProject = () => {
-		if (form?.annual?.some((v) => !v?.budget || !v?.year)) {
+		if (form?.annual?.some((v) => price(v?.budget) == 0 || !v?.year)) {
 			return toastWarn({msg: 'Nhập đầy đủ kế hoạch vốn theo năm!'});
 		}
 
@@ -209,21 +209,7 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
-									<Input
-										label={
-											<span>
-												Tổng dự toán <span style={{color: 'red'}}>*</span>
-											</span>
-										}
-										unit='VNĐ'
-										type='text'
-										placeholder='Nhập tổng dự toán'
-										name='realBudget'
-										value={form?.realBudget}
-										isRequired={true}
-										blur={true}
-										isMoney={true}
-									/>
+
 									<div>
 										<Input
 											label={
@@ -241,6 +227,17 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
+
+									<Input
+										label={<span>Tổng dự toán</span>}
+										unit='VNĐ'
+										type='text'
+										placeholder='Nhập tổng dự toán'
+										name='realBudget'
+										value={form?.realBudget}
+										blur={true}
+										isMoney={true}
+									/>
 								</GridColumn>
 								<div className={clsx(styles.mt)}>
 									<GridColumn col_2>
