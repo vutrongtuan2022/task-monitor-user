@@ -140,7 +140,11 @@ function DetailReportWork({}: PropsDetailReportWork) {
 							<div className={styles.item}>
 								<p>Ngày gửi báo cáo</p>
 								<p>
-									<Moment date={detailReportWork?.completed} format='DD/MM/YYYY' />
+									{detailReportWork?.completed ? (
+										<Moment date={detailReportWork?.completed} format='DD/MM/YYYY' />
+									) : (
+										'---'
+									)}
 								</p>
 							</div>
 							<div className={styles.item}>

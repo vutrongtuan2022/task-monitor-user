@@ -84,8 +84,8 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 									title: 'Loại công việc',
 									render: (data: IWorkReportOverview) => (
 										<>
-											{data?.isInWorkFlow && 'Có kế hoạch'}
-											{!data?.isInWorkFlow && 'Phát sinh'}
+											{data?.isWorkFlow && 'Có kế hoạch'}
+											{!data?.isWorkFlow && 'Phát sinh'}
 										</>
 									),
 								},

@@ -26,5 +26,5 @@ export interface IPlanReportOverview {
 	deadlineStage: number;
 	digitalization: number;
 	uuid: string;
-	isInWorkFlow: boolean;
+	isWorkFlow: number;
 }

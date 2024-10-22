@@ -188,10 +188,10 @@ function MainPageWork({}: PropsMainPageWork) {
 									id: STATE_REPORT_WORK.PROCESSING,
 									name: 'Đang xử lý',
 								},
-								// {
-								// 	id: STATE_REPORT_WORK.COMPLETED,
-								// 	name: 'Đã hoàn thành',
-								// },
+								{
+									id: STATE_REPORT_WORK.COMPLETED,
+									name: 'Đã hoàn thành',
+								},
 							]}
 						/>
 					</div>
@@ -297,7 +297,11 @@ function MainPageWork({}: PropsMainPageWork) {
 							},
 							{
 								title: 'Khó khăn vướng mắc',
-								render: (data: IWork) => <>{data?.issue || '---'}</>,
+								render: (data: IWork) => (
+									<Tippy content={data?.issue || '---'}>
+										<p className={styles.issue}>{data?.issue || '---'}</p>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Tiến độ công việc',

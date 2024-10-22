@@ -481,21 +481,6 @@ function CreateProject({}: PropsCreateProject) {
 									value={form?.totalInvest}
 									unit='VND'
 								/>
-								<Input
-									label={
-										<span>
-											Tổng dự toán <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									type='text'
-									placeholder='Nhập tổng dự toán'
-									isMoney
-									name='realBudget'
-									value={form?.realBudget}
-									isRequired={true}
-									blur={true}
-									unit='VND'
-								/>
 
 								<Input
 									label={
@@ -509,6 +494,17 @@ function CreateProject({}: PropsCreateProject) {
 									name='reserveBudget'
 									value={form?.reserveBudget}
 									isRequired={true}
+									blur={true}
+									unit='VND'
+								/>
+
+								<Input
+									label={<span>Tổng dự toán</span>}
+									type='text'
+									placeholder='Nhập tổng dự toán'
+									isMoney
+									name='realBudget'
+									value={form?.realBudget}
 									blur={true}
 									unit='VND'
 								/>
