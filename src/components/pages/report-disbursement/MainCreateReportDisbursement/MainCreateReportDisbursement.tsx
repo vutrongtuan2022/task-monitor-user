@@ -33,7 +33,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		description: string;
 	}>({
 		year: today.getFullYear(),
-		month: null,
+		month: today.getMonth() + 1,
 		projectUuid: '',
 		budget: 0,
 		description: '',
