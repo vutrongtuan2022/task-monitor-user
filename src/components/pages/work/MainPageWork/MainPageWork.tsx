@@ -264,6 +264,10 @@ function MainPageWork({}: PropsMainPageWork) {
 								render: (data: IWork) => <>{data?.project?.name}</>,
 							},
 							{
+								title: 'Megatype',
+								render: (data: IWork) => <>{data?.megatype || '---'}</>,
+							},
+							{
 								title: 'Tên công việc',
 								render: (data: IWork) => (
 									<Tippy content={data?.activity?.name}>
@@ -282,10 +286,7 @@ function MainPageWork({}: PropsMainPageWork) {
 									</>
 								),
 							},
-							{
-								title: 'Megatype',
-								render: (data: IWork) => <>{data?.megatype || '---'}</>,
-							},
+
 							{
 								title: 'Loại công việc',
 								render: (data: IWork) => (
@@ -392,7 +393,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												<IconCustom
 													color='#2970FF'
 													icon={<PenAdd fontSize={20} fontWeight={600} />}
-													tooltip='Nhập KKVM'
+													tooltip='Nhập khó khăn vướng mắc'
 													onClick={() => {
 														setUuidIssue(data?.activity?.uuid);
 														setForm({
