@@ -61,9 +61,20 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 
 		const updateParentSelection = (node: ITreeCreateReport) => {
 			let parent = findParentNode(node);
-
 			while (parent) {
 				newSelectedNodes.add(parent);
+				parent = findParentNode(parent);
+			}
+		};
+
+		const removeUnselectedParents = (node: ITreeCreateReport) => {
+			let parent = findParentNode(node);
+			while (parent) {
+				const parentChildren = parent.children;
+				const hasSelectedChild = parentChildren.some((child) => newSelectedNodes.has(child));
+				if (!hasSelectedChild) {
+					newSelectedNodes.delete(parent);
+				}
 				parent = findParentNode(parent);
 			}
 		};
@@ -73,6 +84,7 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 			updateParentSelection(node);
 		} else {
 			deselectNodeAndChildren(node);
+			removeUnselectedParents(node);
 		}
 
 		setSelectedNodes(Array.from(newSelectedNodes) as ITreeCreateReport[]);
