@@ -1,6 +1,4 @@
-export interface PropsTableReportWorkLastMonth {
-	projectUuid: string;
-}
+export interface PropsTableReportWorkLastMonth {}
 
 export interface IReportWorkLastMonth {
 	activity: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {IReportWorkLastMonth, PropsTableReportWorkLastMonth} from './interfaces';
 import styles from './TableReportWorkLastMonth.module.scss';
@@ -16,30 +16,36 @@ import Tippy from '@tippyjs/react';
 import Table from '~/components/common/Table';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Progress from '~/components/common/Progress';
+import {CreateReportWork, ICreateReportWork} from '../context';
 
-function TableReportWorkLastMonth({projectUuid}: PropsTableReportWorkLastMonth) {
+function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 	const router = useRouter();
 
 	const {_page, _pageSize, _keyword, _state} = router.query;
 
+	const {month, year, projectUuid} = useContext<ICreateReportWork>(CreateReportWork);
+
 	const {data: listReportLastMonth, isFetching} = useQuery(
-		[QUERY_KEY.table_list_report_work_last_month, _page, _pageSize, _keyword, _state, projectUuid],
+		[QUERY_KEY.table_list_report_work_last_month, _page, _pageSize, _keyword, _state, projectUuid, month, year],
 		{
 			queryFn: () =>
 				httpRequest({
-					http: activityServices.listActivityLastMonthByProject({
+					http: activityServices.getListActivityLastMonth({
 						page: Number(_page) || 1,
 						pageSize: Number(_pageSize) || 20,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
 						state: !!_state ? Number(_state) : null,
-						uuid: projectUuid,
+						projectUuid: projectUuid,
+						type: 0,
+						month: month! - 1 == 0 ? 12 : month! - 1,
+						year: month! - 1 == 0 ? year! - 1 : year!,
 					}),
 				}),
 			select(data) {
 				return data;
 			},
-			enabled: !!projectUuid,
+			enabled: !!projectUuid && !!month && !!year,
 		}
 	);
 

@@ -5,6 +5,7 @@ export enum QUERY_KEY {
 	table_list_project_fund,
 	table_list_work,
 	table_list_work_project,
+	table_tree_work_project,
 	table_list_work_report,
 	table_list_modify_work_report,
 	table_list_report_work,

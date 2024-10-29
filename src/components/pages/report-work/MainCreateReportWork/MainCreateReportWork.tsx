@@ -254,9 +254,11 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 									projectUuid: form.projectUuid,
 									listActivity: listActivity,
 									setListActivity: setListActivity,
+									month: form.month,
+									year: form.year,
 								}}
 							>
-								{!_type && <TableReportWorkLastMonth projectUuid={form.projectUuid} />}
+								{!_type && <TableReportWorkLastMonth />}
 								{_type == 'report' && <TableReportWorkCurrent />}
 							</CreateReportWork.Provider>
 						</div>

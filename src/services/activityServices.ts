@@ -205,6 +205,16 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	treeActivitiesForRegister: (
+		data: {
+			projectUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-activities-tree-view-for-register`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default activityServices;
