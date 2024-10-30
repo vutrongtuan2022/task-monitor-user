@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {IActivityRegister, PropsMainUpdateReportWork} from './interfaces';
+import {IActivityUpdate, PropsMainUpdateReportWork} from './interfaces';
 import styles from './MainUpdateReportWork.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
@@ -16,13 +16,13 @@ import TextArea from '~/components/common/Form/components/TextArea';
 import clsx from 'clsx';
 import TabNavLink from '~/components/common/TabNavLink';
 import {useRouter} from 'next/router';
-import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
-import TableReportWorkCurrent from '../TableReportWorkCurrent';
-import {CreateReportWork} from '../context';
 import {toastWarn} from '~/common/funcs/toast';
 import activityServices from '~/services/activityServices';
 import Loading from '~/components/common/Loading';
 import reportServices from '~/services/reportServices';
+import {UpdateReportWork} from './context';
+import TableWorkLastMonthUpdate from './components/TableWorkLastMonthUpdate';
+import TableWorkCurrentUpdate from './components/TableWorkCurrentUpdate';
 
 function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 	const router = useRouter();
@@ -35,7 +35,8 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 
 	const {_type, _uuid} = router.query;
 
-	const [listActivity, setListActivity] = useState<IActivityRegister[]>([]);
+	const [listActivity, setListActivity] = useState<IActivityUpdate[]>([]);
+
 	const [form, setForm] = useState<{
 		year: number | null;
 		month: number | null;
@@ -48,38 +49,38 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 		description: '',
 	});
 
-	// useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: activityServices.getAllActivityReport({
-	// 				uuid: _uuid as string,
-	// 			}),
-	// 		}),
-	// 	onSuccess(data) {
-	// 		if (data) {
-	// 			setListActivity(
-	// 				data?.map((v: any) => ({
-	// 					activityUuid: v?.activityUuid,
-	// 					reportUuid: v?.reportUuid,
-	// 					activityReportUuid: v?.activityReportUuid,
-	// 					name: v?.name,
-	// 					parent: v?.parent || null,
-	// 					stage: v?.stage,
-	// 					digitalizedState: v?.digitalizedState,
-	// 					megaType: v?.megaType || '',
-	// 					isInWorkFlow: v?.isInWorkFlow,
-	// 					state: v?.state,
-	// 					completeState: v?.completeState,
-	// 					children: [],
-	// 				}))
-	// 			);
-	// 		}
-	// 	},
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!_uuid,
-	// });
+	useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: activityServices.getAllActivityReport({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setListActivity(
+					data?.map((v: any) => ({
+						activityUuid: v?.activityUuid,
+						reportUuid: v?.reportUuid,
+						activityReportUuid: v?.activityReportUuid,
+						name: v?.name,
+						parent: v?.parent || null,
+						stage: v?.stage,
+						digitalizedState: v?.digitalizedState,
+						megaType: v?.megaType || '',
+						isInWorkFlow: v?.isInWorkFlow,
+						state: v?.state,
+						completeState: v?.completeState,
+						children: [],
+					}))
+				);
+			}
+		},
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
 
 	useQuery([QUERY_KEY.detail_report_work, _uuid], {
 		queryFn: () =>
@@ -159,8 +160,6 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 
 		return funcUpdateActivitieWithMonth.mutate();
 	};
-
-	console.log(listActivity);
 
 	return (
 		<div className={styles.container}>
@@ -318,7 +317,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 							<h4>Danh sách công việc</h4>
 						</div>
 						<div className={styles.main_table}>
-							<CreateReportWork.Provider
+							<UpdateReportWork.Provider
 								value={{
 									projectUuid: form.projectUuid,
 									listActivity: listActivity,
@@ -327,9 +326,9 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 									year: form.year,
 								}}
 							>
-								{!_type && <TableReportWorkLastMonth />}
-								{_type == 'report' && <TableReportWorkCurrent />}
-							</CreateReportWork.Provider>
+								{!_type && <TableWorkLastMonthUpdate />}
+								{_type == 'report' && <TableWorkCurrentUpdate />}
+							</UpdateReportWork.Provider>
 						</div>
 					</div>
 				</Form>

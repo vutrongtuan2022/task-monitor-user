@@ -1,6 +1,6 @@
 export interface PropsMainUpdateReportWork {}
 
-export interface IActivityRegister {
+export interface IActivityUpdate {
 	identify: string;
 	activityUuid: string;
 	name: string;
@@ -18,5 +18,5 @@ export interface IActivityRegister {
 	megaType: string;
 	stage: number;
 	isInWorkFlow: boolean;
-	children: IActivityRegister[];
+	children: IActivityUpdate[];
 }

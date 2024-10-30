@@ -16,12 +16,12 @@ import TextArea from '~/components/common/Form/components/TextArea';
 import clsx from 'clsx';
 import TabNavLink from '~/components/common/TabNavLink';
 import {useRouter} from 'next/router';
-import TableReportWorkLastMonth from '../TableReportWorkLastMonth';
-import TableReportWorkCurrent from '../TableReportWorkCurrent';
-import {CreateReportWork} from '../context';
+import TableWorkCurrentCreate from './components/TableWorkCurrentCreate';
+import {CreateReportWork} from './context';
 import {toastWarn} from '~/common/funcs/toast';
 import activityServices from '~/services/activityServices';
 import Loading from '~/components/common/Loading';
+import TableWorkLastMonthCreate from './components/TableWorkLastMonthCreate';
 
 function MainCreateReportWork({}: PropsMainCreateReportWork) {
 	const router = useRouter();
@@ -265,8 +265,8 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 									year: form.year,
 								}}
 							>
-								{!_type && <TableReportWorkLastMonth />}
-								{_type == 'report' && <TableReportWorkCurrent />}
+								{!_type && <TableWorkLastMonthCreate />}
+								{_type == 'report' && <TableWorkCurrentCreate />}
 							</CreateReportWork.Provider>
 						</div>
 					</div>
