@@ -48,23 +48,38 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 		description: '',
 	});
 
-	useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
-		queryFn: () =>
-			httpRequest({
-				http: activityServices.getAllActivityReport({
-					uuid: _uuid as string,
-				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setListActivity(data);
-			}
-		},
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
+	// useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: activityServices.getAllActivityReport({
+	// 				uuid: _uuid as string,
+	// 			}),
+	// 		}),
+	// 	onSuccess(data) {
+	// 		if (data) {
+	// 			setListActivity(
+	// 				data?.map((v: any) => ({
+	// 					activityUuid: v?.activityUuid,
+	// 					reportUuid: v?.reportUuid,
+	// 					activityReportUuid: v?.activityReportUuid,
+	// 					name: v?.name,
+	// 					parent: v?.parent || null,
+	// 					stage: v?.stage,
+	// 					digitalizedState: v?.digitalizedState,
+	// 					megaType: v?.megaType || '',
+	// 					isInWorkFlow: v?.isInWorkFlow,
+	// 					state: v?.state,
+	// 					completeState: v?.completeState,
+	// 					children: [],
+	// 				}))
+	// 			);
+	// 		}
+	// 	},
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!_uuid,
+	// });
 
 	useQuery([QUERY_KEY.detail_report_work, _uuid], {
 		queryFn: () =>
@@ -113,10 +128,17 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 					month: form.month!,
 					projectUuid: form.projectUuid,
 					reportNote: form.description,
-					listActivityForModify: listActivity?.map((v) => ({
-						...v,
-						parentTaskUuid: v?.parentTaskUuid || null,
-					})),
+					listActivityForModify: listActivity
+						?.filter((v) => v?.activityUuid != '1' && v?.activityUuid != '2' && v?.activityUuid != '3') // Không lấy những activity là giai đoạn (I, II, III)
+						?.map(({children, ...v}) => ({
+							activityUuid: v?.activityUuid,
+							isInWorkFlow: true,
+							megaType: v?.megaType,
+							name: v?.name,
+							parent: v?.parent,
+							stage: v?.stage,
+							state: v?.state,
+						})),
 				}),
 			});
 		},
@@ -125,6 +147,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 				queryClient.invalidateQueries([QUERY_KEY.table_list_modify_work_report]);
 				queryClient.invalidateQueries([QUERY_KEY.detail_report_work]);
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report_work_last_month]);
+				queryClient.invalidateQueries([QUERY_KEY.table_tree_work_project]);
 			}
 		},
 	});
@@ -136,6 +159,8 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 
 		return funcUpdateActivitieWithMonth.mutate();
 	};
+
+	console.log(listActivity);
 
 	return (
 		<div className={styles.container}>
@@ -298,9 +323,11 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 									projectUuid: form.projectUuid,
 									listActivity: listActivity,
 									setListActivity: setListActivity,
+									month: form.month,
+									year: form.year,
 								}}
 							>
-								{!_type && <TableReportWorkLastMonth projectUuid={form.projectUuid} />}
+								{!_type && <TableReportWorkLastMonth />}
 								{_type == 'report' && <TableReportWorkCurrent />}
 							</CreateReportWork.Provider>
 						</div>

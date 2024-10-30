@@ -1,30 +1,30 @@
 export interface PropsTableReportWorkLastMonth {}
 
 export interface IReportWorkLastMonth {
-	activity: {
+	categoryTask: {
 		name: string;
-		state: number;
 		uuid: string;
 	};
-	project: {
+	categoryProject: {
 		code: string;
 		name: string;
 		state: number;
 		uuid: string;
 	};
-	isInWorkFlow: boolean;
-	month: number;
-	year: number;
-	issue: string;
-	progress: number;
+	name: string;
+	state: number;
+	stage: number | null;
+	status: number;
+	megatype: string | null;
 	reporter: {
 		fullname: string;
 		code: string;
 		uuid: string;
 	};
-	megatype: string;
-	deadlineState: number;
-	dayDelayed: number;
-	stage: number;
-	digitalizedState: number;
+	activityType: number;
+	deadline: string;
+	deadlineStage: number;
+	digitalization: number;
+	uuid: string;
+	isWorkFlow: number;
 }

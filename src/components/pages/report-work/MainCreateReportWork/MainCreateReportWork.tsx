@@ -71,10 +71,17 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 					month: form.month!,
 					projectUuid: form.projectUuid,
 					reportNote: form.description,
-					listActivityForMonthlyRegister: listActivity?.map((v) => ({
-						...v,
-						parentTaskUuid: v?.parentTaskUuid || null,
-					})),
+					listActivityForMonthlyRegister: listActivity
+						?.filter((v) => v?.activityUuid != '1' && v?.activityUuid != '2' && v?.activityUuid != '3') // Không lấy những activity là giai đoạn (I, II, III)
+						?.map(({children, ...v}) => ({
+							activityUuid: v?.activityUuid,
+							isInWorkFlow: true,
+							megaType: v?.megaType,
+							name: v?.name,
+							parent: v?.parent,
+							stage: v?.stage,
+							state: v?.state,
+						})),
 				}),
 			});
 		},

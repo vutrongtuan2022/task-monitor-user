@@ -1,9 +1,9 @@
-import {ITreeCreateReport} from '../../TableListWorkChecked/interfaces';
+import {IActivityRegister} from '../../MainCreateReportWork/interfaces';
 
 export interface PropsTreeReportWork {
-	activity: ITreeCreateReport;
+	activity: IActivityRegister;
 	level: number;
 	index: number;
 	isChecked: (nodeId: string) => boolean;
-	toggleNode: (node: ITreeCreateReport, checked: boolean) => void;
+	toggleNode: (node: IActivityRegister, checked: boolean) => void;
 }

@@ -79,7 +79,7 @@ const activityServices = {
 				parent: {
 					uuid: string;
 					name: string;
-				};
+				} | null;
 				stage: number;
 				megaType: string;
 				isInWorkFlow: boolean;
@@ -107,7 +107,7 @@ const activityServices = {
 				parent: {
 					uuid: string;
 					name: string;
-				};
+				} | null;
 				stage: number;
 				megaType: string;
 				isInWorkFlow: boolean;

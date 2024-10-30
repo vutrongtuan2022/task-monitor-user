@@ -90,35 +90,22 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 							render: (data: IReportWorkLastMonth, index: number) => <>{index + 1}</>,
 						},
 						{
-							title: 'Tháng báo cáo',
-							fixedLeft: true,
-							render: (data: IReportWorkLastMonth) => (
-								<>
-									Tháng <span>{data?.month}</span> - <span>{data?.year}</span>
-								</>
-							),
-						},
-						{
-							title: 'Tên công trình',
-							render: (data: IReportWorkLastMonth) => <>{data?.project?.name}</>,
-						},
-						{
 							title: 'Tên công việc',
-							render: (data: IReportWorkLastMonth) => (
-								<Tippy content={data?.activity?.name}>
-									<p className={styles.name}>{data?.activity?.name}</p>
+							render: (data: IReportWorkLastMonth, index: number) => (
+								<Tippy content={data?.name || '---'}>
+									<p className={styles.name}>{data?.name || '---'}</p>
 								</Tippy>
 							),
 						},
 						{
 							title: 'Giai đoạn thực hiện',
 							render: (data: IReportWorkLastMonth) => (
-								<>
-									{data?.stage == -1 || (!data?.stage && '---')}
+								<span style={{color: '#2970FF'}}>
+									{!data?.stage && '---'}
 									{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 									{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
-									{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
-								</>
+									{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư xây dựng'}
+								</span>
 							),
 						},
 						{
@@ -129,41 +116,34 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 							title: 'Loại công việc',
 							render: (data: IReportWorkLastMonth) => (
 								<>
-									{!data?.isInWorkFlow && 'Phát sinh'}
-									{data?.isInWorkFlow && 'Có kế hoạch'}
+									{data?.isWorkFlow === 1 && 'Có kế hoạch'}
+									{data?.isWorkFlow === 0 && 'Phát sinh'}
 								</>
 							),
 						},
 						{
-							title: 'Khó khăn vướng mắc',
-							render: (data: IReportWorkLastMonth) => <>{data?.issue || '---'}</>,
-						},
-						{
-							title: 'Tiến độ công việc',
-							render: (data: IReportWorkLastMonth) => <Progress percent={data?.progress} width={80} />,
-						},
-						{
 							title: 'Trạng thái',
+							fixedRight: true,
 							render: (data: IReportWorkLastMonth) => (
 								<StateActive
-									stateActive={data?.activity?.state}
+									stateActive={data?.state}
 									listState={[
 										{
 											state: STATE_REPORT_WORK.NOT_PROCESSED,
 											text: 'Chưa xử lý',
-											textColor: '#fff',
+											textColor: '#FFFFFF',
 											backgroundColor: '#F37277',
 										},
 										{
 											state: STATE_REPORT_WORK.PROCESSING,
 											text: 'Đang xử lý',
-											textColor: '#fff',
-											backgroundColor: '#16C1F3',
+											textColor: '#FFFFFF',
+											backgroundColor: '#4BC9F0',
 										},
 										{
 											state: STATE_REPORT_WORK.COMPLETED,
 											text: 'Đã hoàn thành',
-											textColor: '#fff',
+											textColor: '#FFFFFF',
 											backgroundColor: '#06D7A0',
 										},
 									]}
@@ -175,7 +155,7 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 							render: (data: IReportWorkLastMonth) => (
 								<StateActive
 									isBox={false}
-									stateActive={data?.deadlineState}
+									stateActive={data?.deadlineStage}
 									listState={[
 										{
 											state: STATE_COMPLETE_REPORT.NOT_DONE,
@@ -203,8 +183,8 @@ function TableReportWorkLastMonth({}: PropsTableReportWorkLastMonth) {
 							title: 'Số hóa',
 							render: (data: IReportWorkLastMonth) => (
 								<>
-									{data?.digitalizedState == 0 && 'Chưa số hóa'}
-									{data?.digitalizedState == 1 && 'Đã số hóa'}
+									<p style={{color: '#EE464C'}}>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
+									<p style={{color: '#2970FF'}}>{data?.digitalization == 1 && 'Đã số hóa'}</p>
 								</>
 							),
 						},

@@ -68,11 +68,11 @@ function TableListWorkAdditional({onClose}: PropsTableListWorkAdditional) {
 					uuid: form.parentTaskUuid,
 					name: form.parentTaskName,
 				},
-				parentTaskUuid: form.parentTaskUuid,
 				stage: form?.stage,
 				megaType: '',
 				isInWorkFlow: false,
 				state: STATE_WORK_PROJECT.NOT_PROCESSED,
+				children: [],
 			},
 			...listActivity,
 		]);

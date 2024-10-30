@@ -1,37 +1,21 @@
 import React, {useContext, useState} from 'react';
 
-import {ITreeCreateReport, PropsTableListWorkChecked} from './interfaces';
+import {PropsTableListWorkChecked} from './interfaces';
 import styles from './TableListWorkChecked.module.scss';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
-import {QUERY_KEY} from '~/constants/config/enum';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
-import {useQuery} from '@tanstack/react-query';
-import {httpRequest} from '~/services';
-import activityServices from '~/services/activityServices';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import {CreateReportWork, ICreateReportWork} from '../context';
 import TreeReportWork from '../TreeReportWork';
+import {IActivityRegister} from '../MainCreateReportWork/interfaces';
 
-function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
-	const {projectUuid} = useContext<ICreateReportWork>(CreateReportWork);
-	const [selectedNodes, setSelectedNodes] = useState<ITreeCreateReport[]>([]);
+function TableListWorkChecked({listTree, onClose}: PropsTableListWorkChecked) {
+	const {listActivity, setListActivity} = useContext<ICreateReportWork>(CreateReportWork);
+	const [selectedNodes, setSelectedNodes] = useState<IActivityRegister[]>(listActivity);
 
-	const {data: listTree, isLoading} = useQuery([QUERY_KEY.table_tree_work_project, projectUuid], {
-		queryFn: () =>
-			httpRequest({
-				http: activityServices.treeActivitiesForRegister({
-					projectUuid: projectUuid,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!projectUuid,
-	});
-
-	const findParentNode = (node: ITreeCreateReport, nodes: ITreeCreateReport[] = listTree): ITreeCreateReport | null => {
+	const findParentNode = (node: IActivityRegister, nodes: IActivityRegister[] = listTree): IActivityRegister | null => {
 		for (const currentNode of nodes) {
 			if (currentNode.children.some((child) => child.activityUuid === node.activityUuid)) {
 				return currentNode;
@@ -42,24 +26,24 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 		return null;
 	};
 
-	const getChildNodes = (node: ITreeCreateReport): ITreeCreateReport[] => {
-		return node.children.reduce((acc, child) => [...acc, child, ...getChildNodes(child)], [] as ITreeCreateReport[]);
+	const getChildNodes = (node: IActivityRegister): IActivityRegister[] => {
+		return node.children.reduce((acc, child) => [...acc, child, ...getChildNodes(child)], [] as IActivityRegister[]);
 	};
 
-	const toggleNode = (node: ITreeCreateReport, checked: boolean) => {
+	const toggleNode = (node: IActivityRegister, checked: boolean) => {
 		const newSelectedNodes = new Set(selectedNodes);
 
-		const selectNodeAndChildren = (node: ITreeCreateReport) => {
+		const selectNodeAndChildren = (node: IActivityRegister) => {
 			newSelectedNodes.add(node);
 			getChildNodes(node).forEach((childNode) => newSelectedNodes.add(childNode));
 		};
 
-		const deselectNodeAndChildren = (node: ITreeCreateReport) => {
+		const deselectNodeAndChildren = (node: IActivityRegister) => {
 			newSelectedNodes.delete(node);
 			getChildNodes(node).forEach((childNode) => newSelectedNodes.delete(childNode));
 		};
 
-		const updateParentSelection = (node: ITreeCreateReport) => {
+		const updateParentSelection = (node: IActivityRegister) => {
 			let parent = findParentNode(node);
 			while (parent) {
 				newSelectedNodes.add(parent);
@@ -67,8 +51,9 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 			}
 		};
 
-		const removeUnselectedParents = (node: ITreeCreateReport) => {
+		const removeUnselectedParents = (node: IActivityRegister) => {
 			let parent = findParentNode(node);
+
 			while (parent) {
 				const parentChildren = parent.children;
 				const hasSelectedChild = parentChildren.some((child) => newSelectedNodes.has(child));
@@ -87,10 +72,15 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 			removeUnselectedParents(node);
 		}
 
-		setSelectedNodes(Array.from(newSelectedNodes) as ITreeCreateReport[]);
+		setSelectedNodes(Array.from(newSelectedNodes) as IActivityRegister[]);
 	};
 
 	const isChecked = (nodeId: string) => selectedNodes.some((selectedNode) => selectedNode.activityUuid === nodeId);
+
+	const handleSaveWorks = () => {
+		setListActivity(selectedNodes);
+		onClose();
+	};
 
 	return (
 		<div className={styles.container}>
@@ -108,9 +98,9 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 							p_12_20
 							primary
 							rounded_6
-							// disable={listWorkChecked.length == 0}
+							disable={selectedNodes.length == 0}
 							icon={<FolderOpen size={18} color='#fff' />}
-							// onClick={handleSaveWorks}
+							onClick={handleSaveWorks}
 						>
 							Lưu lại
 						</Button>
@@ -122,10 +112,10 @@ function TableListWorkChecked({onClose}: PropsTableListWorkChecked) {
 				<WrapperScrollbar isWrappreTable={false}>
 					<DataWrapper
 						data={listTree || []}
-						loading={isLoading}
+						loading={false}
 						noti={<Noti title='Danh sách trống!' des='Danh sách công việc trống!' />}
 					>
-						{listTree?.map((v: ITreeCreateReport, index: number) => (
+						{listTree?.map((v: IActivityRegister, index: number) => (
 							<TreeReportWork
 								key={index}
 								activity={v}

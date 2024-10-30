@@ -5,11 +5,10 @@ import styles from './TableReportWorkCurrent.module.scss';
 import {CreateReportWork, ICreateReportWork} from '../context';
 import Search from '~/components/common/Search';
 import FilterCustom from '~/components/common/FilterCustom';
-import {STATE_WORK_PROJECT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_WORK_PROJECT} from '~/constants/config/enum';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
-import {IActivityRegister} from '../MainCreateReportWork/interfaces';
 import Tippy from '@tippyjs/react';
 import StateActive from '~/components/common/StateActive';
 import Button from '~/components/common/Button';
@@ -23,6 +22,10 @@ import useDebounce from '~/common/hooks/useDebounce';
 import TableListWorkAdditional from '../TableListWorkAdditional';
 import IconCustom from '~/components/common/IconCustom';
 import {Trash} from 'iconsax-react';
+import {IActivityRegister} from '../MainCreateReportWork/interfaces';
+import {useQuery} from '@tanstack/react-query';
+import {httpRequest} from '~/services';
+import activityServices from '~/services/activityServices';
 
 function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 	const router = useRouter();
@@ -35,6 +38,67 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 	const [state, setState] = useState<number | null>(null);
 
 	const debounce = useDebounce(keyword, 600);
+
+	const {data: listTree} = useQuery([QUERY_KEY.table_tree_work_project, projectUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: activityServices.treeActivitiesForRegister({
+					projectUuid: projectUuid,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!projectUuid,
+	});
+
+	const findParentNode = (node: IActivityRegister, nodes: IActivityRegister[] = listTree): IActivityRegister | null => {
+		for (const currentNode of nodes) {
+			if (currentNode.children.some((child) => child.activityUuid === node.activityUuid)) {
+				return currentNode;
+			}
+			const parentFromChild = findParentNode(node, currentNode.children);
+			if (parentFromChild) return parentFromChild;
+		}
+		return null;
+	};
+
+	const getChildNodes = (node: IActivityRegister): IActivityRegister[] => {
+		return node.children.reduce((acc, child) => [...acc, child, ...getChildNodes(child)], [] as IActivityRegister[]);
+	};
+
+	const deleteActivityFromList = (node: IActivityRegister, index: number) => {
+		// Xóa công việc phát sinh ==> Xóa theo index.
+		if (!node.activityUuid) {
+			return setListActivity(listActivity?.filter((_v, i) => i != index));
+		}
+
+		const newSelectedNodes = new Set(listActivity);
+
+		// Xóa công việc trong cây ==> Xóa node theo uuid trong cây.
+		const deselectNodeAndChildren = (node: IActivityRegister) => {
+			newSelectedNodes.delete(node);
+			getChildNodes(node).forEach((childNode) => newSelectedNodes.delete(childNode));
+		};
+
+		const removeUnselectedParents = (node: IActivityRegister) => {
+			let parent = findParentNode(node);
+
+			while (parent) {
+				const parentChildren = parent.children;
+				const hasSelectedChild = parentChildren.some((child) => newSelectedNodes.has(child));
+				if (!hasSelectedChild) {
+					newSelectedNodes.delete(parent);
+				}
+				parent = findParentNode(parent);
+			}
+		};
+
+		deselectNodeAndChildren(node);
+		removeUnselectedParents(node);
+
+		return setListActivity(Array.from(newSelectedNodes) as IActivityRegister[]);
+	};
 
 	return (
 		<div className={styles.main_table}>
@@ -103,6 +167,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 			</div>
 			<DataWrapper
 				data={listActivity
+					?.filter((v) => v?.activityUuid != '1' && v?.activityUuid != '2' && v?.activityUuid != '3')
 					?.filter((v) => removeVietnameseTones(v.name)?.includes(debounce ? removeVietnameseTones(debounce) : ''))
 					?.filter((x) => state == null || x?.state == state)}
 				loading={false}
@@ -135,6 +200,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 			>
 				<Table
 					data={listActivity
+						?.filter((v) => v?.activityUuid != '1' && v?.activityUuid != '2' && v?.activityUuid != '3') // Không lấy những activity là giai đoạn (I, II, III)
 						?.filter((v) => removeVietnameseTones(v.name)?.includes(debounce ? removeVietnameseTones(debounce) : ''))
 						?.filter((x) => state == null || x?.state == state)}
 					column={[
@@ -169,13 +235,12 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 								</>
 							),
 						},
-
 						{
 							title: 'Loại công việc',
 							render: (data: IActivityRegister) => (
 								<>
-									{data?.isInWorkFlow && 'Có kế hoạch'}
-									{!data?.isInWorkFlow && 'Phát sinh'}
+									{(data?.isInWorkFlow == null || data?.isInWorkFlow == true) && 'Có kế hoạch'}
+									{data?.isInWorkFlow == false && 'Phát sinh'}
 								</>
 							),
 						},
@@ -220,9 +285,9 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 										type='delete'
 										icon={<Trash fontSize={20} fontWeight={600} />}
 										tooltip='Xóa bỏ'
-										disnable={data.state == STATE_WORK_PROJECT.PROCESSING}
+										// disnable={data.state == STATE_WORK_PROJECT.PROCESSING}
 										onClick={() => {
-											setListActivity(listActivity?.filter((_v, i) => i != index));
+											deleteActivityFromList(data, index);
 										}}
 									/>
 								</div>
@@ -246,6 +311,7 @@ function TableReportWorkCurrent({}: PropsTableReportWorkCurrent) {
 				}}
 			>
 				<TableListWorkChecked
+					listTree={listTree || []}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 
