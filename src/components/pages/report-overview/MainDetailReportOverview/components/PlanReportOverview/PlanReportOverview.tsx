@@ -81,6 +81,15 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 									render: (data: IPlanReportOverview) => <>{data?.megatype || '---'}</>,
 								},
 								{
+									title: 'Số hóa',
+									render: (data: IPlanReportOverview) => (
+										<>
+											{data?.digitalization == 0 && 'Chưa số hóa'}
+											{data?.digitalization == 1 && 'Đã số hóa'}
+										</>
+									),
+								},
+								{
 									title: 'Loại công việc',
 									render: (data: IPlanReportOverview) => (
 										<>
