@@ -88,6 +88,10 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 								<p>{detailProjectFund?.monthReport || '---'}</p>
 							</div>
 							<div className={styles.item}>
+								<p>Người gửi báo cáo</p>
+								<p>{detailProjectFund?.reporter?.fullname || '---'}</p>
+							</div>
+							<div className={styles.item}>
 								<p>Số tiền giải ngân (VND)</p>
 								<p>{convertCoin(detailProjectFund?.realeaseBudget!) || '---'}</p>
 							</div>
@@ -120,13 +124,15 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Ghi chú</p>
+								<p>Mô tả</p>
 								<p>{detailProjectFund?.note || '---'}</p>
 							</div>
-							<div className={styles.item}>
-								<p>Lý do từ chối báo cáo giải ngân</p>
-								<p>{detailProjectFund?.feedback || '---'}</p>
-							</div>
+							{detailProjectFund?.approved === STATE_REPORT_DISBURSEMENT.REJECTED && (
+								<div className={styles.item}>
+									<p>Lý do từ chối báo cáo giải ngân</p>
+									<p>{detailProjectFund?.feedback || '---'}</p>
+								</div>
+							)}
 						</GridColumn>
 					</div>
 				</div>

@@ -25,6 +25,7 @@ import icons from '~/constants/images/icons';
 import Moment from 'react-moment';
 import projectFundServices from '~/services/projectFundServices';
 import {generateYearsArray} from '~/common/funcs/selectDate';
+import Loading from '~/components/common/Loading';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
@@ -38,6 +39,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const [openDelete, setOpenDelete] = useState<boolean>(false);
 	const [openStart, setOpenStart] = useState<boolean>(false);
 	const [openFinish, setOpenFinish] = useState<boolean>(false);
+	const [openReStart, setOpenReStart] = useState<boolean>(false);
 
 	const {data: detailProgressFundProject} = useQuery<IDetailProgressFundProject>([QUERY_KEY.detail_progress_fund_project, _uuid], {
 		queryFn: () =>
@@ -110,7 +112,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 		onSuccess(data) {
 			if (data) {
 				setOpenStart(false);
-				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_progress_fund_project]);
 			}
 		},
 	});
@@ -129,13 +131,37 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 		onSuccess(data) {
 			if (data) {
 				setOpenFinish(false);
-				queryClient.invalidateQueries([QUERY_KEY.detail_project]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_progress_fund_project]);
+			}
+		},
+	});
+
+	const funcReStartProject = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Tái hoạt động dự án thành công!',
+				http: projectServices.updateState({
+					uuid: _uuid as string,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenReStart(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_progress_fund_project]);
 			}
 		},
 	});
 
 	return (
 		<div className={styles.container}>
+			<Loading
+				loading={
+					funcDeleteProject.isLoading || funcStartProject.isLoading || funcFinishProject.isLoading || funcReStartProject.isLoading
+				}
+			/>
 			<Breadcrumb
 				listUrls={[
 					{
@@ -187,6 +213,11 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 						{detailProgressFundProject?.categoryProjectDTO?.state != STATE_PROJECT.FINISH && (
 							<Button p_14_24 rounded_8 primaryLinear href={`${PATH.UpdateInfoProject}?_uuid=${_uuid}`}>
 								Chỉnh sửa
+							</Button>
+						)}
+						{detailProgressFundProject?.categoryProjectDTO?.state == STATE_PROJECT.FINISH && (
+							<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenReStart(true)}>
+								Tái hoạt động dự án
 							</Button>
 						)}
 					</div>
@@ -391,6 +422,15 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 				title={'Kết thúc dự án'}
 				note={'Bạn có chắc chắn muốn kết thúc dự án này?'}
 				onSubmit={funcFinishProject.mutate}
+			/>
+			<Dialog
+				type='primary'
+				open={openReStart}
+				icon={icons.success}
+				onClose={() => setOpenReStart(false)}
+				title={'Tái hoạt động dự án'}
+				note={'Bạn có chắc chắn muốn tái hoạt động dự án này không?'}
+				onSubmit={funcStartProject.mutate}
 			/>
 		</div>
 	);
