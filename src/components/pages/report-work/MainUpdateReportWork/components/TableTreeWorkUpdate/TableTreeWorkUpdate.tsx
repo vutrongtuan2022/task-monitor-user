@@ -15,8 +15,6 @@ function TableTreeWorkUpdate({listTree, onClose}: PropsTableTreeWorkUpdate) {
 	const {listActivity, setListActivity} = useContext<IUpdateReportWork>(UpdateReportWork);
 	const [selectedNodes, setSelectedNodes] = useState<IActivityUpdate[]>(listActivity);
 
-	console.log(listActivity);
-
 	const findParentNode = (node: IActivityUpdate, nodes: IActivityUpdate[] = listTree): IActivityUpdate | null => {
 		for (const currentNode of nodes) {
 			if (currentNode.children.some((child) => child.activityUuid === node.activityUuid)) {
@@ -33,34 +31,52 @@ function TableTreeWorkUpdate({listTree, onClose}: PropsTableTreeWorkUpdate) {
 	};
 
 	const toggleNode = (node: IActivityUpdate, checked: boolean) => {
-		const newSelectedNodes = new Set(selectedNodes);
+		const newSelectedNodes = [...selectedNodes];
 
 		const selectNodeAndChildren = (node: IActivityUpdate) => {
-			newSelectedNodes.add(node);
-			getChildNodes(node).forEach((childNode) => newSelectedNodes.add(childNode));
+			if (!newSelectedNodes.some((n) => n.activityUuid === node.activityUuid)) {
+				newSelectedNodes.push(node);
+			}
+			getChildNodes(node).forEach((childNode) => {
+				if (!newSelectedNodes.some((n) => n.activityUuid === childNode.activityUuid)) {
+					newSelectedNodes.push(childNode);
+				}
+			});
 		};
 
 		const deselectNodeAndChildren = (node: IActivityUpdate) => {
-			newSelectedNodes.delete(node);
-			getChildNodes(node).forEach((childNode) => newSelectedNodes.delete(childNode));
+			const nodeAndChildren = [node, ...getChildNodes(node)];
+			nodeAndChildren.forEach((childNode) => {
+				const index = newSelectedNodes.findIndex((n) => n.activityUuid === childNode.activityUuid);
+				if (index !== -1) {
+					newSelectedNodes.splice(index, 1);
+				}
+			});
 		};
 
 		const updateParentSelection = (node: IActivityUpdate) => {
-			let parent = findParentNode(node);
+			let parent: any = findParentNode(node);
 			while (parent) {
-				newSelectedNodes.add(parent);
+				if (!newSelectedNodes.some((n) => n.activityUuid === parent.activityUuid)) {
+					newSelectedNodes.push(parent);
+				}
 				parent = findParentNode(parent);
 			}
 		};
 
 		const removeUnselectedParents = (node: IActivityUpdate) => {
-			let parent = findParentNode(node);
+			let parent: any = findParentNode(node);
 
 			while (parent) {
 				const parentChildren = parent.children;
-				const hasSelectedChild = parentChildren.some((child) => newSelectedNodes.has(child));
+				const hasSelectedChild = parentChildren.some((child: any) =>
+					newSelectedNodes.some((n) => n.activityUuid === child.activityUuid)
+				);
 				if (!hasSelectedChild) {
-					newSelectedNodes.delete(parent);
+					const index = newSelectedNodes.findIndex((n) => n.activityUuid === parent.activityUuid);
+					if (index !== -1) {
+						newSelectedNodes.splice(index, 1);
+					}
 				}
 				parent = findParentNode(parent);
 			}
@@ -74,7 +90,7 @@ function TableTreeWorkUpdate({listTree, onClose}: PropsTableTreeWorkUpdate) {
 			removeUnselectedParents(node);
 		}
 
-		setSelectedNodes(Array.from(newSelectedNodes) as IActivityUpdate[]);
+		setSelectedNodes(newSelectedNodes);
 	};
 
 	const isChecked = (nodeId: string) => selectedNodes.some((selectedNode) => selectedNode.activityUuid === nodeId);

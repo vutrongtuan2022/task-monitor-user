@@ -52,7 +52,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 	useQuery([QUERY_KEY.table_list_modify_work_report, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: activityServices.getAllActivityReport({
+				http: activityServices.getActivityReportForModify({
 					uuid: _uuid as string,
 				}),
 			}),

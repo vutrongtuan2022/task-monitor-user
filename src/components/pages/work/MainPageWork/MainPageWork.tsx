@@ -4,7 +4,7 @@ import {IWork, PropsMainPageWork} from './interfaces';
 import styles from './MainPageWork.module.scss';
 import Search from '~/components/common/Search';
 import FilterCustom from '~/components/common/FilterCustom';
-import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_REPORT_WORK, STATUS_CONFIG, TYPE_OF_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_REPORT_WORK, STATUS_CONFIG, TYPE_OF_WORK, TYPE_WORK} from '~/constants/config/enum';
 import {useRouter} from 'next/router';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -28,6 +28,7 @@ import Form, {Input} from '~/components/common/Form';
 import TextArea from '~/components/common/Form/components/TextArea';
 import Button from '~/components/common/Button';
 import {toastWarn} from '~/common/funcs/toast';
+import projectServices from '~/services/projectServices';
 
 function MainPageWork({}: PropsMainPageWork) {
 	const router = useRouter();
@@ -36,7 +37,7 @@ function MainPageWork({}: PropsMainPageWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _state, _year, _month, _type} = router.query;
+	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project} = router.query;
 
 	const [form, setForm] = useState<{issue: string; progress: number | null}>({
 		issue: '',
@@ -47,11 +48,25 @@ function MainPageWork({}: PropsMainPageWork) {
 	const [uuidFinish, setUuidFinish] = useState<string>('');
 	const [uuidIssue, setUuidIssue] = useState<string>('');
 	const [uuidProgress, setUuidProgress] = useState<string>('');
+	const [uuidReport, setUuidReport] = useState<string>('');
 
-	const listWork = useQuery([QUERY_KEY.table_list_work, _page, _pageSize, _keyword, _state, _year, _month, _type], {
+	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
 			httpRequest({
-				http: activityServices.listActivityForAction({
+				http: projectServices.categoryProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listWork = useQuery([QUERY_KEY.table_list_work, _page, _pageSize, _keyword, _state, _year, _month, _type, _project], {
+		queryFn: () =>
+			httpRequest({
+				http: activityServices.listActivityForActionNew({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 20,
 					keyword: (_keyword as string) || '',
@@ -60,6 +75,8 @@ function MainPageWork({}: PropsMainPageWork) {
 					year: !!_year ? Number(_year) : null,
 					month: !!_month ? Number(_month) : null,
 					type: !!_type ? Number(_type) : null,
+					projectUuid: (_project as string) || '',
+					userUuid: '',
 				}),
 			}),
 		select(data) {
@@ -75,6 +92,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận xử lý công việc thành công!',
 				http: activityServices.reportActivity({
 					activityUuid: uuidConfirm,
+					reportUuid: uuidReport,
 					type: 1, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành
 					progress: -1,
 					issue: '',
@@ -98,6 +116,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận hoàn thành công việc thành công!',
 				http: activityServices.reportActivity({
 					activityUuid: uuidFinish,
+					reportUuid: uuidReport,
 					type: 2, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành
 					progress: -1,
 					issue: '',
@@ -121,6 +140,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận khó khăn công việc thành công!',
 				http: activityServices.reportActivity({
 					activityUuid: uuidIssue,
+					reportUuid: uuidReport,
 					type: 0, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành
 					progress: -1,
 					issue: form.issue,
@@ -144,6 +164,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận tiến độ công việc thành công!',
 				http: activityServices.reportActivity({
 					activityUuid: uuidProgress,
+					reportUuid: uuidReport,
 					type: 0, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành
 					progress: form?.progress,
 					issue: '',
@@ -172,7 +193,18 @@ function MainPageWork({}: PropsMainPageWork) {
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc, dự án' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo tên công việc' />
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Dự án'
+							query='_project'
+							listFilter={listProject?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.name,
+							}))}
+						/>
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -255,17 +287,23 @@ function MainPageWork({}: PropsMainPageWork) {
 								fixedLeft: true,
 								render: (data: IWork) => (
 									<>
-										Tháng <span>{data?.month}</span> - <span>{data?.year}</span>
+										Tháng <span>{data?.report?.month}</span> - <span>{data?.report?.year}</span>
 									</>
 								),
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IWork) => <>{data?.project?.name}</>,
+								render: (data: IWork) => <>{data?.report?.project?.name}</>,
 							},
 							{
 								title: 'Megatype',
-								render: (data: IWork) => <>{data?.megatype || '---'}</>,
+								render: (data: IWork) => (
+									<p>
+										{data?.type == TYPE_WORK.TASK && 'Task'}
+										{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
+										{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}
+									</p>
+								),
 							},
 							{
 								title: 'Tên công việc',
@@ -291,8 +329,8 @@ function MainPageWork({}: PropsMainPageWork) {
 								title: 'Loại công việc',
 								render: (data: IWork) => (
 									<>
-										{!data?.isInWorkFlow && 'Phát sinh'}
-										{data?.isInWorkFlow && 'Có kế hoạch'}
+										{!data?.isInWorkflow && 'Phát sinh'}
+										{data?.isInWorkflow && 'Có kế hoạch'}
 									</>
 								),
 							},
@@ -384,7 +422,10 @@ function MainPageWork({}: PropsMainPageWork) {
 												color='#4BC9F0'
 												icon={<TickCircle fontSize={20} fontWeight={600} />}
 												tooltip='Xác nhận xử lý'
-												onClick={() => setUuidConfirm(data?.activity?.uuid)}
+												onClick={() => {
+													setUuidConfirm(data?.activity?.uuid);
+													setUuidReport(data?.report?.uuid);
+												}}
 											/>
 										)}
 
@@ -396,6 +437,7 @@ function MainPageWork({}: PropsMainPageWork) {
 													tooltip='Nhập khó khăn vướng mắc'
 													onClick={() => {
 														setUuidIssue(data?.activity?.uuid);
+														setUuidReport(data?.report?.uuid);
 														setForm({
 															issue: data?.issue || '',
 															progress: data?.progress || null,
@@ -408,6 +450,7 @@ function MainPageWork({}: PropsMainPageWork) {
 													tooltip='Nhập tiến độ'
 													onClick={() => {
 														setUuidProgress(data?.activity?.uuid);
+														setUuidReport(data?.report?.uuid);
 														setForm({
 															issue: data?.issue || '',
 															progress: data?.progress || null,
@@ -418,7 +461,10 @@ function MainPageWork({}: PropsMainPageWork) {
 													color='#06D7A0'
 													icon={<TickCircle fontSize={20} fontWeight={600} />}
 													tooltip='Xác nhận hoàn thành'
-													onClick={() => setUuidFinish(data?.activity?.uuid)}
+													onClick={() => {
+														setUuidFinish(data?.activity?.uuid);
+														setUuidReport(data?.report?.uuid);
+													}}
 												/>
 											</>
 										)}
@@ -432,7 +478,7 @@ function MainPageWork({}: PropsMainPageWork) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
 					total={listWork?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _state, _year, _month, _type]}
+					dependencies={[_pageSize, _keyword, _state, _year, _month, _type, _project]}
 				/>
 			</WrapperScrollbar>
 

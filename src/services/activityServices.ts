@@ -35,12 +35,32 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	listActivityForActionNew: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			month: number | null;
+			year: number | null;
+			state: number | null;
+			type: number | null;
+			userUuid: string;
+			projectUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-page-activities-for-action-new`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	reportActivity: (
 		data: {
 			activityUuid: string;
 			type: number;
 			progress: number | null;
 			issue: string;
+			reportUuid: string;
 			stateNote: number | null;
 		},
 		tokenAxios?: any
@@ -130,6 +150,16 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getActivityReportForModify: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-all-activity-in-report-for-modify`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	listActivityLastMonthByProject: (
 		data: {
 			pageSize: number;
@@ -212,6 +242,16 @@ const activityServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Activity/get-activities-tree-view-for-register`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getActivityTreeInReport: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/get-activity-tree-in-report`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

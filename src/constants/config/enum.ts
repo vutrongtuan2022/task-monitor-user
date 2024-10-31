@@ -42,6 +42,7 @@ export enum QUERY_KEY {
 	detail_disbursement_report_overview,
 	detail_profile,
 	detail_profile_update,
+	detail_activity_in_report,
 }
 
 export enum TYPE_DATE {
@@ -78,6 +79,12 @@ export enum STATE_PROJECT {
 	PREPARE = 1,
 	DO,
 	FINISH,
+}
+
+export enum TYPE_WORK {
+	TASK,
+	SUB_TASK,
+	SUB_SUB_TASK,
 }
 
 export enum STATE_WORK_PROJECT {
