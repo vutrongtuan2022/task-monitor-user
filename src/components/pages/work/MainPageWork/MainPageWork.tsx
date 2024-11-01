@@ -206,27 +206,7 @@ function MainPageWork({}: PropsMainPageWork) {
 							}))}
 						/>
 					</div>
-					<div className={styles.filter}>
-						<FilterCustom
-							isSearch
-							name='Trạng thái'
-							query='_state'
-							listFilter={[
-								{
-									id: STATE_REPORT_WORK.NOT_PROCESSED,
-									name: 'Chưa xử lý',
-								},
-								{
-									id: STATE_REPORT_WORK.PROCESSING,
-									name: 'Đang xử lý',
-								},
-								{
-									id: STATE_REPORT_WORK.COMPLETED,
-									name: 'Đã hoàn thành',
-								},
-							]}
-						/>
-					</div>
+
 					<div className={styles.filter}>
 						<FilterCustom
 							isSearch
@@ -262,6 +242,27 @@ function MainPageWork({}: PropsMainPageWork) {
 								{
 									id: TYPE_OF_WORK.HAVE_PLAN,
 									name: 'Có kế hoạch',
+								},
+							]}
+						/>
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Trạng thái'
+							query='_state'
+							listFilter={[
+								{
+									id: STATE_REPORT_WORK.NOT_PROCESSED,
+									name: 'Chưa xử lý',
+								},
+								{
+									id: STATE_REPORT_WORK.PROCESSING,
+									name: 'Đang xử lý',
+								},
+								{
+									id: STATE_REPORT_WORK.COMPLETED,
+									name: 'Đã hoàn thành',
 								},
 							]}
 						/>
