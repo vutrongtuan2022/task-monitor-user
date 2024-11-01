@@ -87,10 +87,10 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 								<p>Báo cáo tháng</p>
 								<p>{detailProjectFund?.monthReport || '---'}</p>
 							</div>
-							<div className={styles.item}>
+							{/* <div className={styles.item}>
 								<p>Người gửi báo cáo</p>
 								<p>{detailProjectFund?.reporter?.fullname || '---'}</p>
-							</div>
+							</div> */}
 							<div className={styles.item}>
 								<p>Số tiền giải ngân (VND)</p>
 								<p>{convertCoin(detailProjectFund?.realeaseBudget!) || '---'}</p>

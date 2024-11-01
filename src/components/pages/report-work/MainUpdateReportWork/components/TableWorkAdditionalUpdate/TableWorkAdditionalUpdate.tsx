@@ -69,7 +69,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 					name: form.parentTaskName,
 				},
 				stage: form?.stage,
-				megaType: '',
+				megaType: 'SubTask',
 				isInWorkFlow: false,
 				state: STATE_WORK_PROJECT.NOT_PROCESSED,
 				children: [],
@@ -104,6 +104,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 									setForm((prev) => ({
 										...prev,
 										stage: v.stage,
+										parentTaskUuid: '',
 									}))
 								}
 							/>
