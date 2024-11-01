@@ -112,7 +112,7 @@ function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
 						</p>
 					</div>
 					<div className={styles.item}>
-						<p>Ghi chú</p>
+						<p>Mô tả</p>
 						<p>{disbursementReportOverview?.note || '---'}</p>
 					</div>
 					{disbursementReportOverview?.approved == STATE_REPORT_DISBURSEMENT.REJECTED && (
