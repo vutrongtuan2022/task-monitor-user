@@ -34,6 +34,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 					month: month!,
 					year: year!,
 					projectUuid: projectUuid,
+					reportUuid: '',
 					type: 1,
 				}),
 			}),

@@ -351,7 +351,7 @@ function MainPageWork({}: PropsMainPageWork) {
 								title: 'Trạng thái',
 								render: (data: IWork) => (
 									<StateActive
-										stateActive={data?.activity?.state}
+										stateActive={data?.activityState}
 										listState={[
 											{
 												state: STATE_REPORT_WORK.NOT_PROCESSED,

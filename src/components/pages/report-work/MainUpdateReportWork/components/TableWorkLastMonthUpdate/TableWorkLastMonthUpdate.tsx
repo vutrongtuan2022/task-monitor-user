@@ -20,12 +20,12 @@ import {IUpdateReportWork, UpdateReportWork} from '../../context';
 function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 	const router = useRouter();
 
-	const {_page, _pageSize, _keyword, _state} = router.query;
+	const {_page, _pageSize, _keyword, _state, _uuid} = router.query;
 
 	const {month, year, projectUuid} = useContext<IUpdateReportWork>(UpdateReportWork);
 
 	const {data: listReportLastMonth, isFetching} = useQuery(
-		[QUERY_KEY.table_list_report_work_last_month, _page, _pageSize, _keyword, _state, projectUuid, month, year],
+		[QUERY_KEY.table_list_report_work_last_month, _page, _pageSize, _keyword, _state, projectUuid, month, year, _uuid],
 		{
 			queryFn: () =>
 				httpRequest({
@@ -37,6 +37,7 @@ function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 						state: !!_state ? Number(_state) : null,
 						projectUuid: projectUuid,
 						type: 0,
+						reportUuid: (_uuid as string) || '',
 						month: month! - 1 == 0 ? 12 : month! - 1,
 						year: month! - 1 == 0 ? year! - 1 : year!,
 					}),
@@ -44,7 +45,7 @@ function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 			select(data) {
 				return data;
 			},
-			enabled: !!projectUuid && !!month && !!year,
+			enabled: !!projectUuid && !!month && !!year && !!_uuid,
 		}
 	);
 
@@ -194,7 +195,7 @@ function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 				currentPage={Number(_page) || 1}
 				pageSize={Number(_pageSize) || 20}
 				total={listReportLastMonth?.pagination?.totalCount}
-				dependencies={[_pageSize, _keyword, _state, projectUuid]}
+				dependencies={[_pageSize, _keyword, _state, projectUuid, month, year, _uuid]}
 			/>
 		</div>
 	);

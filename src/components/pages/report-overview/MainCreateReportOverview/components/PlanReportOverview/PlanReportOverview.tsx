@@ -36,6 +36,7 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 						state: null,
 						month: month == 12 ? 1 : month! + 1,
 						year: month == 12 ? year! + 1 : year!,
+						reportUuid: '',
 						projectUuid: projectUuid,
 						type: 0,
 					}),

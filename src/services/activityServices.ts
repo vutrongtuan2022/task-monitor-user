@@ -215,6 +215,7 @@ const activityServices = {
 			projectUuid: string;
 			month: number | null;
 			year: number | null;
+			reportUuid: string;
 			type: 0 | 1;
 		},
 		tokenAxios?: any
