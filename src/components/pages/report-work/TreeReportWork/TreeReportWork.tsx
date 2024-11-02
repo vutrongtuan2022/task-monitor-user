@@ -86,29 +86,32 @@ function TreeReportWork({level, index, activity, isChecked, toggleNode}: PropsTr
 							SubSubTask: <span>{activity?.taskCount?.subSubTask}</span>
 						</p>
 					)}
-					<StateActive
-						stateActive={activity?.state}
-						listState={[
-							{
-								state: STATE_WORK_PROJECT.NOT_PROCESSED,
-								text: 'Chưa xử lý',
-								textColor: '#FFFFFF',
-								backgroundColor: '#FDAD73',
-							},
-							{
-								state: STATE_WORK_PROJECT.PROCESSING,
-								text: 'Đang xử lý',
-								textColor: '#FFFFFF',
-								backgroundColor: '#16C1F3',
-							},
-							{
-								state: STATE_WORK_PROJECT.COMPLETED,
-								text: 'Đã hoàn thành',
-								textColor: '#FFFFFF',
-								backgroundColor: '#06D7A0',
-							},
-						]}
-					/>
+
+					{level > 1 && (
+						<StateActive
+							stateActive={activity?.state}
+							listState={[
+								{
+									state: STATE_WORK_PROJECT.NOT_PROCESSED,
+									text: 'Chưa xử lý',
+									textColor: '#FFFFFF',
+									backgroundColor: '#FDAD73',
+								},
+								{
+									state: STATE_WORK_PROJECT.PROCESSING,
+									text: 'Đang xử lý',
+									textColor: '#FFFFFF',
+									backgroundColor: '#16C1F3',
+								},
+								{
+									state: STATE_WORK_PROJECT.COMPLETED,
+									text: 'Đã hoàn thành',
+									textColor: '#FFFFFF',
+									backgroundColor: '#06D7A0',
+								},
+							]}
+						/>
+					)}
 				</div>
 			</div>
 
