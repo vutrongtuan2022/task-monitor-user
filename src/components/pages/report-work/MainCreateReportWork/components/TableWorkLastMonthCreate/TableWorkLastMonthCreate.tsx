@@ -39,6 +39,7 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 						type: 0,
 						month: month! - 1 == 0 ? 12 : month! - 1,
 						year: month! - 1 == 0 ? year! - 1 : year!,
+						reportUuid: '',
 					}),
 				}),
 			select(data) {
@@ -194,7 +195,7 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 				currentPage={Number(_page) || 1}
 				pageSize={Number(_pageSize) || 20}
 				total={listReportLastMonth?.pagination?.totalCount}
-				dependencies={[_pageSize, _keyword, _state, projectUuid]}
+				dependencies={[_pageSize, _keyword, _state, projectUuid, month, year]}
 			/>
 		</div>
 	);
