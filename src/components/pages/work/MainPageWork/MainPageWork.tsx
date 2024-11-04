@@ -418,7 +418,7 @@ function MainPageWork({}: PropsMainPageWork) {
 								fixedRight: true,
 								render: (data: IWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data?.activity?.state == STATE_REPORT_WORK.NOT_PROCESSED && (
+										{data?.activityState == STATE_REPORT_WORK.NOT_PROCESSED && (
 											<IconCustom
 												color='#4BC9F0'
 												icon={<TickCircle fontSize={20} fontWeight={600} />}
@@ -430,7 +430,7 @@ function MainPageWork({}: PropsMainPageWork) {
 											/>
 										)}
 
-										{data?.activity?.state == STATE_REPORT_WORK.PROCESSING && (
+										{data?.activityState == STATE_REPORT_WORK.PROCESSING && (
 											<>
 												<IconCustom
 													color='#2970FF'
