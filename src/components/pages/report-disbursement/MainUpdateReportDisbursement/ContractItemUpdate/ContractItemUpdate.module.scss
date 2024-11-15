@@ -1,0 +1,144 @@
+$bg-input: #fff;
+$bg-focus-input: #fff;
+$bg-btn: #005994;
+$bg-disable-input: #f2f2f2;
+
+$color-btn: #fff;
+$color-placeholder: #b4b5bc;
+$color-clean: #29303c;
+$color-focus: #066bb1;
+$color-done: #1cad4c;
+$color-error: #e5493f;
+
+$border-input: #dae1ea;
+$border-disable-input: #cdd5df;
+
+$border-radius: 8px;
+$padding-input: 10px 20px;
+$font-size-input: 16px;
+
+.container {
+	margin-top: 24px;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 24px;
+}
+
+.basic_info {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 12px 0;
+}
+
+.head {
+	border-left: 4px solid #005994;
+	padding: 0 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	& > h4 {
+		color: #202939;
+		font-size: 20px;
+		font-weight: 600;
+	}
+}
+
+.state {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	& > p {
+		color: #777e90;
+		font-size: 14px;
+		font-weight: 500;
+	}
+}
+
+.main {
+	padding: 20px;
+}
+
+.item {
+	& > p:nth-child(1) {
+		color: #697586;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	& > p:nth-child(2) {
+		color: #202939;
+		font-size: 15px;
+		font-weight: 500;
+
+		.link {
+			cursor: pointer;
+			color: #2970ff;
+			font-size: 15px;
+			font-weight: 400;
+			text-decoration: underline;
+			margin-left: 6px;
+			transition: 0.3s;
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+	}
+}
+
+.input_specification {
+	height: 44px;
+	flex: 1;
+	position: relative;
+
+	.input {
+		width: 100%;
+		border-radius: $border-radius;
+		border: 1px solid $border-input;
+		background-color: $bg-input;
+		padding: $padding-input;
+		padding-right: 80px;
+		font-size: $font-size-input;
+		font-weight: 500;
+		z-index: 1;
+
+		&:focus {
+			border: 1px solid $color-focus !important;
+			background-color: $bg-focus-input !important;
+		}
+
+		&::placeholder {
+			font-weight: 500;
+			color: $color-placeholder;
+		}
+	}
+
+	.unit {
+		position: absolute;
+		top: 50%;
+		right: -10px;
+		transform: translate(-50%, -50%);
+		color: #171832;
+		font-size: 16px;
+		font-weight: 500;
+		z-index: 10;
+		border-left: 1px solid #dae1ea;
+		padding-left: 12px;
+	}
+}
+
+.label {
+	font-size: $font-size-input;
+	font-weight: 500;
+	margin-bottom: 8px;
+	display: block;
+}
+
+.mt {
+	margin-top: 20px;
+}

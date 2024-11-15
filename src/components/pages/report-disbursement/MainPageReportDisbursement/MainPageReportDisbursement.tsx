@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {IProjectFundAll, PropsMainPageReportDisbursement} from './interfaces';
+import {IReportDisbursement, PropsMainPageReportDisbursement} from './interfaces';
 import styles from './MainPageReportDisbursement.module.scss';
 import Search from '~/components/common/Search';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -27,6 +27,7 @@ import Image from 'next/image';
 import icons from '~/constants/images/icons';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
+import contractsFundServices from '~/services/contractFundServices';
 
 function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const router = useRouter();
@@ -35,41 +36,44 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _year, _month, _approved} = router.query;
+	const {_page, _pageSize, _keyword, _year, _month, _state} = router.query;
 
-	const [uuidSendBack, setUuidSendBack] = useState<string>('');
+	const [uuidSendReport, setUuidSendReport] = useState<string>('');
 
-	const listProjectFundAll = useQuery([QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _approved, _year, _month], {
-		queryFn: () =>
-			httpRequest({
-				http: projectFundServices.listProjectFundAll({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
-					keyword: (_keyword as string) || '',
-					status: STATUS_CONFIG.ACTIVE,
-					approved: !!_approved ? Number(_approved) : null,
-					year: !!_year ? Number(_year) : null,
-					month: !!_month ? Number(_month) : null,
+	const listUserContractFundAll = useQuery(
+		[QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _state, _year, _month],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: contractsFundServices.getUserContractFundPaged({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 20,
+						keyword: (_keyword as string) || '',
+						status: STATUS_CONFIG.ACTIVE,
+						state: !!_state ? Number(_state) : null,
+						year: !!_year ? Number(_year) : null,
+						month: !!_month ? Number(_month) : null,
+					}),
 				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
+			select(data) {
+				return data;
+			},
+		}
+	);
 
-	const funcSendBackReport = useMutation({
+	const funcSendReport = useMutation({
 		mutationFn: () =>
 			httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Gửi lại báo cáo thành công!',
-				http: projectFundServices.sendProjectFund({
-					uuid: uuidSendBack,
+				msgSuccess: 'Gửi báo cáo thành công!',
+				http: contractsFundServices.sendContractFund({
+					uuid: uuidSendReport,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
-				setUuidSendBack('');
+				setUuidSendReport('');
 				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
 			}
 		},
@@ -77,7 +81,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcSendBackReport.isLoading} />
+			<Loading loading={funcSendReport.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -87,10 +91,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 						<FilterCustom
 							isSearch
 							name='Trạng thái'
-							query='_approved'
+							query='_state'
 							listFilter={[
 								{
-									id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
+									id: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+									name: 'Chưa báo cáo',
+								},
+								{
+									id: STATE_REPORT_DISBURSEMENT.REPORTED,
 									name: 'Đã báo cáo',
 								},
 								{
@@ -141,60 +149,49 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={listProjectFundAll?.data?.items || []}
-					loading={listProjectFundAll.isLoading}
+					data={listUserContractFundAll?.data?.items || []}
+					loading={listUserContractFundAll.isLoading}
 					noti={<Noti title='Dữ liệu trống!' des='Danh sách báo cáo giải ngân trống!' />}
 				>
 					<Table
 						fixedHeader={true}
-						data={listProjectFundAll?.data?.items || []}
+						data={listUserContractFundAll?.data?.items || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: IProjectFundAll, index: number) => <>{index + 1}</>,
+								render: (data: IReportDisbursement, index: number) => <>{index + 1}</>,
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IProjectFundAll) => <>{data?.project?.name}</>,
+								render: (data: IReportDisbursement) => <>{data?.project?.name}</>,
 							},
 							{
 								title: 'Báo cáo tháng',
-								render: (data: IProjectFundAll) => <>{data?.monthReport || '---'}</>,
-							},
-							{
-								title: 'Tổng mức đầu tư (VND)',
-								render: (data: IProjectFundAll) => <>{convertCoin(data?.totalInvest) || '---'}</>,
-							},
-							{
-								title: 'Kế hoạch vốn theo năm (VND)',
-								render: (data: IProjectFundAll) => <>{convertCoin(data?.annualBudget) || '---'}</>,
+								render: (data: IReportDisbursement) => <>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</>,
 							},
 							{
 								title: 'Số tiền giải ngân (VND)',
-								render: (data: IProjectFundAll) => <>{convertCoin(data?.realeaseBudget) || '---'}</>,
+								render: (data: IReportDisbursement) => <>{convertCoin(data?.totalAmount) || '---'}</>,
 							},
 							{
-								title: 'Lũy kế toàn bộ dự án (VND)',
-								render: (data: IProjectFundAll) => <>{convertCoin(data?.projectAccumAmount) || '---'}</>,
+								title: 'Kế hoạch vốn năm (VND)',
+								render: (data: IReportDisbursement) => <>{convertCoin(data?.yearlyBudget) || '---'}</>,
 							},
 							{
-								title: 'Lũy kế theo năm (VND)',
-								render: (data: IProjectFundAll) => <>{convertCoin(data?.annualAccumAmount) || '---'}</>,
-							},
-
-							{
-								title: 'Tỷ lệ giải ngân',
-								render: (data: IProjectFundAll) => <Progress percent={data?.fundProgress} width={80} />,
+								title: 'Tổng mức đầu tư (VND)',
+								render: (data: IReportDisbursement) => <>{convertCoin(data?.totalBudget) || '---'}</>,
 							},
 							{
 								title: 'Ngày gửi báo cáo',
-								render: (data: IProjectFundAll) => <Moment date={data?.created} format='DD/MM/YYYY' />,
+								render: (data: IReportDisbursement) => (
+									<p>{data?.sendDate ? <Moment date={data?.sendDate} format='DD/MM/YYYY' /> : '---'}</p>
+								),
 							},
 							{
 								title: 'Trạng thái',
-								render: (data: IProjectFundAll) => (
+								render: (data: IReportDisbursement) => (
 									<StateActive
-										stateActive={data?.approved}
+										stateActive={data?.state}
 										listState={[
 											{
 												state: STATE_REPORT_DISBURSEMENT.REJECTED,
@@ -203,7 +200,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 												backgroundColor: '#F37277',
 											},
 											{
-												state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
+												state: STATE_REPORT_DISBURSEMENT.REPORTED,
 												text: 'Đã báo cáo',
 												textColor: '#FFFFFF',
 												backgroundColor: '#4BC9F0',
@@ -214,6 +211,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 												textColor: '#FFFFFF',
 												backgroundColor: '#06D7A0',
 											},
+											{
+												state: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+												text: 'Chưa báo cáo',
+												textColor: '#FFFFFF',
+												backgroundColor: '#FF852C',
+											},
 										]}
 									/>
 								),
@@ -221,19 +224,20 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: IProjectFundAll) => (
+								render: (data: IReportDisbursement) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data.approved == STATE_REPORT_DISBURSEMENT.REJECTED ? (
+										{data?.state == STATE_REPORT_DISBURSEMENT.REJECTED ||
+										data?.state == STATE_REPORT_DISBURSEMENT.NOT_REPORT ? (
 											<>
-												{/* <IconCustom
-													color='#FF852C'
-													type='edit'
-													icon={<DocumentForward fontSize={20} fontWeight={600} />}
-													tooltip='Gửi lại'
-													onClick={() => setUuidSendBack(data.uuid)}
-												/> */}
 												<IconCustom
 													color='#16C1F3'
+													type='edit'
+													icon={<DocumentForward fontSize={20} fontWeight={600} />}
+													tooltip='Gửi báo cáo'
+													onClick={() => setUuidSendReport(data.uuid)}
+												/>
+												<IconCustom
+													color='#005994'
 													type='edit'
 													icon={<Edit fontSize={20} fontWeight={600} />}
 													tooltip='Chỉnh sửa'
@@ -242,6 +246,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											</>
 										) : null}
 										<IconCustom
+											color='#202939'
 											href={`${PATH.ReportDisbursement}/${data?.uuid}`}
 											type='edit'
 											icon={<Eye fontSize={20} fontWeight={600} />}
@@ -256,19 +261,19 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				<Pagination
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 20}
-					total={listProjectFundAll?.data?.pagination?.totalCount}
+					total={listUserContractFundAll?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword]}
 				/>
 			</WrapperScrollbar>
 
 			<Dialog
 				type='primary'
-				open={!!uuidSendBack}
+				open={!!uuidSendReport}
 				icon={icons.question_1}
-				onClose={() => setUuidSendBack('')}
-				title={'Gửi lại báo cáo'}
-				note={'Bạn có chắc chắn muốn xác nhận gửi lại báo cáo này không?'}
-				onSubmit={funcSendBackReport.mutate}
+				onClose={() => setUuidSendReport('')}
+				title={'Gửi báo cáo'}
+				note={'Bạn có chắc chắn muốn xác nhận gửi báo cáo này không?'}
+				onSubmit={funcSendReport.mutate}
 			/>
 		</div>
 	);

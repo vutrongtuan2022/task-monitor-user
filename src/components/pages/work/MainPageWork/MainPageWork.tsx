@@ -18,7 +18,7 @@ import Progress from '~/components/common/Progress';
 import StateActive from '~/components/common/StateActive';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import IconCustom from '~/components/common/IconCustom';
-import {DiscountShape, FolderOpen, PenAdd, TickCircle} from 'iconsax-react';
+import {AddSquare, DiscountShape, Edit, FolderOpen, PenAdd, TickCircle} from 'iconsax-react';
 import Tippy from '@tippyjs/react';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
@@ -29,6 +29,9 @@ import TextArea from '~/components/common/Form/components/TextArea';
 import Button from '~/components/common/Button';
 import {toastWarn} from '~/common/funcs/toast';
 import projectServices from '~/services/projectServices';
+import PositionContainer from '~/components/common/PositionContainer';
+import FormCreateContract from '../FormCreateContract';
+import FormUpdateContract from '../FormUpdateContract';
 
 function MainPageWork({}: PropsMainPageWork) {
 	const router = useRouter();
@@ -37,7 +40,7 @@ function MainPageWork({}: PropsMainPageWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project} = router.query;
+	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project, _activityUuid, _contractUuid} = router.query;
 
 	const [form, setForm] = useState<{issue: string; progress: number | null}>({
 		issue: '',
@@ -49,6 +52,7 @@ function MainPageWork({}: PropsMainPageWork) {
 	const [uuidIssue, setUuidIssue] = useState<string>('');
 	const [uuidProgress, setUuidProgress] = useState<string>('');
 	const [uuidReport, setUuidReport] = useState<string>('');
+	const [nameActivity, setNameActivity] = useState<string>('');
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -344,6 +348,10 @@ function MainPageWork({}: PropsMainPageWork) {
 								),
 							},
 							{
+								title: 'Hợp đồng',
+								render: (data: IWork) => <> {data?.activity?.contracts?.code || '---'}</>,
+							},
+							{
 								title: 'Tiến độ công việc',
 								render: (data: IWork) => <Progress percent={data?.progress} width={80} />,
 							},
@@ -418,6 +426,44 @@ function MainPageWork({}: PropsMainPageWork) {
 								fixedRight: true,
 								render: (data: IWork) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										{data?.type == TYPE_WORK.TASK && (
+											<>
+												{!data?.activity?.contracts?.uuid && (
+													<IconCustom
+														color='#06D7A0'
+														icon={<AddSquare fontSize={20} fontWeight={600} />}
+														tooltip='Thêm hợp đồng'
+														onClick={() => {
+															setNameActivity(data?.activity?.name);
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_activityUuid: data?.activity?.uuid,
+																},
+															});
+														}}
+													/>
+												)}
+												{!!data?.activity?.contracts?.uuid && (
+													<IconCustom
+														color='#2970FF'
+														icon={<Edit fontSize={20} fontWeight={600} />}
+														tooltip='Chỉnh sửa hợp đồng'
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_contractUuid: data?.activity?.contracts?.uuid,
+																},
+															});
+														}}
+													/>
+												)}
+											</>
+										)}
+
 										{data?.activityState == STATE_REPORT_WORK.NOT_PROCESSED && (
 											<IconCustom
 												color='#4BC9F0'
@@ -568,6 +614,61 @@ function MainPageWork({}: PropsMainPageWork) {
 						</div>
 					</div>
 				</Popup>
+
+				<PositionContainer
+					open={!!_activityUuid}
+					onClose={() => {
+						const {_activityUuid, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				>
+					<FormCreateContract
+						nameActivity={nameActivity}
+						onClose={() => {
+							const {_activityUuid, ...rest} = router.query;
+
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							});
+						}}
+					/>
+				</PositionContainer>
+
+				<PositionContainer
+					open={!!_contractUuid}
+					onClose={() => {
+						const {_contractUuid, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				>
+					<FormUpdateContract
+						onClose={() => {
+							const {_contractUuid, ...rest} = router.query;
+
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							});
+						}}
+					/>
+				</PositionContainer>
 			</Form>
 		</div>
 	);

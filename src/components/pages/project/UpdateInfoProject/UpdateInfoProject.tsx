@@ -26,7 +26,6 @@ import Loading from '~/components/common/Loading';
 import moment from 'moment';
 import {toastWarn} from '~/common/funcs/toast';
 import GridColumn from '~/components/layouts/GridColumn';
-import {status} from 'nprogress';
 
 function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	const router = useRouter();

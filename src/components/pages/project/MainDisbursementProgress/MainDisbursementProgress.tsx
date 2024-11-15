@@ -302,8 +302,12 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										query='_approved'
 										listFilter={[
 											{
-												id: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
-												name: 'Chưa duyệt',
+												id: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+												name: 'Chưa báo cáo',
+											},
+											{
+												id: STATE_REPORT_DISBURSEMENT.REPORTED,
+												name: 'Đã báo cáo',
 											},
 											{
 												id: STATE_REPORT_DISBURSEMENT.APPROVED,

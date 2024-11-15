@@ -1,63 +1,41 @@
 import React, {useState} from 'react';
-
-import {PropsMainUpdateReportDisbursement} from './interfaces';
 import styles from './MainUpdateReportDisbursement.module.scss';
-import Breadcrumb from '~/components/common/Breadcrumb';
-import {PATH} from '~/constants/config';
-import Button from '~/components/common/Button';
-import Select, {Option} from '~/components/common/Select';
+
+import {IFormUpdateReportDisbursement, PropsMainUpdateReportDisbursement} from './interfaces';
+import {useRouter} from 'next/router';
 import {generateYearsArray} from '~/common/funcs/selectDate';
-import Form, {FormContext, Input} from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import TextArea from '~/components/common/Form/components/TextArea';
-import projectFundServices from '~/services/projectFundServices';
-import {convertCoin, price} from '~/common/funcs/convertCoin';
-import {useRouter} from 'next/router';
+import Form, {FormContext} from '~/components/common/Form';
 import Loading from '~/components/common/Loading';
-import {IDetailProjectFund} from '../DetailReportDisbursement/interfaces';
+import {PATH} from '~/constants/config';
+import Breadcrumb from '~/components/common/Breadcrumb';
+import Button from '~/components/common/Button';
+import Select, {Option} from '~/components/common/Select';
+import TextArea from '~/components/common/Form/components/TextArea';
+import contractsFundServices from '~/services/contractFundServices';
+import ContractItemUpdate from './ContractItemUpdate';
+import {convertCoin, price} from '~/common/funcs/convertCoin';
+import moment from 'moment';
+import {toastWarn} from '~/common/funcs/toast';
 
 function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 	const router = useRouter();
+	const today = new Date();
 
 	const {_uuid} = router.query;
 
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const [form, setForm] = useState<{
-		year: number | null;
-		month: number | null;
-		projectUuid: string;
-		budget: number | string;
-		description: string;
-	}>({
-		year: null,
-		month: null,
+	const [form, setForm] = useState<IFormUpdateReportDisbursement>({
+		year: today.getFullYear(),
+		month: today.getMonth() + 1,
 		projectUuid: '',
-		budget: 0,
 		description: '',
-	});
-
-	useQuery<IDetailProjectFund>([QUERY_KEY.detail_report_disbursement, _uuid], {
-		queryFn: () =>
-			httpRequest({
-				http: projectFundServices.detailProjectFund({
-					uuid: _uuid as string,
-				}),
-			}),
-		onSuccess(data) {
-			setForm({
-				projectUuid: data?.project?.uuid,
-				year: data?.year || 0,
-				month: data?.month || 0,
-				budget: convertCoin(data?.realeaseBudget || 0),
-				description: data?.note || '',
-			});
-		},
-		enabled: !!_uuid,
+		contracts: [],
 	});
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
@@ -73,16 +51,75 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 		},
 	});
 
-	const funcUpdateProjectFund = useMutation({
+	useQuery([QUERY_KEY.detail_contract_report_fund_for_update, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractsFundServices.getContractsFundForUpdate({
+					uuid: _uuid as string,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				console.log(data);
+				setForm({
+					year: data?.year,
+					month: data?.month,
+					projectUuid: data?.project?.uuid || '',
+					description: data?.note || '',
+					contracts: data?.contracts
+						? data?.contracts?.map((v: any) => ({
+								...v,
+								guaranteeAmount: convertCoin(v?.guaranteeAmount),
+						  }))
+						: [],
+				});
+			}
+		},
+		enabled: !!_uuid,
+	});
+
+	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+		const newData = [...form?.contracts];
+
+		if (isConvert) {
+			if (!Number(price(value))) {
+				newData[index] = {
+					...newData[index],
+					[name]: 0,
+				};
+			}
+
+			newData[index] = {
+				...newData[index],
+				[name]: convertCoin(Number(price(value))),
+			};
+		} else {
+			newData[index] = {
+				...newData[index],
+				[name]: value,
+			};
+		}
+
+		setForm((prev) => ({
+			...prev,
+			contracts: newData,
+		}));
+	};
+
+	const funcUpdateReportFund = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Chỉnh sửa báo cáo thành công!',
-				http: projectFundServices.updateProjectFund({
-					uuid: _uuid as string,
-					budget: price(form.budget),
-					note: form.description,
+				http: contractsFundServices.updateReportFund({
+					contractsFundUuid: _uuid as string,
+					note: form?.description,
+					disbursementInfo: form?.contracts?.map((v) => ({
+						contractsContractUuid: v?.contractsContractUuid,
+						amount: price(v?.guaranteeAmount),
+						disbursementDay: moment(v?.releaseDate).format('YYYY-MM-DD'),
+					})),
 				}),
 			});
 		},
@@ -94,13 +131,20 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 	});
 
 	const handleSubmit = () => {
-		return funcUpdateProjectFund.mutate();
+		if (form?.contracts?.length == 0) {
+			return toastWarn({msg: 'Hiện tại chưa có hợp đồng nào!'});
+		}
+		if (form?.contracts?.some((v) => !v?.releaseDate)) {
+			return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
+		}
+
+		return funcUpdateReportFund.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<div className={styles.container}>
-				<Loading loading={funcUpdateProjectFund.isLoading} />
+				<Loading loading={funcUpdateReportFund.isLoading} />
 				<Breadcrumb
 					listUrls={[
 						{
@@ -134,7 +178,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 											blueLinear
 											disable={!isDone || !form.year || !form.month || !form.projectUuid}
 										>
-											Lưu và gửi báo cáo
+											Cập nhật
 										</Button>
 									</div>
 								)}
@@ -142,6 +186,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 						</div>
 					}
 				/>
+
 				<div className={styles.main}>
 					<div className={styles.basic_info}>
 						<div className={styles.head}>
@@ -151,8 +196,8 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 							<div className={styles.col_2}>
 								<div className={styles.col_2}>
 									<Select
-										readOnly={true}
 										isSearch={true}
+										readOnly={true}
 										label={
 											<span>
 												Kế hoạch năm <span style={{color: 'red'}}>*</span>
@@ -178,8 +223,8 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 									</Select>
 									<div>
 										<Select
-											readOnly={true}
 											isSearch={true}
+											readOnly={true}
 											label={
 												<span>
 													Kế hoạch tháng <span style={{color: 'red'}}>*</span>
@@ -206,8 +251,8 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 									</div>
 								</div>
 								<Select
-									readOnly={true}
 									isSearch={true}
+									readOnly={true}
 									label={
 										<span>
 											Chọn dự án <span style={{color: 'red'}}>*</span>
@@ -232,28 +277,15 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 									))}
 								</Select>
 							</div>
-							<div className={styles.mt}>
-								<Input
-									label={
-										<span>
-											Số tiền giải ngân <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập số tiền giải ngân'
-									type='text'
-									isMoney
-									name='budget'
-									value={form?.budget}
-									isRequired={true}
-									blur={true}
-									unit='VND'
-								/>
-							</div>
+
 							<div className={styles.mt}>
 								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
 							</div>
 						</div>
 					</div>
+					{form?.contracts?.map((v, i) => (
+						<ContractItemUpdate key={v?.contractsContractUuid} index={i} contract={v} handleChangeValue={handleChangeValue} />
+					))}
 				</div>
 			</div>
 		</Form>

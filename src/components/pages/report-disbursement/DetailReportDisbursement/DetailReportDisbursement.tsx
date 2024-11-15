@@ -1,35 +1,87 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import {IDetailProjectFund, PropsDetailReportDisbursement} from './interfaces';
+import {IDetailContractFund, IContractFund, PropsDetailReportDisbursement} from './interfaces';
 import styles from './DetailReportDisbursement.module.scss';
 import GridColumn from '~/components/layouts/GridColumn';
 import Moment from 'react-moment';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRouter} from 'next/router';
 import {httpRequest} from '~/services';
-import projectFundServices from '~/services/projectFundServices';
 import {convertCoin} from '~/common/funcs/convertCoin';
-import Progress from '~/components/common/Progress';
+import icons from '~/constants/images/icons';
+import Button from '~/components/common/Button';
+import {DocumentForward} from 'iconsax-react';
+import contractsFundServices from '~/services/contractFundServices';
+import clsx from 'clsx';
+import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
+import Table from '~/components/common/Table';
+import Pagination from '~/components/common/Pagination';
+import Tippy from '@tippyjs/react';
+import DataWrapper from '~/components/common/DataWrapper';
+import Noti from '~/components/common/DataWrapper/components/Noti';
+import Link from 'next/link';
+import Dialog from '~/components/common/Dialog';
+import projectFundServices from '~/services/projectFundServices';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
-	const {_id} = router.query;
+	const queryClient = useQueryClient();
 
-	const {data: detailProjectFund} = useQuery<IDetailProjectFund>([QUERY_KEY.detail_report_disbursement, _id], {
+	const {_uuid, _page, _pageSize} = router.query;
+
+	const [openSendReport, setOpenSendReport] = useState<boolean>(false);
+
+	const {data: detailContractFund} = useQuery<IDetailContractFund>([QUERY_KEY.detail_report_disbursement, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: projectFundServices.detailProjectFund({
-					uuid: _id as string,
+				http: contractsFundServices.detailContractFund({
+					uuid: _uuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!_id,
+		enabled: !!_uuid,
+	});
+
+	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_report_disbursement, _page, _pageSize, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractsFundServices.detailContractFundFundPaged({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					uuid: _uuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
+
+	const funcSendReport = useMutation({
+		mutationFn: () =>
+			httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Gửi báo cáo thành công!',
+				http: contractsFundServices.sendContractFund({
+					uuid: detailContractFund?.uuid!,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setOpenSendReport(false);
+				queryClient.invalidateQueries([QUERY_KEY.detail_report_disbursement]);
+				queryClient.invalidateQueries([QUERY_KEY.table_contract_report_disbursement]);
+			}
+		},
 	});
 
 	return (
@@ -45,7 +97,34 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						title: 'Chi tiết báo cáo',
 					},
 				]}
+				action={
+					<div className={styles.group_button}>
+						{(detailContractFund?.state == STATE_REPORT_DISBURSEMENT.REJECTED ||
+							detailContractFund?.state == STATE_REPORT_DISBURSEMENT.NOT_REPORT) && (
+							<>
+								<Button
+									p_14_24
+									rounded_8
+									blueLinear
+									icon={<DocumentForward size={18} color='#fff' />}
+									onClick={() => setOpenSendReport(true)}
+								>
+									Gửi báo cáo
+								</Button>
+								<Button
+									p_14_24
+									rounded_8
+									primaryLinear
+									href={`${PATH.ReportDisbursementUpdate}?_uuid=${detailContractFund?.uuid}`}
+								>
+									Chỉnh sửa
+								</Button>
+							</>
+						)}
+					</div>
+				}
 			/>
+
 			<div className={styles.main}>
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
@@ -53,7 +132,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						<div className={styles.state}>
 							<p>Trạng thái giải ngân:</p>
 							<StateActive
-								stateActive={detailProjectFund?.approved!}
+								stateActive={detailContractFund?.state!}
 								listState={[
 									{
 										state: STATE_REPORT_DISBURSEMENT.REJECTED,
@@ -62,7 +141,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										backgroundColor: '#F37277',
 									},
 									{
-										state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
+										state: STATE_REPORT_DISBURSEMENT.REPORTED,
 										text: 'Đã báo cáo',
 										textColor: '#FFFFFF',
 										backgroundColor: '#4BC9F0',
@@ -73,6 +152,12 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										textColor: '#FFFFFF',
 										backgroundColor: '#06D7A0',
 									},
+									{
+										state: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+										text: 'Chưa báo cáo',
+										textColor: '#FFFFFF',
+										backgroundColor: '#FF852C',
+									},
 								]}
 							/>
 						</div>
@@ -81,62 +166,120 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên công trình</p>
-								<p>{detailProjectFund?.project?.name || '---'}</p>
+								<p>{detailContractFund?.project?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Báo cáo tháng</p>
-								<p>{detailProjectFund?.monthReport || '---'}</p>
-							</div>
-							{/* <div className={styles.item}>
-								<p>Người gửi báo cáo</p>
-								<p>{detailProjectFund?.reporter?.fullname || '---'}</p>
-							</div> */}
-							<div className={styles.item}>
-								<p>Số tiền giải ngân (VND)</p>
-								<p>{convertCoin(detailProjectFund?.realeaseBudget!) || '---'}</p>
+								<p>{`Tháng ${detailContractFund?.releasedMonth} - ${detailContractFund?.releasedYear}`}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tổng mức đầu tư (VND)</p>
-								<p>{convertCoin(detailProjectFund?.totalInvest!) || '---'}</p>
+								<p>Số hợp đồng giải ngân</p>
+								<p>{detailContractFund?.contractCount || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Kế hoạch vốn năm (VND)</p>
-								<p>{convertCoin(detailProjectFund?.annualBudget!) || '---'}</p>
+								<p>Tổng số tiền giải ngân (VND)</p>
+								<p>{convertCoin(detailContractFund?.totalAmount!) || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Lũy kế theo năm (VND)</p>
-								<p>{convertCoin(detailProjectFund?.annualAccumAmount!) || '---'}</p>
-							</div>
-							<div className={styles.item}>
-								<p>Lũy kế theo dự án (VND)</p>
-								<p>{convertCoin(detailProjectFund?.projectAccumAmount!) || '---'} </p>
-							</div>
-							<div className={styles.item}>
-								<p>Tỷ lệ giải ngân</p>
-								<p>
-									<Progress percent={detailProjectFund?.fundProgress!} width={80} />
-								</p>
+								<p>Người báo cáo</p>
+								<p>{detailContractFund?.creator?.fullname || '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày gửi báo cáo</p>
 								<p>
-									<Moment date={detailProjectFund?.created} format='DD/MM/YYYY' />
+									{detailContractFund?.sendDate ? (
+										<Moment date={detailContractFund?.sendDate} format='DD/MM/YYYY' />
+									) : (
+										'---'
+									)}
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Mô tả</p>
-								<p>{detailProjectFund?.note || '---'}</p>
+								<p>Ghi chú</p>
+								<p>{detailContractFund?.note || '---'}</p>
 							</div>
-							{detailProjectFund?.approved === STATE_REPORT_DISBURSEMENT.REJECTED && (
+							{detailContractFund?.state === STATE_REPORT_DISBURSEMENT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối báo cáo giải ngân</p>
-									<p>{detailProjectFund?.feedback || '---'}</p>
+									<p>{detailContractFund?.rejectedReason || '---'}</p>
 								</div>
 							)}
 						</GridColumn>
 					</div>
 				</div>
+				<div className={clsx(styles.basic_info, styles.mt)}>
+					<div className={styles.head}>
+						<h4>Danh sách giải ngân</h4>
+					</div>
+					<WrapperScrollbar>
+						<DataWrapper
+							data={listContractFund?.items || []}
+							loading={listContractFund?.isLoading}
+							noti={<Noti title='Danh sách hợp đồng trống!' des='Hiện tại chưa có hợp đồng nào!' />}
+						>
+							<Table
+								fixedHeader={true}
+								data={listContractFund?.items || []}
+								column={[
+									{
+										title: 'STT',
+										render: (data: IContractFund, index: number) => <>{index + 1}</>,
+									},
+									{
+										title: 'Số hợp đồng',
+										fixedLeft: true,
+										render: (data: IContractFund) => (
+											<Tippy content='Chi tiết hợp đồng'>
+												<Link href={`${PATH.ContractReportDisbursement}/${data?.uuid}`} className={styles.link}>
+													{data?.code}
+												</Link>
+											</Tippy>
+										),
+									},
+									{
+										title: 'Tên công việc',
+										render: (data: IContractFund) => <>{data?.activity?.name}</>,
+									},
+									{
+										title: 'Số tiền giải ngân (VND)',
+										render: (data: IContractFund) => <>{convertCoin(data?.amount)}</>,
+									},
+									{
+										title: 'Ngày giải ngân',
+										render: (data: IContractFund) => (
+											<>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</>
+										),
+									},
+									{
+										title: 'Thuộc nhóm',
+										render: (data: IContractFund) => <>{data?.contractorGroup?.name}</>,
+									},
+									{
+										title: 'Tên nhà thầu',
+										render: (data: IContractFund) => <>{data?.contractor?.name}</>,
+									},
+								]}
+							/>
+						</DataWrapper>
+						<Pagination
+							currentPage={Number(_page) || 1}
+							pageSize={Number(_pageSize) || 20}
+							total={listContractFund?.pagination?.totalCount}
+							dependencies={[_pageSize, _uuid]}
+						/>
+					</WrapperScrollbar>
+				</div>
 			</div>
+
+			<Dialog
+				type='primary'
+				open={openSendReport}
+				icon={icons.question_1}
+				onClose={() => setOpenSendReport(false)}
+				title={'Gửi báo cáo'}
+				note={'Bạn có chắc chắn muốn xác nhận gửi báo cáo này không?'}
+				onSubmit={funcSendReport.mutate}
+			/>
 		</div>
 	);
 }
