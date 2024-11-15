@@ -1,22 +1,26 @@
 import React, {useState} from 'react';
 
-import {PropsMainCreateReportDisbursement} from './interfaces';
+import {IFormCreateReportDisbursement, PropsMainCreateReportDisbursement} from './interfaces';
 import styles from './MainCreateReportDisbursement.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Select, {Option} from '~/components/common/Select';
 import {generateYearsArray} from '~/common/funcs/selectDate';
-import Form, {FormContext, Input} from '~/components/common/Form';
+import Form, {FormContext} from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import TextArea from '~/components/common/Form/components/TextArea';
-import projectFundServices from '~/services/projectFundServices';
-import {price} from '~/common/funcs/convertCoin';
 import {useRouter} from 'next/router';
 import Loading from '~/components/common/Loading';
+import ContractItemCreate from './ContractItemCreate';
+import contractsServices from '~/services/contractsServices';
+import {convertCoin, price} from '~/common/funcs/convertCoin';
+import moment from 'moment';
+import {toastWarn} from '~/common/funcs/toast';
+import contractsFundServices from '~/services/contractFundServices';
 
 function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 	const router = useRouter();
@@ -25,18 +29,12 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const [form, setForm] = useState<{
-		year: number | null;
-		month: number | null;
-		projectUuid: string;
-		budget: number;
-		description: string;
-	}>({
+	const [form, setForm] = useState<IFormCreateReportDisbursement>({
 		year: today.getFullYear(),
 		month: today.getMonth() + 1,
 		projectUuid: '',
-		budget: 0,
 		description: '',
+		contracts: [],
 	});
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
@@ -52,18 +50,50 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		},
 	});
 
-	const funcCreateProjectFund = useMutation({
+	useQuery([QUERY_KEY.detail_contract_report_fund, form.year, form.month, form.projectUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractsServices.getContractsReportFund({
+					year: form.year!,
+					month: form.month!,
+					projectUuid: form.projectUuid,
+				}),
+			}),
+		onSuccess(data) {
+			if (data) {
+				setForm((prev) => ({
+					...prev,
+					contracts: data?.contracts
+						? data?.contracts?.map((v: any) => ({
+								...v,
+								amountDisbursement: 0,
+								dayDisbursement: '',
+						  }))
+						: [],
+				}));
+			}
+		},
+		enabled: !!form.year && !!form.month && !!form.projectUuid,
+	});
+
+	const funcCreateContractsReportFund = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Thêm báo cáo thành công!',
-				http: projectFundServices.createProjectFund({
-					year: form.year!,
-					month: form.month!,
-					projectUuid: form.projectUuid,
-					budget: price(form.budget),
-					note: form.description,
+				http: contractsFundServices.createContractFundReportFund({
+					year: form?.year,
+					month: form?.month,
+					projectUuid: form?.projectUuid,
+					note: form?.description,
+					disbursementInfo: form?.contracts?.map((v) => {
+						return {
+							contractsUuid: v?.uuid,
+							amount: price(v?.amountDisbursement),
+							disbursementDay: moment(v?.dayDisbursement).format('YYYY-MM-DD'),
+						};
+					}),
 				}),
 			});
 		},
@@ -75,13 +105,50 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 	});
 
 	const handleSubmit = () => {
-		return funcCreateProjectFund.mutate();
+		if (!form?.projectUuid) {
+			return toastWarn({msg: 'Vui lòng chọn dự án!'});
+		}
+		if (form?.contracts?.length == 0) {
+			return toastWarn({msg: 'Hiện tại chưa có hợp đồng nào!'});
+		}
+		if (form?.contracts?.some((v) => !v?.dayDisbursement)) {
+			return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
+		}
+		return funcCreateContractsReportFund.mutate();
+	};
+
+	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+		const newData = [...form?.contracts];
+
+		if (isConvert) {
+			if (!Number(price(value))) {
+				newData[index] = {
+					...newData[index],
+					[name]: 0,
+				};
+			}
+
+			newData[index] = {
+				...newData[index],
+				[name]: convertCoin(Number(price(value))),
+			};
+		} else {
+			newData[index] = {
+				...newData[index],
+				[name]: value,
+			};
+		}
+
+		setForm((prev) => ({
+			...prev,
+			contracts: newData,
+		}));
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<div className={styles.container}>
-				<Loading loading={funcCreateProjectFund.isLoading} />
+				<Loading loading={funcCreateContractsReportFund.isLoading} />
 				<Breadcrumb
 					listUrls={[
 						{
@@ -115,7 +182,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 											blueLinear
 											disable={!isDone || !form.year || !form.month || !form.projectUuid}
 										>
-											Gửi báo cáo
+											Thêm báo cáo
 										</Button>
 									</div>
 								)}
@@ -210,28 +277,15 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 									))}
 								</Select>
 							</div>
-							<div className={styles.mt}>
-								<Input
-									label={
-										<span>
-											Số tiền giải ngân <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập số tiền giải ngân'
-									type='text'
-									isMoney
-									name='budget'
-									value={form?.budget}
-									isRequired={true}
-									blur={true}
-									unit='VND'
-								/>
-							</div>
+
 							<div className={styles.mt}>
 								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
 							</div>
 						</div>
 					</div>
+					{form?.contracts?.map((v, i) => (
+						<ContractItemCreate key={v?.uuid} index={i} contract={v} handleChangeValue={handleChangeValue} />
+					))}
 				</div>
 			</div>
 		</Form>

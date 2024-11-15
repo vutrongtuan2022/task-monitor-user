@@ -24,7 +24,13 @@ export interface IWork {
 		uuid: string;
 		name: string;
 		state: number;
+		contracts: {
+			uuid: string;
+			code: string;
+			status: number;
+		};
 	};
+
 	type: number;
 	isInWorkflow: boolean;
 	issue: string;

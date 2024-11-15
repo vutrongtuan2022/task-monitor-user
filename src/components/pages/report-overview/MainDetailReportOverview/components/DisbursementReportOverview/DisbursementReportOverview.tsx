@@ -50,8 +50,8 @@ function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
 								backgroundColor: '#F37277',
 							},
 							{
-								state: STATE_REPORT_DISBURSEMENT.NOT_APPROVED,
-								text: 'Chưa xử lý',
+								state: STATE_REPORT_DISBURSEMENT.REPORTED,
+								text: 'Đã báo cáo',
 								textColor: '#FFFFFF',
 								backgroundColor: '#4BC9F0',
 							},
@@ -60,6 +60,12 @@ function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
 								text: 'Đã duyệt',
 								textColor: '#FFFFFF',
 								backgroundColor: '#06D7A0',
+							},
+							{
+								state: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+								text: 'Chưa báo cáo',
+								textColor: '#FFFFFF',
+								backgroundColor: '#FF852C',
 							},
 						]}
 					/>
