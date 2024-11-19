@@ -7,25 +7,25 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import Form, {FormContext, Input} from '~/components/common/Form';
+import Form, {Input} from '~/components/common/Form';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import branchesServices from '~/services/branchesServices';
 import Select, {Option} from '~/components/common/Select';
-import taskCatServices from '~/services/taskCatServices';
 import clsx from 'clsx';
-import userServices from '~/services/userServices';
 import SelectMany from '~/components/common/SelectMany';
 import TextArea from '~/components/common/Form/components/TextArea';
-import provineServices from '~/services/provineServices';
 import DatePicker from '~/components/common/DatePicker';
 import {IDetailInfoProject} from '../MainInfoProject/interfaces';
-import projectServices from '~/services/projectServices';
 import Loading from '~/components/common/Loading';
 import moment from 'moment';
-import {toastWarn} from '~/common/funcs/toast';
 import GridColumn from '~/components/layouts/GridColumn';
+import projectServices from '~/services/projectServices';
+import branchesServices from '~/services/branchesServices';
+import taskCatServices from '~/services/taskCatServices';
+import userServices from '~/services/userServices';
+import provineServices from '~/services/provineServices';
+import {toastWarn} from '~/common/funcs/toast';
 
 function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	const router = useRouter();
@@ -50,7 +50,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 		description: '',
 	});
 
-	const {data: detailInfoProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
+	const {data: detailProject} = useQuery<IDetailInfoProject>([QUERY_KEY.detail_general_update_project, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.detailInfoProject({
@@ -80,9 +80,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 					code: v?.code,
 				}))
 			);
-		},
-		select(data) {
-			return data;
 		},
 		enabled: !!_uuid,
 	});
@@ -238,62 +235,56 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 	};
 
 	return (
-		<Form form={form} setForm={setForm} onSubmit={handleUpdateGeneralProject}>
-			<div className={styles.container}>
-				<Loading loading={funcUpdateGeneralProject.isLoading} />
-				<Breadcrumb
-					listUrls={[
-						{
-							path: PATH.Project,
-							title: 'Danh sách dự án',
-						},
-						{
-							path: '',
-							title: 'Chỉnh sửa dự án',
-						},
-					]}
-				/>
-				<LayoutPages
-					listPages={[
-						{
-							title: 'Thông tin chung',
-							path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
-						},
-						{
-							title: 'Thông tin kế hoạch vốn',
-							path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
-						},
-						{
-							title: 'Thông tin nhà thầu',
-							path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
-						},
-					]}
-					action={
-						<div className={styles.group_btn}>
-							<Button
-								p_14_24
-								rounded_8
-								light-red
-								onClick={(e) => {
-									e.preventDefault();
-									window.history.back();
-								}}
-							>
-								Hủy bỏ
-							</Button>
-							<FormContext.Consumer>
-								{({isDone}) => (
-									<div className={styles.btn}>
-										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
-											Lưu lại
-										</Button>
-									</div>
-								)}
-							</FormContext.Consumer>
-						</div>
-					}
-				>
-					<div className={styles.main}>
+		<div className={styles.container}>
+			<Loading loading={funcUpdateGeneralProject.isLoading} />
+			<Breadcrumb
+				listUrls={[
+					{
+						path: PATH.Project,
+						title: 'Danh sách dự án',
+					},
+					{
+						path: '',
+						title: 'Chỉnh sửa dự án',
+					},
+				]}
+			/>
+			<LayoutPages
+				listPages={[
+					{
+						title: 'Thông tin chung',
+						path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Thông tin kế hoạch vốn',
+						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Quản lý nhà thầu',
+						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
+					},
+				]}
+				action={
+					<div className={styles.group_btn}>
+						<Button
+							p_14_24
+							rounded_8
+							light-red
+							onClick={(e) => {
+								e.preventDefault();
+								window.history.back();
+							}}
+						>
+							Hủy bỏ
+						</Button>
+						<Button p_14_24 rounded_8 blueLinear onClick={handleUpdateGeneralProject}>
+							Lưu lại
+						</Button>
+					</div>
+				}
+			>
+				<div className={styles.main}>
+					<Form form={form} setForm={setForm}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
 								<h4>Thông tin cơ bản</h4>
@@ -350,7 +341,6 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											name='name'
 											value={form?.name}
 											isRequired={true}
-											max={255}
 											blur={true}
 										/>
 									</div>
@@ -364,7 +354,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 										name='type'
 										value={form.type}
 										placeholder='Chọn'
-										readOnly={detailInfoProject?.state === STATE_PROJECT.DO}
+										readOnly={detailProject?.state == STATE_PROJECT.DO}
 									>
 										{listTasks?.map((v: any) => (
 											<Option
@@ -494,6 +484,7 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
+
 									<div>
 										<Select
 											isSearch
@@ -539,21 +530,15 @@ function UpdateInfoProject({}: PropsUpdateInfoProject) {
 											/>
 										))}
 									</Select>
-									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' max={255} blur />
-									<TextArea
-										name='description'
-										placeholder='Nhập quy mô công trình'
-										label='Quy mô công trình'
-										max={255}
-										blur
-									/>
+									<TextArea name='address' placeholder='Nhập địa chỉ chi tiết' label='Địa chỉ chi tiết' />
+									<TextArea name='description' placeholder='Nhập quy mô công trình' label='Quy mô công trình' />
 								</GridColumn>
 							</div>
 						</div>
-					</div>
-				</LayoutPages>
-			</div>
-		</Form>
+					</Form>
+				</div>
+			</LayoutPages>
+		</div>
 	);
 }
 

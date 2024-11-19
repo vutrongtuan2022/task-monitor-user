@@ -2,6 +2,7 @@ export interface PropsMainUpdateReportDisbursement {}
 
 export interface IContractUpdateReportFund {
 	contractsContractUuid: string;
+	guaranteeReverseAmount: number;
 	guaranteeAmount: number;
 	releaseDate: string;
 	detailContractsDTO: {

@@ -11,19 +11,7 @@ import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
 
-function ContractItemCreate({index, contract, handleChangeValue}: PropsContractItemCreate) {
-	const [items, setItems] = useState<
-		{
-			reverseAmount: number | null;
-			amountDisbursement: number | null;
-			dayDisbursement: string;
-		}[]
-	>([]);
-	const handleDelete = (index: number) => {
-		const updatedItems = items.filter((_, i) => i !== index);
-		setItems(updatedItems);
-	};
-
+function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: PropsContractItemCreate) {
 	return (
 		<div className={styles.container}>
 			<div className={styles.grid}>
@@ -138,12 +126,9 @@ function ContractItemCreate({index, contract, handleChangeValue}: PropsContractI
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
 						<h4>Thông tin giải ngân</h4>
-						<div className={styles.state}>
-							{index >= 0 && (
-								<div className={styles.delete} onClick={() => handleDelete(index)}>
-									<Trash size={22} color='#fff' />
-								</div>
-							)}
+
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#EE464C' />
 						</div>
 					</div>
 					<div className={styles.main}>
@@ -154,7 +139,7 @@ function ContractItemCreate({index, contract, handleChangeValue}: PropsContractI
 							<input
 								name='value'
 								type='text'
-								placeholder='Nhập số tiền giải ngân'
+								placeholder='Nhập vốn dự phòng'
 								className={styles.input}
 								value={contract?.reverseAmount}
 								onChange={(e) => handleChangeValue(index, 'reverseAmount', e.target.value, true)}
@@ -168,7 +153,7 @@ function ContractItemCreate({index, contract, handleChangeValue}: PropsContractI
 							<input
 								name='value'
 								type='text'
-								placeholder='Nhập số tiền giải ngân'
+								placeholder='Nhập vốn dự án'
 								className={styles.input}
 								value={contract?.amountDisbursement}
 								onChange={(e) => handleChangeValue(index, 'amountDisbursement', e.target.value, true)}

@@ -147,6 +147,13 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		}));
 	};
 
+	const handleDelete = (index: number) => {
+		setForm((prev) => ({
+			...prev,
+			contracts: [...prev?.contracts?.slice(0, index), ...prev?.contracts?.slice(index + 1)],
+		}));
+	};
+
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<div className={styles.container}>
@@ -286,7 +293,13 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 						</div>
 					</div>
 					{form?.contracts?.map((v, i) => (
-						<ContractItemCreate key={v?.uuid} index={i} contract={v} handleChangeValue={handleChangeValue} />
+						<ContractItemCreate
+							key={v?.uuid}
+							index={i}
+							contract={v}
+							handleChangeValue={handleChangeValue}
+							handleDelete={() => handleDelete(i)}
+						/>
 					))}
 				</div>
 			</div>

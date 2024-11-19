@@ -70,6 +70,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 						? data?.contracts?.map((v: any) => ({
 								...v,
 								guaranteeAmount: convertCoin(v?.guaranteeAmount),
+								guaranteeReverseAmount: convertCoin(v?.guaranteeReverseAmount),
 						  }))
 						: [],
 				});
@@ -106,6 +107,13 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 		}));
 	};
 
+	const handleDelete = (index: number) => {
+		setForm((prev) => ({
+			...prev,
+			contracts: [...prev?.contracts?.slice(0, index), ...prev?.contracts?.slice(index + 1)],
+		}));
+	};
+
 	const funcUpdateReportFund = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -118,6 +126,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 					disbursementInfo: form?.contracts?.map((v) => ({
 						contractsContractUuid: v?.contractsContractUuid,
 						amount: price(v?.guaranteeAmount),
+						reverseAmount: price(v?.guaranteeReverseAmount),
 						disbursementDay: moment(v?.releaseDate).format('YYYY-MM-DD'),
 					})),
 				}),
@@ -284,7 +293,13 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 						</div>
 					</div>
 					{form?.contracts?.map((v, i) => (
-						<ContractItemUpdate key={v?.contractsContractUuid} index={i} contract={v} handleChangeValue={handleChangeValue} />
+						<ContractItemUpdate
+							key={v?.contractsContractUuid}
+							index={i}
+							contract={v}
+							handleChangeValue={handleChangeValue}
+							handleDelete={() => handleDelete(i)}
+						/>
 					))}
 				</div>
 			</div>

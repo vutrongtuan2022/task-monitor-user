@@ -10,15 +10,15 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import projectServices from '~/services/projectServices';
-import Form, {FormContext, Input} from '~/components/common/Form';
+import Form, {Input} from '~/components/common/Form';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import clsx from 'clsx';
 import Select, {Option} from '~/components/common/Select';
 import {AddCircle, Trash} from 'iconsax-react';
-import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import GridColumn from '~/components/layouts/GridColumn';
+import projectServices from '~/services/projectServices';
+import {toastWarn} from '~/common/funcs/toast';
 
 function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	const router = useRouter();
@@ -115,62 +115,56 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 	};
 
 	return (
-		<Form form={form} setForm={setForm} onSubmit={updateBudgetProject}>
-			<div className={styles.container}>
-				<Loading loading={funcUpdateBudgetProject.isLoading} />
-				<Breadcrumb
-					listUrls={[
-						{
-							path: PATH.Project,
-							title: 'Danh sách dự án',
-						},
-						{
-							path: '',
-							title: 'Chỉnh sửa dự án',
-						},
-					]}
-				/>
-				<LayoutPages
-					listPages={[
-						{
-							title: 'Thông tin chung',
-							path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
-						},
-						{
-							title: 'Thông tin kế hoạch vốn',
-							path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
-						},
-						{
-							title: 'Thông tin nhà thầu',
-							path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
-						},
-					]}
-					action={
-						<div className={styles.group_btn}>
-							<Button
-								p_14_24
-								rounded_8
-								light-red
-								onClick={(e) => {
-									e.preventDefault();
-									window.history.back();
-								}}
-							>
-								Hủy bỏ
-							</Button>
-							<FormContext.Consumer>
-								{({isDone}) => (
-									<div className={styles.btn}>
-										<Button disable={!isDone} p_14_24 rounded_8 blueLinear>
-											Lưu lại
-										</Button>
-									</div>
-								)}
-							</FormContext.Consumer>
-						</div>
-					}
-				>
-					<div className={styles.main}>
+		<div className={styles.container}>
+			<Loading loading={funcUpdateBudgetProject.isLoading} />
+			<Breadcrumb
+				listUrls={[
+					{
+						path: PATH.Project,
+						title: 'Danh sách dự án',
+					},
+					{
+						path: '',
+						title: 'Chỉnh sửa dự án',
+					},
+				]}
+			/>
+			<LayoutPages
+				listPages={[
+					{
+						title: 'Thông tin chung',
+						path: `${PATH.UpdateInfoProject}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Thông tin kế hoạch vốn',
+						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Quản lý nhà thầu',
+						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
+					},
+				]}
+				action={
+					<div className={styles.group_btn}>
+						<Button
+							p_14_24
+							rounded_8
+							light-red
+							onClick={(e) => {
+								e.preventDefault();
+								window.history.back();
+							}}
+						>
+							Hủy bỏ
+						</Button>
+						<Button p_14_24 rounded_8 blueLinear onClick={updateBudgetProject}>
+							Lưu lại
+						</Button>
+					</div>
+				}
+			>
+				<div className={styles.main}>
+					<Form form={form} setForm={setForm}>
 						<div className={styles.basic_info}>
 							<div className={styles.head}>
 								<h4>Thông tin kế hoạch vốn</h4>
@@ -209,7 +203,17 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
-
+									<Input
+										label={<span>Tổng dự toán</span>}
+										unit='VNĐ'
+										type='text'
+										placeholder='Nhập tổng dự toán'
+										name='realBudget'
+										value={form?.realBudget}
+										isRequired={true}
+										blur={true}
+										isMoney={true}
+									/>
 									<div>
 										<Input
 											label={
@@ -227,17 +231,6 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 											isMoney={true}
 										/>
 									</div>
-
-									<Input
-										label={<span>Tổng dự toán</span>}
-										unit='VNĐ'
-										type='text'
-										placeholder='Nhập tổng dự toán'
-										name='realBudget'
-										value={form?.realBudget}
-										blur={true}
-										isMoney={true}
-									/>
 								</GridColumn>
 								<div className={clsx(styles.mt)}>
 									<GridColumn col_2>
@@ -272,14 +265,14 @@ function UpdateInfoCapital({}: PropsUpdateInfoCapital) {
 									<div>
 										<AddCircle size={20} />
 									</div>
-									<p>Thêm kế hoạch vốn theo năm</p>
+									<p>Thêm kế hoạch năm</p>
 								</div>
 							</div>
 						</div>
-					</div>
-				</LayoutPages>
-			</div>
-		</Form>
+					</Form>
+				</div>
+			</LayoutPages>
+		</div>
 	);
 }
 

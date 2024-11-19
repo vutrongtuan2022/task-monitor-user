@@ -56,5 +56,21 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	listContractsForProject: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			projectUuid: string;
+			contractorUuid: string;
+			contractorCat: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-page-list-contracts-for-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsServices;

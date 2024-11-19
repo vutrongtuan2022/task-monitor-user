@@ -10,15 +10,15 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import projectContractorServices from '~/services/projectContractorServices';
 import clsx from 'clsx';
 import {AddCircle, Trash} from 'iconsax-react';
-import contractorServices from '~/services/contractorServices';
 import Select, {Option} from '~/components/common/Select';
 import Loading from '~/components/common/Loading';
-import {toastWarn} from '~/common/funcs/toast';
 import GridColumn from '~/components/layouts/GridColumn';
+import projectContractorServices from '~/services/projectContractorServices';
+import {toastWarn} from '~/common/funcs/toast';
 import contractorcatServices from '~/services/contractorcatServices';
+import contractorServices from '~/services/contractorServices';
 
 function UpdateInforContractor({}: PropsUpdateInforContractor) {
 	const router = useRouter();
@@ -122,7 +122,7 @@ function UpdateInforContractor({}: PropsUpdateInforContractor) {
 						path: `${PATH.UpdateInfoCapital}?_uuid=${_uuid}`,
 					},
 					{
-						title: 'Thông tin nhà thầu',
+						title: 'Quản lý nhà thầu',
 						path: `${PATH.UpdateInfoContractor}?_uuid=${_uuid}`,
 					},
 				]}
@@ -148,7 +148,7 @@ function UpdateInforContractor({}: PropsUpdateInforContractor) {
 				<div className={styles.main}>
 					<div className={styles.basic_info}>
 						<div className={styles.head}>
-							<h4>Thông tin nhà thầu</h4>
+							<h4>Quản lý nhà thầu</h4>
 						</div>
 						<div className={styles.form}>
 							<GridColumn col_2>

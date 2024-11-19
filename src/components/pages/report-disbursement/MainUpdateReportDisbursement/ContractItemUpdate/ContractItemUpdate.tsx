@@ -8,8 +8,10 @@ import Progress from '~/components/common/Progress';
 import DatePicker from '~/components/common/DatePicker';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
+import {Trash} from 'iconsax-react';
+import clsx from 'clsx';
 
-function ContractItemUpdate({index, contract, handleChangeValue}: PropsContractItemUpdate) {
+function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: PropsContractItemUpdate) {
 	return (
 		<div className={styles.container}>
 			<div className={styles.grid}>
@@ -130,16 +132,34 @@ function ContractItemUpdate({index, contract, handleChangeValue}: PropsContractI
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
 						<h4>Thông tin giải ngân</h4>
+
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#EE464C' />
+						</div>
 					</div>
 					<div className={styles.main}>
 						<p className={styles.label}>
-							Số tiền giải ngân <span style={{color: 'red'}}>*</span>
+							Vốn dự phòng <span style={{color: 'red'}}>*</span>
 						</p>
 						<div className={styles.input_specification}>
 							<input
 								name='value'
 								type='text'
-								placeholder='Nhập số tiền giải ngân'
+								placeholder='Nhập vốn dự phòng'
+								className={styles.input}
+								value={contract?.guaranteeReverseAmount}
+								onChange={(e) => handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true)}
+							/>
+							<div className={styles.unit}>VNĐ</div>
+						</div>
+						<p className={clsx(styles.label, styles.mt)}>
+							Vốn dự án <span style={{color: 'red'}}>*</span>
+						</p>
+						<div className={styles.input_specification}>
+							<input
+								name='value'
+								type='text'
+								placeholder='Nhập vốn dự án'
 								className={styles.input}
 								value={contract?.guaranteeAmount}
 								onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true)}

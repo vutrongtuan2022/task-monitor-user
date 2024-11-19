@@ -142,3 +142,24 @@ $font-size-input: 16px;
 .mt {
 	margin-top: 20px;
 }
+
+.delete {
+	border-radius: 8px;
+	padding: 8px;
+	background: rgba(244, 97, 97, 0.1);
+	border: 1px solid #ebaaac;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.7;
+	}
+
+	&:active {
+		transform: scale(0.9);
+	}
+}

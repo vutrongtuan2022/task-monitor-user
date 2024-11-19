@@ -208,8 +208,12 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 										),
 									},
 									{
-										title: 'Số tiền giải ngân (VND)',
-										render: (data: IContractDetailFund) => <>{convertCoin(data?.amount) || '---'}</>,
+										title: 'Vốn dự phòng (VND)',
+										render: (data: IContractDetailFund) => <>{convertCoin(data?.reverseAmount) || '---'}</>,
+									},
+									{
+										title: 'Vốn dự án (VND)',
+										render: (data: IContractDetailFund) => <>{convertCoin(data?.projectAmount) || '---'}</>,
 									},
 									{
 										title: 'Ngày giải ngân',

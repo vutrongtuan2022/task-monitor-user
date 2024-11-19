@@ -17,9 +17,7 @@ import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
 import {DocumentForward, Edit, Eye} from 'iconsax-react';
 import Moment from 'react-moment';
-import Progress from '~/components/common/Progress';
 import {convertCoin} from '~/common/funcs/convertCoin';
-import projectFundServices from '~/services/projectFundServices';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
@@ -170,8 +168,12 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 								render: (data: IReportDisbursement) => <>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</>,
 							},
 							{
-								title: 'Số tiền giải ngân (VND)',
-								render: (data: IReportDisbursement) => <>{convertCoin(data?.totalAmount) || '---'}</>,
+								title: 'Vốn dự phòng (VND)',
+								render: (data: IReportDisbursement) => <>{convertCoin(data?.reverseAmount) || '---'}</>,
+							},
+							{
+								title: 'Vốn dự án (VND)',
+								render: (data: IReportDisbursement) => <>{convertCoin(data?.projectAmount) || '---'}</>,
 							},
 							{
 								title: 'Kế hoạch vốn năm (VND)',

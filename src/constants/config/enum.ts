@@ -17,6 +17,7 @@ export enum QUERY_KEY {
 	table_contract_report_disbursement,
 	table_contract_fund_detail,
 	table_contract_fund_for_over_view,
+	table_contract_for_project,
 
 	dropdown_branches,
 	dropdown_project,
@@ -50,6 +51,7 @@ export enum QUERY_KEY {
 	detail_contract,
 	detail_contract_report_fund,
 	detail_contract_report_fund_for_update,
+	detail_progress_contract_fund_project,
 }
 
 export enum TYPE_DATE {

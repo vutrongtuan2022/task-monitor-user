@@ -14,20 +14,18 @@ import Moment from 'react-moment';
 import clsx from 'clsx';
 import {httpRequest} from '~/services';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import projectServices from '~/services/projectServices';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import icons from '~/constants/images/icons';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
+import projectServices from '~/services/projectServices';
 import Tippy from '@tippyjs/react';
 
 function MainInfoProject({}: PropsMainInfoProject) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-	const today = new Date();
-	const currentYear = today.getFullYear();
 
 	const {_uuid} = router.query;
 
@@ -108,7 +106,6 @@ function MainInfoProject({}: PropsMainInfoProject) {
 			}
 		},
 	});
-
 	const funcReStartProject = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -154,16 +151,20 @@ function MainInfoProject({}: PropsMainInfoProject) {
 						path: `${PATH.ProjectInfo}?_uuid=${_uuid}`,
 					},
 					{
-						title: 'Báo cáo công việc',
+						title: 'Quản lý công việc',
 						path: `${PATH.ProjectWorkReport}?_uuid=${_uuid}`,
 					},
 					{
-						title: 'Tiến độ giải ngân',
+						title: 'Quản lý hợp đồng',
 						path: `${PATH.ProjectDisbursementProgress}?_uuid=${_uuid}`,
 					},
 					{
-						title: 'Thông tin nhà thầu',
+						title: 'Quản lý nhà thầu',
 						path: `${PATH.ProjectContractor}?_uuid=${_uuid}`,
+					},
+					{
+						title: 'Nhật ký kế hoạch vốn',
+						path: `${PATH.ProjectPlanningCapital}?_uuid=${_uuid}`,
 					},
 				]}
 				action={
@@ -385,16 +386,15 @@ function MainInfoProject({}: PropsMainInfoProject) {
 									<p>Vốn dự phòng còn lại</p>
 									<p>{convertCoin(detailProject?.remainReserveBudget!)} VND</p>
 								</div>
-
-								<div className={styles.line}></div>
-								<div className={styles.item_capital}>
-									<p>Kế hoạch vốn theo năm {currentYear}</p>
-									<p>{convertCoin(detailProject?.annualBudget!)} VND</p>
-								</div>
 								<div className={styles.line}></div>
 								<div className={styles.item_capital}>
 									<p>Số tiền giải ngân lũy kế theo năm</p>
 									<p>{convertCoin(detailProject?.annualAccumAmount!)} VND</p>
+								</div>
+								<div className={styles.line}></div>
+								<div className={styles.item_capital}>
+									<p>Kế hoạch vốn theo năm</p>
+									<p>{convertCoin(detailProject?.annualBudget!)} VND</p>
 								</div>
 								<div className={styles.line}></div>
 								<div className={styles.item_capital}>

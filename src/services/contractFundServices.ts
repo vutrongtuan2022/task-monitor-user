@@ -76,6 +76,7 @@ const contractsFundServices = {
 			disbursementInfo: {
 				contractsContractUuid: string;
 				amount: number;
+				reverseAmount: number;
 				disbursementDay: string;
 			}[];
 		},

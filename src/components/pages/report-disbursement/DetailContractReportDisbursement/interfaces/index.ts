@@ -86,6 +86,8 @@ export interface IDetailContract {
 export interface IContractDetailFund {
 	releasedMonth: number;
 	releasedYear: number;
+	projectAmount: number;
+	reverseAmount: number;
 	amount: number;
 	releasedDate: string;
 	creator: {

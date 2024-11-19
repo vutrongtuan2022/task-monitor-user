@@ -5,7 +5,7 @@ const contractorServices = {
 		data: {
 			keyword: string;
 			status: number;
-			type: number;
+			type: number | null;
 		},
 		tokenAxios?: any
 	) => {
@@ -23,6 +23,22 @@ const contractorServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Contractor/category-contractor-in-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getContractorForProject: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			projectUuid: string;
+			contractorUuid: string;
+			contractorCat: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-contractor-project`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
