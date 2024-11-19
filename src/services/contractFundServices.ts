@@ -110,7 +110,6 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-
 	listContractFundForOverView: (
 		data: {
 			pageSize: number;

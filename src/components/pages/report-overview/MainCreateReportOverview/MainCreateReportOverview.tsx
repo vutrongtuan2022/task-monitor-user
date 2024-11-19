@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Fragment, useState} from 'react';
 
 import {PropsMainCreateReportOverview} from './interfaces';
 import styles from './MainCreateReportOverview.module.scss';
@@ -38,7 +38,7 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 		projectUuid: string;
 	}>({
 		year: today.getFullYear(),
-		month: null,
+		month: today.getMonth() + 1,
 		projectUuid: '',
 	});
 
@@ -252,10 +252,10 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 								{!_type && <ProjectReportOverview />}
 								{_type == 'work' && <WorkReportOverview />}
 								{_type == 'disbursement' && (
-									<div>
+									<Fragment>
 										<DisbursementReportOverview />
 										<TableContracfund />
-									</div>
+									</Fragment>
 								)}
 								{_type == 'plan' && <PlanReportOverview />}
 							</div>

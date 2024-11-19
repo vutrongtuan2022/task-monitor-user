@@ -88,5 +88,19 @@ const overviewServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	listContractFundReportOverview: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/OverviewReport/get-page-list-contract-contract-fund-overview-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default overviewServices;

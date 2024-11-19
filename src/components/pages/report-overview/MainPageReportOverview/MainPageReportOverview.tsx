@@ -140,21 +140,16 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 								),
 							},
 							{
-								title: 'Số hợp đồng giải ngân',
-								render: (data: IReportOverview) => <>{convertCoin(data?.fundReport?.realeaseBudget) || '---'}</>,
+								title: 'Hợp đồng giải ngân',
+								render: (data: IReportOverview) => <>{data?.fund?.totalContracts}</>,
 							},
 							{
 								title: 'Số tiền giải ngân (VND)',
-								render: (data: IReportOverview) => <>{convertCoin(data?.fundReport?.realeaseBudget) || '---'}</>,
+								render: (data: IReportOverview) => <>{convertCoin(data?.fund?.totalFunds) || '---'}</>,
 							},
 							{
 								title: 'Tổng mức đầu tư (VND)',
-								render: (data: IReportOverview) => <>{convertCoin(data?.fundReport?.totalInvest) || '---'}</>,
-							},
-
-							{
-								title: 'Tỷ lệ giải ngân',
-								render: (data: IReportOverview) => <Progress percent={data?.fundReport?.fundProgress} width={80} />,
+								render: (data: IReportOverview) => <>{convertCoin(data?.totalInvest) || '---'}</>,
 							},
 							{
 								title: 'Ngày gửi báo cáo',

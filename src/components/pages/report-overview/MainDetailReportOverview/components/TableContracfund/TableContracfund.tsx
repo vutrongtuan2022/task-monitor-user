@@ -1,48 +1,41 @@
-import React, {useContext, useState} from 'react';
+import React from 'react';
 import styles from './TableContracfund.module.scss';
 import {IContractFund, PropsTableContracFund} from './interface';
 import clsx from 'clsx';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import Pagination from '~/components/common/Pagination';
-import Tippy from '@tippyjs/react';
-import Link from 'next/link';
-import {PATH} from '~/constants/config';
-import contractsFundServices from '~/services/contractFundServices';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
+import {useRouter} from 'next/router';
+import overviewServices from '~/services/overviewServices';
 
 function TableContracfund({}: PropsTableContracFund) {
-	const [page, setPage] = useState<number>(1);
-	const [pageSize, setPageSize] = useState<number>(20);
+	const router = useRouter();
 
-	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
+	const {_uuid, _page, _pageSize} = router.query;
 
-	const {data: listContractFundForOverView, isLoading} = useQuery(
-		[QUERY_KEY.table_contract_fund_for_overview, projectUuid, month, year, page, pageSize],
-		{
-			queryFn: () =>
-				httpRequest({
-					http: contractsFundServices.listContractFundForOverView({
-						page: Number(page) || 1,
-						pageSize: Number(pageSize) || 20,
-						projectUuid: projectUuid,
-						year: year!,
-						month: month!,
-					}),
+	const {data: listContractFundForOverView, isLoading} = useQuery([QUERY_KEY.table_contract_fund_for_overview, _uuid, _page, _pageSize], {
+		queryFn: () =>
+			httpRequest({
+				http: overviewServices.listContractFundReportOverview({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 20,
+					uuid: (_uuid as string) || '',
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
 				}),
-			select(data) {
-				return data;
-			},
-			enabled: !!year && !!month && !!projectUuid,
-		}
-	);
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_uuid,
+	});
 	return (
 		<div className={clsx(styles.basic_info, styles.mt)}>
 			<div className={styles.head}>
@@ -97,12 +90,10 @@ function TableContracfund({}: PropsTableContracFund) {
 					/>
 				</DataWrapper>
 				<Pagination
-					currentPage={page}
-					pageSize={pageSize}
-					onSetPage={setPage}
-					onSetpageSize={setPageSize}
+					currentPage={Number(_page) || 1}
+					pageSize={Number(_pageSize) || 20}
 					total={listContractFundForOverView?.pagination?.totalCount}
-					dependencies={[projectUuid, month, year, pageSize]}
+					dependencies={[_uuid, _pageSize]}
 				/>
 			</WrapperScrollbar>
 		</div>
