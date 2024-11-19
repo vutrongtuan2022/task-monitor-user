@@ -77,6 +77,7 @@ export interface IContractsReportFund {
 	uuid: string;
 	amountDisbursement: number;
 	dayDisbursement: string;
+	reverseAmount: number;
 }
 
 export interface IFormCreateReportDisbursement {

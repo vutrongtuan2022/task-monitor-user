@@ -66,6 +66,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 					contracts: data?.contracts
 						? data?.contracts?.map((v: any) => ({
 								...v,
+								reverseAmount: 0,
 								amountDisbursement: 0,
 								dayDisbursement: '',
 						  }))
@@ -90,6 +91,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 					disbursementInfo: form?.contracts?.map((v) => {
 						return {
 							contractsUuid: v?.uuid,
+							reverseAmount: price(v?.reverseAmount),
 							amount: price(v?.amountDisbursement),
 							disbursementDay: moment(v?.dayDisbursement).format('YYYY-MM-DD'),
 						};

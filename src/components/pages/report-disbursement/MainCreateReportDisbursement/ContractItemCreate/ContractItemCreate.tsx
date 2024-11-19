@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './ContractItemCreate.module.scss';
 import {PropsContractItemCreate} from './interfaces';
 import StateActive from '~/components/common/StateActive';
@@ -8,8 +8,22 @@ import Progress from '~/components/common/Progress';
 import DatePicker from '~/components/common/DatePicker';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
+import {Trash} from 'iconsax-react';
+import clsx from 'clsx';
 
 function ContractItemCreate({index, contract, handleChangeValue}: PropsContractItemCreate) {
+	const [items, setItems] = useState<
+		{
+			reverseAmount: number | null;
+			amountDisbursement: number | null;
+			dayDisbursement: string;
+		}[]
+	>([]);
+	const handleDelete = (index: number) => {
+		const updatedItems = items.filter((_, i) => i !== index);
+		setItems(updatedItems);
+	};
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.grid}>
@@ -124,10 +138,31 @@ function ContractItemCreate({index, contract, handleChangeValue}: PropsContractI
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
 						<h4>Thông tin giải ngân</h4>
+						<div className={styles.state}>
+							{index >= 0 && (
+								<div className={styles.delete} onClick={() => handleDelete(index)}>
+									<Trash size={22} color='#fff' />
+								</div>
+							)}
+						</div>
 					</div>
 					<div className={styles.main}>
 						<p className={styles.label}>
-							Số tiền giải ngân <span style={{color: 'red'}}>*</span>
+							Vốn dự phòng <span style={{color: 'red'}}>*</span>
+						</p>
+						<div className={styles.input_specification}>
+							<input
+								name='value'
+								type='text'
+								placeholder='Nhập số tiền giải ngân'
+								className={styles.input}
+								value={contract?.reverseAmount}
+								onChange={(e) => handleChangeValue(index, 'reverseAmount', e.target.value, true)}
+							/>
+							<div className={styles.unit}>VNĐ</div>
+						</div>
+						<p className={clsx(styles.label, styles.mt)}>
+							Vốn dự án <span style={{color: 'red'}}>*</span>
 						</p>
 						<div className={styles.input_specification}>
 							<input

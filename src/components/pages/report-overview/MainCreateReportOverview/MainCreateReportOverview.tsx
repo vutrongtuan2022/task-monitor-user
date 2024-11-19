@@ -21,6 +21,7 @@ import ProjectReportOverview from './components/ProjectReportOverview';
 import WorkReportOverview from './components/WorkReportOverview';
 import DisbursementReportOverview from './components/DisbursementReportOverview';
 import PlanReportOverview from './components/PlanReportOverview';
+import TableContracfund from './components/TableContracfund/TableContracfund';
 
 function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 	const router = useRouter();
@@ -250,7 +251,12 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 							<div className={styles.main_table}>
 								{!_type && <ProjectReportOverview />}
 								{_type == 'work' && <WorkReportOverview />}
-								{_type == 'disbursement' && <DisbursementReportOverview />}
+								{_type == 'disbursement' && (
+									<div>
+										<DisbursementReportOverview />
+										<TableContracfund />
+									</div>
+								)}
 								{_type == 'plan' && <PlanReportOverview />}
 							</div>
 						</div>

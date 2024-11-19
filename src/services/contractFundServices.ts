@@ -25,6 +25,7 @@ const contractsFundServices = {
 			disbursementInfo: {
 				contractsUuid: string;
 				amount: number;
+				reverseAmount: number;
 				disbursementDay: string;
 			}[];
 		},
@@ -92,6 +93,34 @@ const contractsFundServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/ContractFund/user-send-contract-fund`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
+	getContractFundForOverView: (
+		data: {
+			projectUuid: string;
+			month: number;
+			year: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/get-contract-fun-for-over-view`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
+	listContractFundForOverView: (
+		data: {
+			pageSize: number;
+			page: number;
+			projectUuid: string;
+			year: number | null;
+			month: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/get-list-contract-contract-fund-for-over-view`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

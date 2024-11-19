@@ -84,15 +84,15 @@ export interface IDetailContract {
 }
 
 export interface IContractDetailFund {
-	releasedMonth: 1;
-	releasedYear: 2025;
-	amount: 1200000000;
-	releasedDate: '2025-01-13T00:00:00';
+	releasedMonth: number;
+	releasedYear: number;
+	amount: number;
+	releasedDate: string;
 	creator: {
-		fullname: 'linhtrang';
-		code: 'U45';
-		uuid: '2146100a-87ab-11ef-9e1b-0242ac12005a';
+		fullname: string;
+		code: string;
+		uuid: string;
 	};
-	created: '2024-11-14T02:54:57';
-	state: 0;
+	created: string;
+	state: number;
 }
