@@ -1,3 +1,7 @@
+.container {
+	background-color: #fff;
+	padding: 12px 0;
+}
 .head {
 	border-left: 4px solid #005994;
 	padding: 0 20px;
@@ -53,4 +57,13 @@
 			}
 		}
 	}
+}
+.basic_info {
+	background-color: #fff;
+	border-radius: 12px;
+	padding: 12px 0;
+}
+
+.mt {
+	margin-top: 20px;
 }

@@ -128,7 +128,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IReportOverview) => <>{data?.project?.name}</>,
+								render: (data: IReportOverview) => <>{data?.project?.name || '---'}</>,
 							},
 							{
 								title: 'Số công việc thực hiện',
@@ -138,6 +138,10 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 										<span>{data?.report?.totalActivity}</span>
 									</>
 								),
+							},
+							{
+								title: 'Số hợp đồng giải ngân',
+								render: (data: IReportOverview) => <>{convertCoin(data?.fundReport?.realeaseBudget) || '---'}</>,
 							},
 							{
 								title: 'Số tiền giải ngân (VND)',
