@@ -139,3 +139,8 @@ export enum STATE_COMPLETE_REPORT {
 	ON_SCHEDULE,
 	SLOW_PROGRESS,
 }
+
+export enum SORT_TYPE {
+	DECREASE = 1,
+	INCREASE,
+}

@@ -1,10 +1,10 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 
 import {PropsTable} from './interfaces';
 import clsx from 'clsx';
 import styles from './Table.module.scss';
 
-function Table({data, column, fixedHeader = false, handleCheckedAll, isCheckedAll, handleCheckedRow, handleIsCheckedRow}: PropsTable) {
+function Table({data, column, onSetData, fixedHeader = false}: PropsTable) {
 	const myElementRef = useRef<any>(null);
 	const [isShowScroll, setIsShowScroll] = useState<boolean>(false);
 
@@ -29,6 +29,41 @@ function Table({data, column, fixedHeader = false, handleCheckedAll, isCheckedAl
 		};
 	}, []);
 
+	/*---------- Handle CheckBox ----------*/
+	useEffect(() => {
+		onSetData &&
+			onSetData((prev: any[]) =>
+				prev.map((item: any, index: number) => ({
+					...item,
+					isChecked: false,
+					index: index,
+				}))
+			);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const handleCheckAll = (e: any) => {
+		const {checked} = e.target;
+		onSetData && onSetData((prev: any[]) => prev.map((item: any) => ({...item, isChecked: checked})));
+	};
+
+	const handleCheckRow = (e: any, i: any) => {
+		const {checked} = e.target;
+		onSetData &&
+			onSetData((prev: any[]) =>
+				prev.map((item: any, index: number) => {
+					if (index === i) {
+						return {...item, isChecked: checked};
+					}
+					return item;
+				})
+			);
+	};
+
+	const isCheckedAll = useMemo(() => {
+		return data.length > 0 ? data.some((item: any) => item?.isChecked === false) : false;
+	}, [data]);
+
 	return (
 		<div ref={myElementRef} className={clsx(styles.container, {[styles.fixedHeader]: fixedHeader})}>
 			<table>
@@ -52,10 +87,8 @@ function Table({data, column, fixedHeader = false, handleCheckedAll, isCheckedAl
 								{v.checkBox ? (
 									<input
 										className={clsx(styles.checkbox, styles.checkbox_head)}
-										onChange={(e) => {
-											handleCheckedAll && handleCheckedAll(e);
-										}}
-										checked={isCheckedAll}
+										onChange={handleCheckAll}
+										checked={!isCheckedAll || false}
 										type='checkbox'
 									/>
 								) : null}
@@ -84,10 +117,8 @@ function Table({data, column, fixedHeader = false, handleCheckedAll, isCheckedAl
 										{y.checkBox ? (
 											<input
 												className={styles.checkbox}
-												onChange={(e) => {
-													handleCheckedRow && handleCheckedRow(e, v);
-												}}
-												checked={(handleIsCheckedRow && handleIsCheckedRow(v)) || v?.isChecked || false}
+												onChange={(e) => handleCheckRow(e, i)}
+												checked={v?.isChecked || false}
 												type='checkbox'
 											/>
 										) : null}
