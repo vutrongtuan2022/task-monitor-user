@@ -9,7 +9,11 @@ export interface PropsTable {
 		fixedLeft?: boolean;
 		fixedRight?: boolean;
 	}[];
-	onSetData?: (any: any) => void;
-	isChild?: boolean;
 	fixedHeader?: boolean;
+
+	// Props checked data
+	handleCheckedAll?: (e: any) => void;
+	isCheckedAll?: boolean;
+	handleCheckedRow?: (e: any, data: any) => void;
+	handleIsCheckedRow?: (data: any) => boolean;
 }
