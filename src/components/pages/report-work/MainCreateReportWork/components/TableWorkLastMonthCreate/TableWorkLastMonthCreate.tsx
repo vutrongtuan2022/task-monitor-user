@@ -31,7 +31,7 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 				httpRequest({
 					http: activityServices.getListActivityLastMonth({
 						page: Number(_page) || 1,
-						pageSize: Number(_pageSize) || 20,
+						pageSize: Number(_pageSize) || 10,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
 						state: !!_state ? Number(_state) : null,
@@ -193,7 +193,7 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 			</DataWrapper>
 			<Pagination
 				currentPage={Number(_page) || 1}
-				pageSize={Number(_pageSize) || 20}
+				pageSize={Number(_pageSize) || 10}
 				total={listReportLastMonth?.pagination?.totalCount}
 				dependencies={[_pageSize, _keyword, _state, projectUuid, month, year]}
 			/>

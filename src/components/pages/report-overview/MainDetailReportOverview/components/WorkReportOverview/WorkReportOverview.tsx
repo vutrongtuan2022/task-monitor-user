@@ -26,7 +26,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 				http: overviewServices.activityOverview({
 					uuid: _uuid as string,
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 				}),
@@ -84,8 +84,8 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 									title: 'Loại công việc',
 									render: (data: IWorkReportOverview) => (
 										<>
-											{data?.isWorkFlow && 'Có kế hoạch'}
-											{!data?.isWorkFlow && 'Phát sinh'}
+											{data?.isWorkFlow == 1 && 'Có kế hoạch'}
+											{data?.isWorkFlow == 0 && 'Phát sinh'}
 										</>
 									),
 								},
@@ -161,7 +161,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 					</DataWrapper>
 					<Pagination
 						currentPage={Number(_page) || 1}
-						pageSize={Number(_pageSize) || 20}
+						pageSize={Number(_pageSize) || 10}
 						total={activityOverview?.pagination?.totalCount}
 						dependencies={[_uuid, _pageSize]}
 					/>

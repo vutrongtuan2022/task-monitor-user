@@ -31,7 +31,7 @@ function TableContracfund({}: PropsTableContracFund) {
 				httpRequest({
 					http: contractsFundServices.listContractFundForOverView({
 						page: Number(page) || 1,
-						pageSize: Number(pageSize) || 20,
+						pageSize: Number(pageSize) || 10,
 						projectUuid: projectUuid,
 						year: year!,
 						month: month!,
