@@ -52,7 +52,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 			httpRequest({
 				http: contractsFundServices.detailContractFundFundPaged({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 					uuid: _uuid as string,
@@ -194,7 +194,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Ghi chú</p>
+								<p>Mô tả</p>
 								<p>{detailContractFund?.note || '---'}</p>
 							</div>
 							{detailContractFund?.state === STATE_REPORT_DISBURSEMENT.REJECTED && (
@@ -240,9 +240,14 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										render: (data: IContractFund) => <>{data?.activity?.name}</>,
 									},
 									{
-										title: 'Số tiền giải ngân (VND)',
-										render: (data: IContractFund) => <>{convertCoin(data?.amount)}</>,
+										title: 'Vốn dự phòng',
+										render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount)}</>,
 									},
+									{
+										title: 'Vốn dự án',
+										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
+									},
+
 									{
 										title: 'Ngày giải ngân',
 										render: (data: IContractFund) => (
@@ -262,7 +267,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 						</DataWrapper>
 						<Pagination
 							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 20}
+							pageSize={Number(_pageSize) || 10}
 							total={listContractFund?.pagination?.totalCount}
 							dependencies={[_pageSize, _uuid]}
 						/>

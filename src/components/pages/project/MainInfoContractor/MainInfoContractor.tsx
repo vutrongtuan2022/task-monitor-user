@@ -56,7 +56,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 				httpRequest({
 					http: contractorServices.getContractorForProject({
 						page: Number(_page) || 1,
-						pageSize: Number(_pageSize) || 20,
+						pageSize: Number(_pageSize) || 10,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
 						projectUuid: (_uuid as string) || '',
@@ -297,11 +297,11 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									},
 									{
 										title: 'Tên nhà thầu',
-										render: (data: IContractorProject) => <>{data?.contractor?.name || ''}</>,
+										render: (data: IContractorProject) => <>{data?.contractor?.name || '---'}</>,
 									},
 									{
 										title: 'Số lượng hợp đồng',
-										render: (data: IContractorProject) => <>{data?.totalContract || ''}</>,
+										render: (data: IContractorProject) => <>{data?.totalContract || '0'}</>,
 									},
 									{
 										title: 'Tổng giá trị hợp đồng (VND',
@@ -312,7 +312,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 						</DataWrapper>
 						<Pagination
 							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 20}
+							pageSize={Number(_pageSize) || 10}
 							total={listContractorProject?.pagination?.totalCount || 0}
 							dependencies={[_uuid, _pageSize, _keyword, _contractorUuid, _contractorCat]}
 						/>

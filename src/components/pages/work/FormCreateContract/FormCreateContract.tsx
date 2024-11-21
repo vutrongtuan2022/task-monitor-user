@@ -136,6 +136,9 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 		if (!form?.startDate) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
 		}
+		if (form?.totalDayAdvantage! < 0) {
+			return toastWarn({msg: 'Thời gian thực hiện hợp đồng không hợp lệ!'});
+		}
 
 		return funcCreateContract.mutate();
 	};

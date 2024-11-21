@@ -23,6 +23,7 @@ import overviewServices from '~/services/overviewServices';
 import Button from '~/components/common/Button';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
+import Tippy from '@tippyjs/react';
 
 function MainPageReportOverview({}: PropsMainPageReportOverview) {
 	const router = useRouter();
@@ -36,7 +37,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 			httpRequest({
 				http: overviewServices.listOverview({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					year: !!_year ? Number(_year) : null,
@@ -128,7 +129,11 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IReportOverview) => <>{data?.project?.name || '---'}</>,
+								render: (data: IReportOverview) => (
+									<Tippy content={data?.project?.name}>
+										<p className={styles.name}>{data?.project?.name || '---'}</p>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Số công việc thực hiện',
@@ -140,7 +145,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 								),
 							},
 							{
-								title: 'Hợp đồng giải ngân',
+								title: 'Số hợp đồng giải ngân',
 								render: (data: IReportOverview) => <>{data?.fund?.totalContracts}</>,
 							},
 							{
@@ -176,7 +181,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listOverview?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _year, _month]}
 				/>

@@ -47,7 +47,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 			httpRequest({
 				http: contractsServices.contractsReportFundpaged({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 					uuid: _uuid as string,
@@ -108,7 +108,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 							<div className={styles.item}>
 								<p>Lũy kế giải ngân hiện tại</p>
 								<p>
-									<span style={{color: '#EE464C'}}>{convertCoin(detailContract?.contractExecution?.amount!)}</span> /{' '}
+									<span style={{color: '#EE464C'}}>{convertCoin(detailContract?.accumAmount!)}</span> /{' '}
 									<span>{convertCoin(detailContract?.amount!)}</span>
 								</p>
 							</div>
@@ -139,13 +139,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 							</div>
 							<div className={styles.item}>
 								<p>Thời gian THHĐ</p>
-								<p>
-									{detailContract?.totalDayAdvantage ? (
-										<Moment date={detailContract?.totalDayAdvantage} format='DD/MM/YYYY' />
-									) : (
-										'---'
-									)}
-								</p>
+								<p>{detailContract?.totalDayAdvantage}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Giá trị BLTHHĐ</p>
@@ -266,7 +260,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 						</DataWrapper>
 						<Pagination
 							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 20}
+							pageSize={Number(_pageSize) || 10}
 							total={listContractFund?.pagination?.totalCount}
 							dependencies={[_pageSize, _uuid]}
 						/>

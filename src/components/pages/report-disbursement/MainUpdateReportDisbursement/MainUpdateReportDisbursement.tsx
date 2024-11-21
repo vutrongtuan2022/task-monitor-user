@@ -143,9 +143,9 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 		if (form?.contracts?.length == 0) {
 			return toastWarn({msg: 'Hiện tại chưa có hợp đồng nào!'});
 		}
-		if (form?.contracts?.some((v) => !v?.releaseDate)) {
-			return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
-		}
+		// if (form?.contracts?.some((v) => !v?.releaseDate)) {
+		// 	return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
+		// }
 
 		return funcUpdateReportFund.mutate();
 	};

@@ -84,13 +84,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							</div>
 							<div className={styles.item}>
 								<p>Thời gian THHĐ</p>
-								<p>
-									{contract?.totalDayAdvantage ? (
-										<Moment date={contract?.totalDayAdvantage} format='DD/MM/YYYY' />
-									) : (
-										'---'
-									)}
-								</p>
+								<p>{contract?.totalDayAdvantage || '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Giá trị BLTHHĐ</p>
@@ -132,9 +126,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 						</div>
 					</div>
 					<div className={styles.main}>
-						<p className={styles.label}>
-							Vốn dự phòng <span style={{color: 'red'}}>*</span>
-						</p>
+						<p className={styles.label}>Vốn dự phòng</p>
 						<div className={styles.input_specification}>
 							<input
 								name='value'
@@ -146,9 +138,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							/>
 							<div className={styles.unit}>VNĐ</div>
 						</div>
-						<p className={clsx(styles.label, styles.mt)}>
-							Vốn dự án <span style={{color: 'red'}}>*</span>
-						</p>
+						<p className={clsx(styles.label, styles.mt)}>Vốn dự án</p>
 						<div className={styles.input_specification}>
 							<input
 								name='value'
@@ -164,11 +154,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							<DatePicker
 								onClean={true}
 								icon={true}
-								label={
-									<span>
-										Ngày giải ngân <span style={{color: 'red'}}>*</span>
-									</span>
-								}
+								label={<span>Ngày giải ngân</span>}
 								placeholder='Chọn ngày giải ngân'
 								value={contract?.dayDisbursement}
 								onSetValue={(date) => handleChangeValue(index, 'dayDisbursement', date)}

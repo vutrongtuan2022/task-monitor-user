@@ -57,4 +57,7 @@ export interface IContractFund {
 	code: string;
 	status: number;
 	uuid: string;
+
+	projectAmount: number;
+	reverseAmount: number;
 }

@@ -72,7 +72,7 @@ function MainPageWork({}: PropsMainPageWork) {
 			httpRequest({
 				http: activityServices.listActivityForActionNew({
 					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 20,
+					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
@@ -298,7 +298,11 @@ function MainPageWork({}: PropsMainPageWork) {
 							},
 							{
 								title: 'Tên công trình',
-								render: (data: IWork) => <>{data?.report?.project?.name}</>,
+								render: (data: IWork) => (
+									<Tippy content={data?.report?.project?.name}>
+										<p className={styles.name}>{data?.report?.project?.name}</p>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Megatype',
@@ -309,6 +313,10 @@ function MainPageWork({}: PropsMainPageWork) {
 										{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}
 									</p>
 								),
+							},
+							{
+								title: 'Lãnh đạo phụ trách',
+								render: (data: IWork) => <>{data?.report?.project?.leader?.fullname}</>,
 							},
 							{
 								title: 'Tên công việc',
@@ -523,7 +531,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				</DataWrapper>
 				<Pagination
 					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 20}
+					pageSize={Number(_pageSize) || 10}
 					total={listWork?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _state, _year, _month, _type, _project]}
 				/>

@@ -28,6 +28,7 @@ import contractorcatServices from '~/services/contractorcatServices';
 import Search from '~/components/common/Search';
 import Tippy from '@tippyjs/react';
 import contractorServices from '~/services/contractorServices';
+import Link from 'next/link';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
@@ -63,7 +64,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 				httpRequest({
 					http: contractsServices.listContractsForProject({
 						page: Number(_page) || 1,
-						pageSize: Number(_pageSize) || 20,
+						pageSize: Number(_pageSize) || 10,
 						keyword: (_keyword as string) || '',
 						status: STATUS_CONFIG.ACTIVE,
 						projectUuid: (_uuid as string) || '',
@@ -330,9 +331,16 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										title: 'STT',
 										render: (data: IContractsForProject, index: number) => <>{index + 1}</>,
 									},
+
 									{
 										title: 'Số hợp đồng',
-										render: (data: IContractsForProject) => <>{data?.code || '---'}</>,
+										render: (data: IContractsForProject) => (
+											<Tippy content='Chi tiết hợp đồng'>
+												<Link href={`${PATH.ContractReportDisbursement}/${data?.uuid}`} className={styles.link}>
+													{data?.code}
+												</Link>
+											</Tippy>
+										),
 									},
 									{
 										title: 'Giá trị hợp đồng (VND)',
@@ -394,7 +402,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 						</DataWrapper>
 						<Pagination
 							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 20}
+							pageSize={Number(_pageSize) || 10}
 							total={listContractForProject?.pagination?.totalCount || 0}
 							dependencies={[_uuid, _pageSize, _keyword, _contractorUuid, _contractorCat]}
 						/>
