@@ -127,7 +127,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 						contractsContractUuid: v?.contractsContractUuid,
 						amount: price(v?.guaranteeAmount),
 						reverseAmount: price(v?.guaranteeReverseAmount),
-						disbursementDay: moment(v?.releaseDate).format('YYYY-MM-DD'),
+						disbursementDay: v?.releaseDate ? moment(v?.releaseDate).format('YYYY-MM-DD') : null,
 					})),
 				}),
 			});

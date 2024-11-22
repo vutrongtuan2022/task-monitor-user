@@ -301,10 +301,10 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									},
 									{
 										title: 'Số lượng hợp đồng',
-										render: (data: IContractorProject) => <>{data?.totalContract || '0'}</>,
+										render: (data: IContractorProject) => <>{data?.totalContract || 0}</>,
 									},
 									{
-										title: 'Tổng giá trị hợp đồng (VND',
+										title: 'Tổng giá trị hợp đồng (VND)',
 										render: (data: IContractorProject) => <>{convertCoin(data?.amount)}</>,
 									},
 								]}

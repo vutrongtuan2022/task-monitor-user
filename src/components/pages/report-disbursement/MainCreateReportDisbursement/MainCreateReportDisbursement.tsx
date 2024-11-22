@@ -93,7 +93,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 							contractsUuid: v?.uuid,
 							reverseAmount: price(v?.reverseAmount),
 							amount: price(v?.amountDisbursement),
-							disbursementDay: moment(v?.dayDisbursement).format('YYYY-MM-DD'),
+							disbursementDay: v?.dayDisbursement ? moment(v?.dayDisbursement).format('YYYY-MM-DD') : null,
 						};
 					}),
 				}),
