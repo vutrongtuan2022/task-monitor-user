@@ -26,7 +26,7 @@ const contractsFundServices = {
 				contractsUuid: string;
 				amount: number;
 				reverseAmount: number;
-				disbursementDay: string;
+				disbursementDay: string | null;
 			}[];
 		},
 		tokenAxios?: any
@@ -77,7 +77,7 @@ const contractsFundServices = {
 				contractsContractUuid: string;
 				amount: number;
 				reverseAmount: number;
-				disbursementDay: string;
+				disbursementDay: string | null;
 			}[];
 		},
 		tokenAxios?: any
