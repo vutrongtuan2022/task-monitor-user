@@ -285,22 +285,42 @@ function MainPageWork({}: PropsMainPageWork) {
 						column={[
 							{
 								title: 'STT',
-								render: (data: IWork, index: number) => <>{index + 1}</>,
+								render: (data: IWork, index: number) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{index + 1}
+									</p>
+								),
 							},
 							{
 								title: 'Tháng báo cáo',
 								fixedLeft: true,
 								render: (data: IWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										Tháng <span>{data?.report?.month}</span> - <span>{data?.report?.year}</span>
-									</>
+									</p>
 								),
 							},
 							{
 								title: 'Tên công trình',
 								render: (data: IWork) => (
 									<Tippy content={data?.report?.project?.name}>
-										<p className={styles.name}>{data?.report?.project?.name}</p>
+										<p
+											className={styles.name}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.report?.project?.name}
+										</p>
 									</Tippy>
 								),
 							},
@@ -308,58 +328,97 @@ function MainPageWork({}: PropsMainPageWork) {
 								title: 'Megatype',
 								render: (data: IWork) => (
 									<p>
-										<span style={{color: '#2970FF', fontWeight: 700}}>{data?.type == TYPE_WORK.TASK && 'Task'}</span>
-										<span style={{color: '#16C1F3', fontWeight: 600}}>
-											{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}
-										</span>
-										<span style={{fontWeight: 500}}>{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}</span>
+										<span style={{color: '#2970FF'}}>{data?.type == TYPE_WORK.TASK && 'Task'}</span>
+										<span style={{color: ''}}>{data?.type == TYPE_WORK.SUB_TASK && 'Subtask'}</span>
+										<span>{data?.type == TYPE_WORK.SUB_SUB_TASK && 'Subsubtask'}</span>
 									</p>
 								),
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
-								render: (data: IWork) => <>{data?.report?.project?.leader?.fullname}</>,
+								render: (data: IWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{data?.report?.project?.leader?.fullname}
+									</p>
+								),
 							},
 							{
 								title: 'Tên công việc',
 								render: (data: IWork) => (
 									<Tippy content={data?.activity?.name}>
-										<p className={styles.name}>{data?.activity?.name}</p>
+										<p
+											className={styles.name}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.activity?.name}
+										</p>
 									</Tippy>
 								),
 							},
 							{
 								title: 'Giai đoạn thực hiện',
 								render: (data: IWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										{data?.stage == -1 || (!data?.stage && '---')}
 										{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 										{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
 										{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
-									</>
+									</p>
 								),
 							},
 
 							{
 								title: 'Loại công việc',
 								render: (data: IWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										{!data?.isInWorkflow && 'Phát sinh'}
 										{data?.isInWorkflow && 'Có kế hoạch'}
-									</>
+									</p>
 								),
 							},
 							{
 								title: 'Khó khăn vướng mắc',
 								render: (data: IWork) => (
 									<Tippy content={data?.issue || '---'}>
-										<p className={styles.issue}>{data?.issue || '---'}</p>
+										<p
+											className={styles.issue}
+											style={{
+												color:
+													data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+											}}
+										>
+											{data?.issue || '---'}
+										</p>
 									</Tippy>
 								),
 							},
 							{
 								title: 'Hợp đồng',
-								render: (data: IWork) => <> {data?.activity?.contracts?.code || '---'}</>,
+								render: (data: IWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{' '}
+										{data?.activity?.contracts?.code || '---'}
+									</p>
+								),
 							},
 							{
 								title: 'Tiến độ công việc',
@@ -368,67 +427,83 @@ function MainPageWork({}: PropsMainPageWork) {
 							{
 								title: 'Trạng thái',
 								render: (data: IWork) => (
-									<StateActive
-										stateActive={data?.activityState}
-										listState={[
-											{
-												state: STATE_REPORT_WORK.NOT_PROCESSED,
-												text: 'Chưa xử lý',
-												textColor: '#fff',
-												backgroundColor: '#F37277',
-											},
-											{
-												state: STATE_REPORT_WORK.PROCESSING,
-												text: 'Đang xử lý',
-												textColor: '#fff',
-												backgroundColor: '#16C1F3',
-											},
-											{
-												state: STATE_REPORT_WORK.COMPLETED,
-												text: 'Đã hoàn thành',
-												textColor: '#fff',
-												backgroundColor: '#06D7A0',
-											},
-										]}
-									/>
+									<div
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										<StateActive
+											stateActive={data?.activityState}
+											listState={[
+												{
+													state: STATE_REPORT_WORK.NOT_PROCESSED,
+													text: 'Chưa xử lý',
+													textColor: '#fff',
+													backgroundColor: '#F37277',
+												},
+												{
+													state: STATE_REPORT_WORK.PROCESSING,
+													text: 'Đang xử lý',
+													textColor: '#fff',
+													backgroundColor: '',
+												},
+												{
+													state: STATE_REPORT_WORK.COMPLETED,
+													text: 'Đã hoàn thành',
+													textColor: '#fff',
+													backgroundColor: '#06D7A0',
+												},
+											]}
+										/>
+									</div>
 								),
 							},
 							{
 								title: 'Tình trạng',
 								render: (data: IWork) => (
-									<StateActive
-										isBox={false}
-										stateActive={data?.deadlineState}
-										listState={[
-											{
-												state: STATE_COMPLETE_REPORT.NOT_DONE,
-												text: 'Chưa thực hiện',
-												textColor: '#FF852C',
-												backgroundColor: '#FF852C',
-											},
-											{
-												state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
-												text: 'Đúng tiến độ',
-												textColor: '#005994',
-												backgroundColor: '#005994',
-											},
-											{
-												state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
-												text: 'Chậm tiến độ',
-												textColor: '#EE464C',
-												backgroundColor: '#EE464C',
-											},
-										]}
-									/>
+									<div
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										<StateActive
+											isBox={false}
+											stateActive={data?.deadlineState}
+											listState={[
+												{
+													state: STATE_COMPLETE_REPORT.NOT_DONE,
+													text: 'Chưa thực hiện',
+													textColor: '#FF852C',
+													backgroundColor: '#FF852C',
+												},
+												{
+													state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
+													text: 'Đúng tiến độ',
+													textColor: '#005994',
+													backgroundColor: '#005994',
+												},
+												{
+													state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
+													text: 'Chậm tiến độ',
+													textColor: '#EE464C',
+													backgroundColor: '#EE464C',
+												},
+											]}
+										/>
+									</div>
 								),
 							},
 							{
 								title: 'Số hóa',
 								render: (data: IWork) => (
-									<>
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
 										{data?.digitalizedState == 0 && 'Chưa số hóa'}
 										{data?.digitalizedState == 1 && 'Đã số hóa'}
-									</>
+									</p>
 								),
 							},
 							{
@@ -441,7 +516,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												{!data?.activity?.contracts?.uuid && (
 													<IconCustom
 														color='#06D7A0'
-														icon={<AddSquare fontSize={20} fontWeight={600} />}
+														icon={<AddSquare fontSize={20} />}
 														tooltip='Thêm hợp đồng'
 														onClick={() => {
 															setNameActivity(data?.activity?.name);
@@ -458,7 +533,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												{!!data?.activity?.contracts?.uuid && (
 													<IconCustom
 														color='#2970FF'
-														icon={<Edit fontSize={20} fontWeight={600} />}
+														icon={<Edit fontSize={20} />}
 														tooltip='Chỉnh sửa hợp đồng'
 														onClick={() => {
 															router.replace({
@@ -477,7 +552,7 @@ function MainPageWork({}: PropsMainPageWork) {
 										{data?.activityState == STATE_REPORT_WORK.NOT_PROCESSED && (
 											<IconCustom
 												color='#4BC9F0'
-												icon={<TickCircle fontSize={20} fontWeight={600} />}
+												icon={<TickCircle fontSize={20} />}
 												tooltip='Xác nhận xử lý'
 												onClick={() => {
 													setUuidConfirm(data?.activity?.uuid);
@@ -490,7 +565,7 @@ function MainPageWork({}: PropsMainPageWork) {
 											<>
 												<IconCustom
 													color='#2970FF'
-													icon={<PenAdd fontSize={20} fontWeight={600} />}
+													icon={<PenAdd fontSize={20} />}
 													tooltip='Nhập khó khăn vướng mắc'
 													onClick={() => {
 														setUuidIssue(data?.activity?.uuid);
@@ -503,7 +578,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												/>
 												<IconCustom
 													color='#5B70B3'
-													icon={<DiscountShape fontSize={20} fontWeight={600} />}
+													icon={<DiscountShape fontSize={20} />}
 													tooltip='Nhập tiến độ'
 													onClick={() => {
 														setUuidProgress(data?.activity?.uuid);
@@ -516,7 +591,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												/>
 												<IconCustom
 													color='#06D7A0'
-													icon={<TickCircle fontSize={20} fontWeight={600} />}
+													icon={<TickCircle fontSize={20} />}
 													tooltip='Xác nhận hoàn thành'
 													onClick={() => {
 														setUuidFinish(data?.activity?.uuid);

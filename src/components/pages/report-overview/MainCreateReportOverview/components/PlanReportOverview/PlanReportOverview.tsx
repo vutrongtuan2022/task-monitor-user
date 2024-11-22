@@ -2,11 +2,9 @@ import React, {useContext, useState} from 'react';
 
 import {IPlanReportOverview, PropsPlanReportOverview} from './interfaces';
 import styles from './PlanReportOverview.module.scss';
-import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_REPORT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
-import overviewServices from '~/services/overviewServices';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
@@ -21,7 +19,7 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
 
 	const [page, setPage] = useState<number>(1);
-	const [pageSize, setPageSize] = useState<number>(20);
+	const [pageSize, setPageSize] = useState<number>(10);
 
 	const {data: nextPlanReport, isLoading} = useQuery(
 		[QUERY_KEY.table_next_plan_report_overview, page, pageSize, year, month, projectUuid],
