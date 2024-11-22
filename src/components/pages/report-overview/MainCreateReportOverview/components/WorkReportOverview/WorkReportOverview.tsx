@@ -20,7 +20,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
 
 	const [page, setPage] = useState<number>(1);
-	const [pageSize, setPageSize] = useState<number>(20);
+	const [pageSize, setPageSize] = useState<number>(10);
 
 	const {data: activityOverview, isLoading} = useQuery([QUERY_KEY.table_work_report_overview, page, pageSize, year, month, projectUuid], {
 		queryFn: () =>
