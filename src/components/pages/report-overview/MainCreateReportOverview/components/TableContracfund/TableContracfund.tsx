@@ -65,7 +65,16 @@ function TableContracfund({}: PropsTableContracFund) {
 							{
 								title: 'Số hợp đồng',
 								fixedLeft: true,
-								render: (data: IContractFund) => <p className={styles.link}>{data?.activity?.contracts?.code}</p>,
+								render: (data: IContractFund) => (
+									<Tippy content='Chi tiết hợp đồng'>
+										<Link
+											href={`${PATH.ContractReportDisbursement}/${data?.activity?.contracts?.uuid}`}
+											className={styles.link}
+										>
+											{data?.activity?.contracts?.code}
+										</Link>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Tên công việc',

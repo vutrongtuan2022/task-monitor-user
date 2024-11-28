@@ -445,7 +445,7 @@ function MainPageWork({}: PropsMainPageWork) {
 													state: STATE_REPORT_WORK.PROCESSING,
 													text: 'Đang xử lý',
 													textColor: '#fff',
-													backgroundColor: '',
+													backgroundColor: '#16C1F3',
 												},
 												{
 													state: STATE_REPORT_WORK.COMPLETED,
@@ -564,19 +564,6 @@ function MainPageWork({}: PropsMainPageWork) {
 										{data?.activityState == STATE_REPORT_WORK.PROCESSING && (
 											<>
 												<IconCustom
-													color='#2970FF'
-													icon={<PenAdd fontSize={20} />}
-													tooltip='Nhập khó khăn vướng mắc'
-													onClick={() => {
-														setUuidIssue(data?.activity?.uuid);
-														setUuidReport(data?.report?.uuid);
-														setForm({
-															issue: data?.issue || '',
-															progress: data?.progress || null,
-														});
-													}}
-												/>
-												<IconCustom
 													color='#5B70B3'
 													icon={<DiscountShape fontSize={20} />}
 													tooltip='Nhập tiến độ'
@@ -599,6 +586,22 @@ function MainPageWork({}: PropsMainPageWork) {
 													}}
 												/>
 											</>
+										)}
+										{(data?.activityState == STATE_REPORT_WORK.COMPLETED ||
+											data?.activityState == STATE_REPORT_WORK.PROCESSING) && (
+											<IconCustom
+												color='#2970FF'
+												icon={<PenAdd fontSize={20} />}
+												tooltip='Nhập khó khăn vướng mắc'
+												onClick={() => {
+													setUuidIssue(data?.activity?.uuid);
+													setUuidReport(data?.report?.uuid);
+													setForm({
+														issue: data?.issue || '',
+														progress: data?.progress || null,
+													});
+												}}
+											/>
 										)}
 									</div>
 								),
