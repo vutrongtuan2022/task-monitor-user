@@ -60,18 +60,24 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 			if (data) {
 				setListActivity(
 					data?.map((v: any) => ({
+						identify: v?.identify,
 						activityUuid: v?.activityUuid,
-						reportUuid: v?.reportUuid,
-						activityReportUuid: v?.activityReportUuid,
 						name: v?.name,
-						parent: v?.parent || null,
-						stage: v?.stage,
-						digitalizedState: v?.digitalizedState,
-						megaType: v?.megaType || '',
-						isInWorkFlow: v?.isInWorkFlow,
 						state: v?.state,
-						completeState: v?.completeState,
-						children: [],
+						registeredMonth: v?.registeredMonth || '',
+						parent: {
+							uuid: v?.parent?.uuid,
+							name: v?.parent?.name,
+						},
+						taskCount: {
+							task: v?.taskCount?.task,
+							subTask: v?.taskCount?.subTask,
+							subSubTask: v?.taskCount?.subSubTask,
+						},
+						megaType: v?.megaType,
+						stage: v?.stage,
+						isInWorkFlow: v?.isInWorkFlow,
+						children: v?.children,
 					}))
 				);
 			}

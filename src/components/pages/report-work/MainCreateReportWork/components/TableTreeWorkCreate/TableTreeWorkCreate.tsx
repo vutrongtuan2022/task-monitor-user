@@ -15,8 +15,6 @@ function TableTreeWorkCreate({listTree, onClose}: PropsTableTreeWorkCreate) {
 	const {listActivity, setListActivity} = useContext<ICreateReportWork>(CreateReportWork);
 	const [selectedNodes, setSelectedNodes] = useState<IActivityRegister[]>(listActivity);
 
-	console.log(listActivity);
-
 	const findParentNode = (node: IActivityRegister, nodes: IActivityRegister[] = listTree): IActivityRegister | null => {
 		for (const currentNode of nodes) {
 			if (currentNode.children.some((child) => child.activityUuid === node.activityUuid)) {

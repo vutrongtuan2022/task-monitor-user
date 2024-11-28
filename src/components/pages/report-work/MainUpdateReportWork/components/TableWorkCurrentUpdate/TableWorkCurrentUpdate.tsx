@@ -57,6 +57,7 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 			if (currentNode.children.some((child) => child.activityUuid === node.activityUuid)) {
 				return currentNode;
 			}
+
 			const parentFromChild = findParentNode(node, currentNode.children);
 			if (parentFromChild) return parentFromChild;
 		}
@@ -64,40 +65,38 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 	};
 
 	const getChildNodes = (node: IActivityUpdate): IActivityUpdate[] => {
-		return node.children.reduce((acc, child) => [...acc, child, ...getChildNodes(child)], [] as IActivityUpdate[]);
+		return node.children.reduce((acc, child) => {
+			return [...acc, child, ...getChildNodes(child)];
+		}, [] as IActivityUpdate[]);
 	};
 
 	const deleteActivityFromList = (node: IActivityUpdate, index: number) => {
-		// Xóa công việc phát sinh ==> Xóa theo index.
 		if (!node.activityUuid) {
-			return setListActivity(listActivity?.filter((_v, i) => i != index));
+			return setListActivity(listActivity?.filter((_v, i) => i !== index));
 		}
 
-		const newSelectedNodes = new Set(listActivity);
+		const nodesToDelete = new Set<string>();
 
-		// Xóa công việc trong cây ==> Xóa node theo uuid trong cây.
-		const deselectNodeAndChildren = (node: IActivityUpdate) => {
-			newSelectedNodes.delete(node);
-			getChildNodes(node).forEach((childNode) => newSelectedNodes.delete(childNode));
+		const findNodesToDelete = (node: IActivityUpdate) => {
+			nodesToDelete.add(node.activityUuid);
+			node.children?.forEach((child) => findNodesToDelete(child));
 		};
 
-		const removeUnselectedParents = (node: IActivityUpdate) => {
-			let parent = findParentNode(node);
-
-			while (parent) {
-				const parentChildren = parent.children;
-				const hasSelectedChild = parentChildren.some((child) => newSelectedNodes.has(child));
+		const removeUnselectedParents = (currentNode: IActivityUpdate) => {
+			const parent = findParentNode(currentNode);
+			if (parent) {
+				const hasSelectedChild = parent.children.some((child) => !nodesToDelete.has(child.activityUuid));
 				if (!hasSelectedChild) {
-					newSelectedNodes.delete(parent);
+					nodesToDelete.add(parent.activityUuid);
+					removeUnselectedParents(parent);
 				}
-				parent = findParentNode(parent);
 			}
 		};
 
-		deselectNodeAndChildren(node);
+		findNodesToDelete(node);
 		removeUnselectedParents(node);
 
-		return setListActivity(Array.from(newSelectedNodes) as IActivityUpdate[]);
+		return setListActivity(listActivity.filter((item) => !nodesToDelete.has(item.activityUuid)));
 	};
 
 	return (
