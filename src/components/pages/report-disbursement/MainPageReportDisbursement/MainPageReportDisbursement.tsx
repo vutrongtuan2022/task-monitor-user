@@ -15,7 +15,7 @@ import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
-import {DocumentForward, Edit, Eye} from 'iconsax-react';
+import {DocumentForward, Edit, Eye, Trash} from 'iconsax-react';
 import Moment from 'react-moment';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import {generateYearsArray} from '~/common/funcs/selectDate';
@@ -38,6 +38,7 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 	const {_page, _pageSize, _keyword, _year, _month, _state} = router.query;
 
 	const [uuidSendReport, setUuidSendReport] = useState<string>('');
+	const [openDelete, setOpenDelete] = useState<IReportDisbursement | null>(null);
 
 	const listUserContractFundAll = useQuery(
 		[QUERY_KEY.table_list_report_disbursement, _page, _pageSize, _keyword, _state, _year, _month],
@@ -78,9 +79,28 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 		},
 	});
 
+	const funcDeleteContratsFund = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa báo cáo thành công',
+				http: contractsFundServices.updateStatus({
+					uuid: openDelete?.uuid!,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setOpenDelete(null);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_report_disbursement]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcSendReport.isLoading} />
+			<Loading loading={funcSendReport.isLoading || funcDeleteContratsFund.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -264,6 +284,16 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
 										/>
+										{data?.state == STATE_REPORT_DISBURSEMENT.NOT_REPORT ? (
+											<IconCustom
+												type='delete'
+												icon={<Trash fontSize={20} fontWeight={600} />}
+												tooltip='Xóa bỏ'
+												onClick={() => {
+													setOpenDelete(data);
+												}}
+											/>
+										) : null}
 									</div>
 								),
 							},
@@ -286,6 +316,14 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 				title={'Gửi báo cáo'}
 				note={'Bạn có chắc chắn muốn xác nhận gửi báo cáo này không?'}
 				onSubmit={funcSendReport.mutate}
+			/>
+			<Dialog
+				type='error'
+				open={!!openDelete}
+				onClose={() => setOpenDelete(null)}
+				title={'Xác nhận xóa'}
+				note={'Bạn có chắc chắn muốn xóa báo cáo này?'}
+				onSubmit={funcDeleteContratsFund.mutate}
 			/>
 		</div>
 	);
