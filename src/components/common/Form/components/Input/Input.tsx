@@ -272,8 +272,6 @@ function Input({
 		return true;
 	};
 
-	console.log(1);
-
 	return (
 		<div
 			className={clsx(styles.container, {

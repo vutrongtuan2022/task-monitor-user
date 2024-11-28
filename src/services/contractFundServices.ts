@@ -124,5 +124,15 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	updateStatus: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/update-status`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsFundServices;
