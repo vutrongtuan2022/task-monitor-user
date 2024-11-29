@@ -89,9 +89,15 @@ function TableContracfund({}: PropsTableContracFund) {
 								render: (data: IContractFund) => <>{convertCoin(data?.amount)}</>,
 							},
 							{
-								title: 'Ngày gửi báo cáo',
+								title: 'Ngày giải ngân',
 								render: (data: IContractFund) => (
 									<>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</>
+								),
+							},
+							{
+								title: 'Ngày gửi báo cáo',
+								render: (data: IContractFund) => (
+									<>{data?.sendDate ? <Moment date={data?.sendDate} format='DD/MM/YYYY' /> : '---'}</>
 								),
 							},
 							{
