@@ -65,10 +65,12 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 						name: v?.name,
 						state: v?.state,
 						registeredMonth: v?.registeredMonth || '',
-						parent: {
-							uuid: v?.parent?.uuid,
-							name: v?.parent?.name,
-						},
+						parent: v?.parent
+							? {
+									uuid: v?.parent?.uuid,
+									name: v?.parent?.name,
+							  }
+							: null,
 						taskCount: {
 							task: v?.taskCount?.task,
 							subTask: v?.taskCount?.subTask,
