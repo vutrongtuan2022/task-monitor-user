@@ -4,6 +4,11 @@
 	flex-direction: column;
 }
 
+.btn {
+	display: flex;
+	gap: 12px;
+}
+
 .head {
 	display: flex;
 	align-items: center;

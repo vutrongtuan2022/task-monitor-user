@@ -10,6 +10,7 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
+import TextArea from '~/components/common/Form/components/TextArea';
 
 function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: PropsContractItemUpdate) {
 	return (
@@ -165,6 +166,16 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								value={contract?.releaseDate}
 								onSetValue={(date) => handleChangeValue(index, 'releaseDate', date)}
 								name='birthday'
+							/>
+						</div>
+						<div className={styles.mt}>
+							<label className={styles.label}>Mô tả</label>
+							<textarea
+								name='note'
+								value={contract?.note}
+								placeholder='Nhập mô tả'
+								className={styles.textarea}
+								onChange={(e) => handleChangeValue(index, 'note', e.target.value)}
 							/>
 						</div>
 					</div>

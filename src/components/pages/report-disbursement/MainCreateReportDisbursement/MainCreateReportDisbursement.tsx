@@ -69,6 +69,8 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 								reverseAmount: 0,
 								amountDisbursement: 0,
 								dayDisbursement: '',
+								contractsUuid: '',
+								note: '',
 						  }))
 						: [],
 				}));
@@ -94,6 +96,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 							reverseAmount: price(v?.reverseAmount),
 							amount: price(v?.amountDisbursement),
 							disbursementDay: v?.dayDisbursement ? moment(v?.dayDisbursement).format('YYYY-MM-DD') : null,
+							note: v?.note,
 						};
 					}),
 				}),
@@ -116,6 +119,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		// if (form?.contracts?.some((v) => !v?.dayDisbursement)) {
 		// 	return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
 		// }
+
 		return funcCreateContractsReportFund.mutate();
 	};
 
@@ -155,7 +159,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 	};
 
 	return (
-		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
+		<Form form={form} setForm={setForm}>
 			<div className={styles.container}>
 				<Loading loading={funcCreateContractsReportFund.isLoading} />
 				<Breadcrumb
@@ -182,20 +186,18 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 							>
 								Hủy bỏ
 							</Button>
-							<FormContext.Consumer>
-								{({isDone}) => (
-									<div className={styles.btn}>
-										<Button
-											p_14_24
-											rounded_8
-											blueLinear
-											disable={!isDone || !form.year || !form.month || !form.projectUuid}
-										>
-											Thêm báo cáo
-										</Button>
-									</div>
-								)}
-							</FormContext.Consumer>
+
+							<div className={styles.btn}>
+								<Button
+									p_14_24
+									rounded_8
+									blueLinear
+									disable={!form.year || !form.month || !form.projectUuid}
+									onClick={handleSubmit}
+								>
+									Thêm báo cáo
+								</Button>
+							</div>
 						</div>
 					}
 				/>
@@ -285,10 +287,6 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 										/>
 									))}
 								</Select>
-							</div>
-
-							<div className={styles.mt}>
-								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
 							</div>
 						</div>
 					</div>

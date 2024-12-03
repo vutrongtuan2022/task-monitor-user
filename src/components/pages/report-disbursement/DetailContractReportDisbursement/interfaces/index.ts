@@ -1,6 +1,7 @@
 export interface PropsDetailContractReportDisbursement {}
 
 export interface IDetailContract {
+	accumAmountThisYear: number;
 	advanceGuarantee: {
 		amount: number;
 		endDate: string;
@@ -97,4 +98,5 @@ export interface IContractDetailFund {
 	};
 	created: string;
 	state: number;
+	note: string;
 }
