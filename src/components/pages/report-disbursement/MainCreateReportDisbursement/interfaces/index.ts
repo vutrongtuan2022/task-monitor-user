@@ -78,6 +78,7 @@ export interface IContractsReportFund {
 	amountDisbursement: number;
 	dayDisbursement: string;
 	reverseAmount: number;
+	note: string;
 }
 
 export interface IFormCreateReportDisbursement {

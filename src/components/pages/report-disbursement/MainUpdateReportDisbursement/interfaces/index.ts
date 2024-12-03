@@ -4,6 +4,7 @@ export interface IContractUpdateReportFund {
 	contractsContractUuid: string;
 	guaranteeReverseAmount: number;
 	guaranteeAmount: number;
+	note: string;
 	releaseDate: string;
 	detailContractsDTO: {
 		advanceGuarantee: {

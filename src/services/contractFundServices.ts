@@ -27,6 +27,7 @@ const contractsFundServices = {
 				amount: number;
 				reverseAmount: number;
 				disbursementDay: string | null;
+				note: string;
 			}[];
 		},
 		tokenAxios?: any
@@ -78,6 +79,7 @@ const contractsFundServices = {
 				amount: number;
 				reverseAmount: number;
 				disbursementDay: string | null;
+				note: string | null;
 			}[];
 		},
 		tokenAxios?: any

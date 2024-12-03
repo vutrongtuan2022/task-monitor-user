@@ -10,6 +10,7 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
+import TextArea from '~/components/common/Form/components/TextArea';
 
 function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: PropsContractItemCreate) {
 	return (
@@ -58,6 +59,11 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 									<span>{convertCoin(contract?.amount)}</span>
 								</p>
 							</div>
+							<div className={styles.item}>
+								<p>Lũy kế giải ngân trong năm (VND)</p>
+								<p>{'---'}</p>
+							</div>
+
 							<div className={styles.item}>
 								<p>Tiến độ giải ngân</p>
 								<Progress percent={contract?.progress} width={80} />
@@ -119,26 +125,13 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 				</div>
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
-						<h4>Thông tin giải ngân</h4>
-
+						<h4>Thông tin giải ngân kỳ này</h4>
 						<div className={styles.delete} onClick={handleDelete}>
 							<Trash size={22} color='#EE464C' />
 						</div>
 					</div>
 					<div className={styles.main}>
-						<p className={styles.label}>Vốn dự phòng</p>
-						<div className={styles.input_specification}>
-							<input
-								name='value'
-								type='text'
-								placeholder='Nhập vốn dự phòng'
-								className={styles.input}
-								value={contract?.reverseAmount}
-								onChange={(e) => handleChangeValue(index, 'reverseAmount', e.target.value, true)}
-							/>
-							<div className={styles.unit}>VNĐ</div>
-						</div>
-						<p className={clsx(styles.label, styles.mt)}>Vốn dự án</p>
+						<p className={clsx(styles.label)}>Vốn dự án</p>
 						<div className={styles.input_specification}>
 							<input
 								name='value'
@@ -147,6 +140,18 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 								className={styles.input}
 								value={contract?.amountDisbursement}
 								onChange={(e) => handleChangeValue(index, 'amountDisbursement', e.target.value, true)}
+							/>
+							<div className={styles.unit}>VNĐ</div>
+						</div>
+						<p className={clsx(styles.label, styles.mt)}>Vốn dự phòng</p>
+						<div className={styles.input_specification}>
+							<input
+								name='value'
+								type='text'
+								placeholder='Nhập vốn dự phòng'
+								className={styles.input}
+								value={contract?.reverseAmount}
+								onChange={(e) => handleChangeValue(index, 'reverseAmount', e.target.value, true)}
 							/>
 							<div className={styles.unit}>VNĐ</div>
 						</div>
@@ -159,6 +164,16 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 								value={contract?.dayDisbursement}
 								onSetValue={(date) => handleChangeValue(index, 'dayDisbursement', date)}
 								name='birthday'
+							/>
+						</div>
+						<div className={styles.mt}>
+							<label className={styles.label}>Mô tả</label>
+							<textarea
+								name='note'
+								value={contract?.note}
+								placeholder='Nhập mô tả'
+								className={styles.textarea}
+								onChange={(e) => handleChangeValue(index, 'note', e.target.value)}
 							/>
 						</div>
 					</div>

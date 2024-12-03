@@ -20,6 +20,7 @@ import ContractItemUpdate from './ContractItemUpdate';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import moment from 'moment';
 import {toastWarn} from '~/common/funcs/toast';
+import {Note} from 'iconsax-react';
 
 function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 	const router = useRouter();
@@ -71,6 +72,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 								...v,
 								guaranteeAmount: convertCoin(v?.guaranteeAmount),
 								guaranteeReverseAmount: convertCoin(v?.guaranteeReverseAmount),
+								note: v?.note,
 						  }))
 						: [],
 				});
@@ -128,6 +130,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 						amount: price(v?.guaranteeAmount),
 						reverseAmount: price(v?.guaranteeReverseAmount),
 						disbursementDay: v?.releaseDate ? moment(v?.releaseDate).format('YYYY-MM-DD') : null,
+						note: v?.note,
 					})),
 				}),
 			});
@@ -287,9 +290,9 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 								</Select>
 							</div>
 
-							<div className={styles.mt}>
+							{/* <div className={styles.mt}>
 								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
-							</div>
+							</div> */}
 						</div>
 					</div>
 					{form?.contracts?.map((v, i) => (
