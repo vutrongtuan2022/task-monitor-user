@@ -154,7 +154,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 	};
 
 	return (
-		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
+		<Form form={form} setForm={setForm}>
 			<div className={styles.container}>
 				<Loading loading={funcUpdateReportFund.isLoading} />
 				<Breadcrumb
@@ -181,20 +181,18 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 							>
 								Hủy bỏ
 							</Button>
-							<FormContext.Consumer>
-								{({isDone}) => (
-									<div className={styles.btn}>
-										<Button
-											p_14_24
-											rounded_8
-											blueLinear
-											disable={!isDone || !form.year || !form.month || !form.projectUuid}
-										>
-											Cập nhật
-										</Button>
-									</div>
-								)}
-							</FormContext.Consumer>
+
+							<div className={styles.btn}>
+								<Button
+									p_14_24
+									rounded_8
+									blueLinear
+									disable={!form.year || !form.month || !form.projectUuid}
+									onClick={handleSubmit}
+								>
+									Cập nhật
+								</Button>
+							</div>
 						</div>
 					}
 				/>
