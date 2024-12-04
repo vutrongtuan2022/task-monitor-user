@@ -55,13 +55,13 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							<div className={styles.item}>
 								<p>Lũy kế giải ngân hiện tại</p>
 								<p>
-									<span style={{color: '#EE464C'}}>{convertCoin(contract?.accumAmount)}</span> /{' '}
-									<span>{convertCoin(contract?.amount)}</span>
+									<span style={{color: '#EE464C'}}>{convertCoin(contract?.accumAmount) || '---'}</span> /{' '}
+									<span>{convertCoin(contract?.amount) || '---'}</span>
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Lũy kế giải ngân trong năm (VND)</p>
-								<p>{'---'}</p>
+								<p>{convertCoin(contract?.accumAmountThisYear) || '---'}</p>
 							</div>
 
 							<div className={styles.item}>

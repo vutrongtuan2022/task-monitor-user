@@ -23,6 +23,7 @@ import Pagination from '~/components/common/Pagination';
 import StateActive from '~/components/common/StateActive';
 import PositionContainer from '~/components/common/PositionContainer';
 import FormUpdateContract from './FormUpdateContract';
+import Tippy from '@tippyjs/react';
 
 function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursement) {
 	const router = useRouter();
@@ -269,7 +270,16 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 									},
 									{
 										title: 'Mô tả',
-										render: (data: IContractDetailFund) => <>{data?.note || '---'}</>,
+										render: (data: IContractDetailFund) => (
+											<>
+												{(data?.note && (
+													<Tippy content={data?.note}>
+														<p className={styles.name}>{data?.note || '---'}</p>
+													</Tippy>
+												)) ||
+													'---'}
+											</>
+										),
 									},
 								]}
 							/>

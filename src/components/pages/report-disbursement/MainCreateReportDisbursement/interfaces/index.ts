@@ -76,6 +76,7 @@ export interface IContractsReportFund {
 	status: number;
 	uuid: string;
 	amountDisbursement: number;
+	accumAmountThisYear: number;
 	dayDisbursement: string;
 	reverseAmount: number;
 	note: string;

@@ -74,15 +74,15 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Tên công việc',
-								render: (data: IContractFund) => <>{data?.activity?.name}</>,
+								render: (data: IContractFund) => <>{data?.activity?.name || '---'}</>,
 							},
 							{
 								title: 'Vốn dự phòng (VND)',
-								render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount)}</>,
+								render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount) || 0}</>,
 							},
 							{
 								title: 'Vốn dự án (VND)',
-								render: (data: IContractFund) => <>{convertCoin(data?.amount)}</>,
+								render: (data: IContractFund) => <>{convertCoin(data?.amount) || 0}</>,
 							},
 							{
 								title: 'Ngày giải ngân',
@@ -98,11 +98,24 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Thuộc nhóm',
-								render: (data: IContractFund) => <>{data?.contractor?.contractorCat?.name}</>,
+								render: (data: IContractFund) => <>{data?.contractor?.contractorCat?.name || '---'}</>,
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: IContractFund) => <>{data?.contractor?.name}</>,
+								render: (data: IContractFund) => <>{data?.contractor?.name || '---'}</>,
+							},
+							{
+								title: 'Mô tả',
+								render: (data: IContractFund) => (
+									<>
+										{(data?.note && (
+											<Tippy content={data?.note}>
+												<p className={styles.name}>{data?.note || '---'}</p>
+											</Tippy>
+										)) ||
+											'---'}
+									</>
+								),
 							},
 						]}
 					/>
