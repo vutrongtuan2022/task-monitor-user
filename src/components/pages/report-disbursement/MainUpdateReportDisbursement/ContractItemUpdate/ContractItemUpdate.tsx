@@ -60,6 +60,10 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								</p>
 							</div>
 							<div className={styles.item}>
+								<p>Lũy kế giải ngân trong năm</p>
+								<p>{convertCoin(contract?.detailContractsDTO?.accumAmountThisYear) || '---'}</p>
+							</div>
+							<div className={styles.item}>
 								<p>Tiến độ giải ngân</p>
 								<Progress percent={contract?.detailContractsDTO?.progress} width={80} />
 							</div>

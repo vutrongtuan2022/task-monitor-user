@@ -13,6 +13,7 @@ import {QUERY_KEY, STATE_WORK_PROJECT, STATUS_CONFIG} from '~/constants/config/e
 import {useQuery} from '@tanstack/react-query';
 import activityServices from '~/services/activityServices';
 import {httpRequest} from '~/services';
+import {toastWarn} from '~/common/funcs/toast';
 
 function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 	const {listActivity, setListActivity, projectUuid} = useContext<ICreateReportWork>(CreateReportWork);
@@ -76,6 +77,7 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 			},
 			...listActivity,
 		]);
+
 		onClose();
 	};
 
@@ -162,7 +164,7 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button
-									disable={!isDone || !form.stage}
+									disable={!isDone || !form.stage || !form.parentTaskUuid}
 									p_12_20
 									primary
 									rounded_6
