@@ -162,7 +162,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button
-									disable={!isDone || !form.stage}
+									disable={!isDone || !form.stage || !form.parentTaskUuid}
 									p_12_20
 									primary
 									rounded_6

@@ -60,7 +60,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Lũy kế giải ngân trong năm (VND)</p>
+								<p>Lũy kế giải ngân trong năm</p>
 								<p>{convertCoin(contract?.accumAmountThisYear) || '---'}</p>
 							</div>
 

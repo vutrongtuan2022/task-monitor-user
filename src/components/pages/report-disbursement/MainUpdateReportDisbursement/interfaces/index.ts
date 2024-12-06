@@ -77,6 +77,7 @@ export interface IContractUpdateReportFund {
 			uuid: string;
 		};
 		totalDayAdvantage: number;
+		accumAmountThisYear: number;
 		amount: number;
 		accumAmount: number;
 		progress: number;
