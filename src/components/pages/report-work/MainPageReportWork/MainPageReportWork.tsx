@@ -167,7 +167,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 						href={PATH.ReportWorkCreate}
 						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 					>
-						Thêm mới báo cáo
+						Tạo kế hoạch tháng
 					</Button>
 				</div>
 			</div>
@@ -178,7 +178,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 					noti={
 						<Noti
 							title='Dữ liệu trống!'
-							des='Danh sách báo cáo công việc trống!'
+							des='Danh sách kế hoạch tháng trống!'
 							button={
 								<Button
 									p_10_24
@@ -187,7 +187,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 									href={PATH.ReportWorkCreate}
 									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
 								>
-									Thêm mới báo cáo
+									Tạo kế hoạch tháng
 								</Button>
 							}
 						/>

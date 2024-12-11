@@ -161,7 +161,7 @@ function TableWorkCurrentCreate({}: PropsTableWorkCurrentCreate) {
 							});
 						}}
 					>
-						Chọn công việc
+						Công việc kế hoạch
 					</Button>
 				</div>
 			</div>
@@ -192,7 +192,7 @@ function TableWorkCurrentCreate({}: PropsTableWorkCurrentCreate) {
 									});
 								}}
 							>
-								Chọn công việc
+								Công việc kế hoạch
 							</Button>
 						}
 					/>

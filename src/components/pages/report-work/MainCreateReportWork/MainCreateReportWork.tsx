@@ -246,7 +246,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 									{
 										pathname: PATH.ProjectCreate,
 										query: 'report',
-										title: 'Báo cáo hiện tại',
+										title: 'Kế hoạch tháng hiện tại',
 									},
 								]}
 							/>
