@@ -130,7 +130,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 				</div>
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
-						<h4>Thông tin giải ngân</h4>
+						<h4>Thông tin giải ngân kỳ này</h4>
 
 						<div className={styles.delete} onClick={handleDelete}>
 							<Trash size={22} color='#EE464C' />
