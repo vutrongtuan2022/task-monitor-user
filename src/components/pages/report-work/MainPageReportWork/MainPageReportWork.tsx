@@ -128,7 +128,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 								},
 								{
 									id: STATE_REPORT.IN_PROGRESS,
-									name: 'Chưa báo cáo',
+									name: 'Đang thực hiện',
 								},
 								{
 									id: STATE_REPORT.PENDING_APPROVAL,
@@ -264,7 +264,7 @@ function MainPageReportWork({}: PropsMainPageReportWork) {
 											},
 											{
 												state: STATE_REPORT.IN_PROGRESS,
-												text: 'Chưa báo cáo',
+												text: 'Đang thực hiện',
 												textColor: '#fff',
 												backgroundColor: '#FF852C',
 											},
