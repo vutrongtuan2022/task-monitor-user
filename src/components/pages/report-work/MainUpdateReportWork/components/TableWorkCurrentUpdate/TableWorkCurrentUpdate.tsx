@@ -205,13 +205,20 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 					column={[
 						{
 							title: 'STT',
-							render: (data: IActivityUpdate, index: number) => <>{index + 1}</>,
+							render: (data: IActivityUpdate, index: number) => (
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>{index + 1}</p>
+							),
 						},
 						{
 							title: 'Tên công việc',
 							render: (data: IActivityUpdate) => (
 								<Tippy content={data?.name}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+									<p
+										style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}
+										className={styles.name}
+									>
+										{data?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
@@ -219,60 +226,71 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 							title: 'Thuộc nhóm công việc',
 							render: (data: IActivityUpdate) => (
 								<Tippy content={data?.parent?.name || '---'}>
-									<p className={styles.group_task}>{data?.parent?.name || '---'}</p>
+									<p
+										style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}
+										className={styles.group_task}
+									>
+										{data?.parent?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
 						{
 							title: 'Giai đoạn thực hiện',
 							render: (data: IActivityUpdate) => (
-								<>
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
 									{data?.stage == -1 && '---'}
 									{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 									{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
 									{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
-								</>
+								</p>
 							),
 						},
 						{
 							title: 'Loại công việc',
 							render: (data: IActivityUpdate) => (
-								<>
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
 									{(data?.isInWorkFlow == null || data?.isInWorkFlow == true) && 'Có kế hoạch'}
 									{data?.isInWorkFlow == false && 'Phát sinh'}
-								</>
+								</p>
 							),
 						},
 						{
 							title: 'Megatype',
-							render: (data: IActivityUpdate) => <>{data?.megaType || '---'}</>,
+							render: (data: IActivityUpdate) => (
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
+									{data?.megaType || '---'}
+								</p>
+							),
 						},
 						{
 							title: 'Trạng thái',
 							render: (data: IActivityUpdate) => (
-								<StateActive
-									stateActive={data?.state}
-									listState={[
-										{
-											state: STATE_WORK_PROJECT.NOT_PROCESSED,
-											text: 'Chưa xử lý',
-											textColor: '#FFFFFF',
-											backgroundColor: '#FDAD73',
-										},
-										{
-											state: STATE_WORK_PROJECT.PROCESSING,
-											text: 'Đang xử lý',
-											textColor: '#FFFFFF',
-											backgroundColor: '#16C1F3',
-										},
-										{
-											state: STATE_WORK_PROJECT.COMPLETED,
-											text: 'Đã hoàn thành',
-											textColor: '#FFFFFF',
-											backgroundColor: '#06D7A0',
-										},
-									]}
-								/>
+								<div style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
+									<StateActive
+										stateActive={data?.state}
+										listState={[
+											{
+												state: STATE_WORK_PROJECT.NOT_PROCESSED,
+												text: 'Chưa xử lý',
+												textColor: '#FFFFFF',
+												backgroundColor: '#FDAD73',
+											},
+											{
+												state: STATE_WORK_PROJECT.PROCESSING,
+												text: 'Đang xử lý',
+												textColor: '#FFFFFF',
+												backgroundColor: '#16C1F3',
+											},
+											{
+												state: STATE_WORK_PROJECT.COMPLETED,
+												text: 'Đã hoàn thành',
+												textColor: '#FFFFFF',
+												backgroundColor: '#06D7A0',
+											},
+										]}
+									/>
+								</div>
 							),
 						},
 						{

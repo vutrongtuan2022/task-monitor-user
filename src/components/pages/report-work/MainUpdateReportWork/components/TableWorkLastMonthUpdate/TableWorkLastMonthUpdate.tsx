@@ -87,20 +87,27 @@ function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 					column={[
 						{
 							title: 'STT',
-							render: (data: IReportWorkLastMonth, index: number) => <>{index + 1}</>,
+							render: (data: IReportWorkLastMonth, index: number) => (
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>{index + 1}</p>
+							),
 						},
 						{
 							title: 'Tên công việc',
 							render: (data: IReportWorkLastMonth, index: number) => (
 								<Tippy content={data?.name || '---'}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+									<p
+										style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}
+										className={styles.name}
+									>
+										{data?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
 						{
 							title: 'Giai đoạn thực hiện',
 							render: (data: IReportWorkLastMonth) => (
-								<span style={{color: '#2970FF'}}>
+								<span style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
 									{!data?.stage && '---'}
 									{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 									{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
@@ -110,82 +117,90 @@ function TableWorkLastMonthUpdate({}: PropsTableWorkLastMonthUpdate) {
 						},
 						{
 							title: 'Megatype',
-							render: (data: IReportWorkLastMonth) => <>{data?.megatype || '---'}</>,
+							render: (data: IReportWorkLastMonth) => (
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+									{data?.megatype || '---'}
+								</p>
+							),
 						},
 						{
 							title: 'Loại công việc',
 							render: (data: IReportWorkLastMonth) => (
-								<>
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
 									{data?.isWorkFlow === 1 && 'Có kế hoạch'}
 									{data?.isWorkFlow === 0 && 'Phát sinh'}
-								</>
+								</p>
 							),
 						},
 						{
 							title: 'Trạng thái',
 							fixedRight: true,
 							render: (data: IReportWorkLastMonth) => (
-								<StateActive
-									stateActive={data?.state}
-									listState={[
-										{
-											state: STATE_REPORT_WORK.NOT_PROCESSED,
-											text: 'Chưa xử lý',
-											textColor: '#FFFFFF',
-											backgroundColor: '#F37277',
-										},
-										{
-											state: STATE_REPORT_WORK.PROCESSING,
-											text: 'Đang xử lý',
-											textColor: '#FFFFFF',
-											backgroundColor: '#4BC9F0',
-										},
-										{
-											state: STATE_REPORT_WORK.COMPLETED,
-											text: 'Đã hoàn thành',
-											textColor: '#FFFFFF',
-											backgroundColor: '#06D7A0',
-										},
-									]}
-								/>
+								<div style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+									<StateActive
+										stateActive={data?.state}
+										listState={[
+											{
+												state: STATE_REPORT_WORK.NOT_PROCESSED,
+												text: 'Chưa xử lý',
+												textColor: '#FFFFFF',
+												backgroundColor: '#F37277',
+											},
+											{
+												state: STATE_REPORT_WORK.PROCESSING,
+												text: 'Đang xử lý',
+												textColor: '#FFFFFF',
+												backgroundColor: '#4BC9F0',
+											},
+											{
+												state: STATE_REPORT_WORK.COMPLETED,
+												text: 'Đã hoàn thành',
+												textColor: '#FFFFFF',
+												backgroundColor: '#06D7A0',
+											},
+										]}
+									/>
+								</div>
 							),
 						},
 						{
 							title: 'Tình trạng',
 							render: (data: IReportWorkLastMonth) => (
-								<StateActive
-									isBox={false}
-									stateActive={data?.deadlineStage}
-									listState={[
-										{
-											state: STATE_COMPLETE_REPORT.NOT_DONE,
-											text: 'Chưa thực hiện',
-											textColor: '#FF852C',
-											backgroundColor: '#FF852C',
-										},
-										{
-											state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
-											text: 'Đúng tiến độ',
-											textColor: '#005994',
-											backgroundColor: '#005994',
-										},
-										{
-											state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
-											text: 'Chậm tiến độ',
-											textColor: '#EE464C',
-											backgroundColor: '#EE464C',
-										},
-									]}
-								/>
+								<div style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+									<StateActive
+										isBox={false}
+										stateActive={data?.deadlineStage}
+										listState={[
+											{
+												state: STATE_COMPLETE_REPORT.NOT_DONE,
+												text: 'Chưa thực hiện',
+												textColor: '#FF852C',
+												backgroundColor: '#FF852C',
+											},
+											{
+												state: STATE_COMPLETE_REPORT.ON_SCHEDULE,
+												text: 'Đúng tiến độ',
+												textColor: '#005994',
+												backgroundColor: '#005994',
+											},
+											{
+												state: STATE_COMPLETE_REPORT.SLOW_PROGRESS,
+												text: 'Chậm tiến độ',
+												textColor: '#EE464C',
+												backgroundColor: '#EE464C',
+											},
+										]}
+									/>
+								</div>
 							),
 						},
 						{
 							title: 'Số hóa',
 							render: (data: IReportWorkLastMonth) => (
-								<>
-									<p style={{color: '#EE464C'}}>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
-									<p style={{color: '#2970FF'}}>{data?.digitalization == 1 && 'Đã số hóa'}</p>
-								</>
+								<span style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+									{data?.digitalization == 0 && 'Chưa số hóa'}
+									{data?.digitalization == 1 && 'Đã số hóa'}
+								</span>
 							),
 						},
 					]}
