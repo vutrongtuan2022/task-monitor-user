@@ -87,7 +87,7 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	chageContracts: (
+	changeContracts: (
 		data: {
 			uuid: string;
 			activityUuid: string;

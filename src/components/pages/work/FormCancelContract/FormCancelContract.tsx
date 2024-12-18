@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import {PropsFormChangeContract} from './interfaces';
-import styles from './FormChangeContract.module.scss';
+import {PropsFormCancelContract} from './interfaces';
+import styles from './FormCancelContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
 import {FolderOpen} from 'iconsax-react';
@@ -18,10 +18,10 @@ import DatePicker from '~/components/common/DatePicker';
 import {toastWarn} from '~/common/funcs/toast';
 import contractsServices from '~/services/contractsServices';
 import moment from 'moment';
-import {convertCoin, price} from '~/common/funcs/convertCoin';
+import {price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
 
-interface IFormChangeContract {
+interface IFormCancelContract {
 	nameActivity: string;
 	code: string;
 	contractorUuid: string;
@@ -35,13 +35,13 @@ interface IFormChangeContract {
 	advanceGuaranteeEndDate: string;
 }
 
-function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
+function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_uuid, _contractChangeUuid} = router.query;
 
-	const [form, setForm] = useState<IFormChangeContract>({
+	const [form, setForm] = useState<IFormCancelContract>({
 		nameActivity: nameActivity,
 		code: '',
 		contractorUuid: '',
@@ -53,33 +53,6 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 		contractExecutionEndDate: '',
 		advanceGuaranteeAmount: 0,
 		advanceGuaranteeEndDate: '',
-	});
-
-	useQuery([QUERY_KEY.detail_contract], {
-		queryFn: () =>
-			httpRequest({
-				http: contractsServices.detailContracts({
-					uuid: _contractChangeUuid as string,
-				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setForm({
-					nameActivity: data?.activityDTO?.name || '',
-					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.uuid || '',
-					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayAdvantage || null,
-					amount: convertCoin(data?.amount),
-					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
-					contractExecutionEndDate: data?.contractExecution?.endDate || '',
-					advanceGuaranteeAmount: convertCoin(data?.advanceGuarantee?.amount),
-					advanceGuaranteeEndDate: data?.advanceGuarantee?.endDate || '',
-				});
-			}
-		},
-		enabled: !!_contractChangeUuid,
 	});
 
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
@@ -110,12 +83,12 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 		},
 	});
 
-	const funcChangeContract = useMutation({
+	const funcCreateContractAdditional = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thay thế hợp đồng thành công!',
+				msgSuccess: 'Thêm mới hợp đồng thành công!',
 				http: contractsServices.changeContracts({
 					uuid: _contractChangeUuid as string,
 					activityUuid: _uuid as string,
@@ -168,14 +141,14 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 			return toastWarn({msg: 'Thời gian thực hiện hợp đồng không hợp lệ!'});
 		}
 
-		return funcChangeContract.mutate();
+		return funcCreateContractAdditional.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-			<Loading loading={funcChangeContract.isLoading} />
+			<Loading loading={funcCreateContractAdditional.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thay thế hợp đồng</h4>
+				<h4 className={styles.title}>Thêm mới hợp đồng bổ sung</h4>
 				<div className={styles.form}>
 					<div className={styles.head}>
 						<h4>Thông tin hợp đồng</h4>
@@ -385,7 +358,7 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
-									Thay thế
+									Lưu lại
 								</Button>
 							</div>
 						)}
@@ -399,4 +372,4 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 	);
 }
 
-export default FormChangeContract;
+export default FormCancelContract;

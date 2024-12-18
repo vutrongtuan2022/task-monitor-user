@@ -4,7 +4,6 @@ import {IContractByActivity, IDetailActivityContract, PropsDetailPageWork} from 
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
-import {AddSquare, StopCircle} from 'iconsax-react';
 import StateActive from '~/components/common/StateActive';
 import {QUERY_KEY, STATE_CONTRACT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
@@ -18,8 +17,6 @@ import Link from 'next/link';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import Pagination from '~/components/common/Pagination';
-import Dialog from '~/components/common/Dialog';
-import icons from '~/constants/images/icons';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import PositionContainer from '~/components/common/PositionContainer';
@@ -28,14 +25,15 @@ import FormChangeContract from '../FormChangeContract';
 import {httpRequest} from '~/services';
 import activityServices from '~/services/activityServices';
 import contractsServices from '~/services/contractsServices';
+import FormCancelContract from '../FormCancelContract';
+import Dialog from '~/components/common/Dialog';
+
 function DetailPageWork({}: PropsDetailPageWork) {
 	const router = useRouter();
 
-	const {_page, _pageSize, _uuid, _contractChageUuid, _contractUuid} = router.query;
+	const {_page, _pageSize, _uuid, _contractChangeUuid, _contractCancelUuid, _contractUuid} = router.query;
 
-	const [uuidConfirm, setUuidConfirm] = useState<string>('');
-	const [nameActivity, setNameActivity] = useState<string>('');
-	const [isFormOpen, setIsFormOpen] = useState(false);
+	const [openCancelContract, setOpenCancelContract] = useState<boolean>(false);
 
 	const {data: detailActivityContract} = useQuery<IDetailActivityContract>([QUERY_KEY.detail_activity_contract, _uuid], {
 		queryFn: () =>
@@ -67,11 +65,6 @@ function DetailPageWork({}: PropsDetailPageWork) {
 		enabled: !!_uuid,
 	});
 
-	const funcConfirmActiviti = () => {
-		setUuidConfirm('');
-		setIsFormOpen(true);
-	};
-
 	return (
 		<div className={styles.container}>
 			<Breadcrumb
@@ -89,22 +82,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 					<div className={styles.group_button}>
 						{detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.PROCESSING && (
 							<>
-								<Button
-									p_14_24
-									rounded_8
-									blueLinear
-									icon={<StopCircle size={18} color='#fff' />}
-									onClick={() => {
-										setUuidConfirm(detailActivityContract?.contracts?.uuid);
-										router.replace({
-											pathname: router.pathname,
-											query: {
-												...router.query,
-												_contractChageUuid: detailActivityContract?.contracts?.uuid,
-											},
-										});
-									}}
-								>
+								<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenCancelContract(true)}>
 									Kết thúc hợp đồng
 								</Button>
 								<Button
@@ -132,15 +110,12 @@ function DetailPageWork({}: PropsDetailPageWork) {
 								p_14_24
 								rounded_8
 								green
-								icon={<AddSquare size={18} color='#fff' />}
 								onClick={() => {
-									setNameActivity(detailActivityContract?.name);
-									setIsFormOpen(true);
 									router.replace({
 										pathname: router.pathname,
 										query: {
 											...router.query,
-											_contractChageUuid: detailActivityContract?.contracts?.uuid,
+											_contractChangeUuid: detailActivityContract?.contracts?.uuid,
 										},
 									});
 								}}
@@ -318,21 +293,64 @@ function DetailPageWork({}: PropsDetailPageWork) {
 					</WrapperScrollbar>
 				</div>
 			</div>
+
 			<Dialog
-				type='primary'
-				open={!!uuidConfirm}
-				icon={icons.question_1}
-				onClose={() => setUuidConfirm('')}
-				title={'Xác nhận kết thúc'}
-				note={'Bạn có chắc chắn muốn kết thúc hợp đồng này không? Nếu kết thúc hợp đồng thì phải thêm hợp đồng mới'}
-				onSubmit={funcConfirmActiviti}
+				type='error'
+				open={openCancelContract}
+				title='Kết thúc hợp đồng'
+				note={
+					<span>
+						Bạn có chắn chắn muốn kết thúc hợp đồng không? <br />
+						Nếu kết thúc hợp đồng thì phải thêm mới hợp đồng bổ sung?
+					</span>
+				}
+				titleCancel='Hủy bỏ'
+				titleSubmit='Thêm mới hợp đồng'
+				onClose={() => setOpenCancelContract(false)}
+				onSubmit={() => {
+					setOpenCancelContract(false);
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...router.query,
+							_contractCancelUuid: detailActivityContract?.contracts?.uuid,
+						},
+					});
+				}}
 			/>
 
 			<PositionContainer
-				open={isFormOpen}
+				open={!!_contractCancelUuid}
 				onClose={() => {
-					setIsFormOpen(false);
-					const {_contractChageUuid, ...rest} = router.query;
+					const {_contractCancelUuid, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormCancelContract
+					nameActivity={detailActivityContract?.name!}
+					onClose={() => {
+						const {_contractCancelUuid, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			<PositionContainer
+				open={!!_contractChangeUuid}
+				onClose={() => {
+					const {_contractChangeUuid, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -343,10 +361,9 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				}}
 			>
 				<FormChangeContract
-					nameActivity={nameActivity}
+					nameActivity={detailActivityContract?.name!}
 					onClose={() => {
-						setIsFormOpen(false);
-						const {_contractChageUuid, ...rest} = router.query;
+						const {_contractChangeUuid, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
