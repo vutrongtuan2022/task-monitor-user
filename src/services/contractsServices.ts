@@ -72,5 +72,40 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	listContractsByActivity: (
+		data: {
+			uuid: string;
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-page-list-contracts-by-activity`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	chageContracts: (
+		data: {
+			uuid: string;
+			activityUuid: string;
+			code: string;
+			contractorUuid: string;
+			startDate: string;
+			totalDayAdvantage: number;
+			amount: number;
+			contractExecutionAmount: number;
+			advanceGuaranteeAmount: number;
+			contractExecutionEndDate: string | null;
+			advanceGuaranteeEndDate: string | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/change-contracts`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsServices;

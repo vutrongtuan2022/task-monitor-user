@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-import {PropsFormUpdateContract} from './interfaces';
-import styles from './FormUpdateContract.module.scss';
+import {PropsFormChangeContract} from './interfaces';
+import styles from './FormChangeContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
 import {FolderOpen} from 'iconsax-react';
@@ -21,7 +21,8 @@ import moment from 'moment';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
 
-interface IFormUpdateContract {
+interface IFormChangeContract {
+	uuidContract: string;
 	uuidActivity: string;
 	nameActivity: string;
 	code: string;
@@ -36,15 +37,16 @@ interface IFormUpdateContract {
 	advanceGuaranteeEndDate: string;
 }
 
-function FormUpdateContract({onClose}: PropsFormUpdateContract) {
+function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_contractUuid} = router.query;
+	const {_uuid, _contractChageUuid} = router.query;
 
-	const [form, setForm] = useState<IFormUpdateContract>({
+	const [form, setForm] = useState<IFormChangeContract>({
+		uuidContract: '',
 		uuidActivity: '',
-		nameActivity: '',
+		nameActivity: nameActivity,
 		code: '',
 		contractorUuid: '',
 		contractorGroupUuid: '',
@@ -61,12 +63,25 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		queryFn: () =>
 			httpRequest({
 				http: contractsServices.detailContracts({
-					uuid: _contractUuid as string,
+					uuid: _contractChageUuid as string,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
 				setForm({
+					uuidContract: data?.uuid || '',
+					// uuidActivity: data?.activityDTO?.name || '',
+					// nameActivity: data?.activityDTO?.name || '',
+					// code: '',
+					// contractorUuid: '',
+					// contractorGroupUuid: '',
+					// startDate: '',
+					// totalDayAdvantage: null,
+					// amount: '',
+					// contractExecutionAmount: '',
+					// contractExecutionEndDate: '',
+					// advanceGuaranteeAmount: '',
+					// advanceGuaranteeEndDate: '',
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
@@ -82,7 +97,11 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 				});
 			}
 		},
-		enabled: !!_contractUuid,
+		enabled: !!_contractChageUuid,
+		// select(data) {
+		// 	return data;
+		// },
+		// enabled: !!_contractChageUuid,
 	});
 
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
@@ -91,13 +110,13 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 				http: contractorServices.categoryContractorInProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					uuid: form?.uuidActivity,
+					uuid: _uuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!form?.uuidActivity,
+		enabled: !!_uuid,
 	});
 
 	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
@@ -113,15 +132,15 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		},
 	});
 
-	const funcUpdateContract = useMutation({
+	const funcCreateChageContract = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Chỉnh sửa hợp đồng thành công!',
-				http: contractsServices.upsertContracts({
-					uuid: _contractUuid as string,
-					activityUuid: form?.uuidActivity,
+				msgSuccess: 'Thêm mới hợp đồng thành công!',
+				http: contractsServices.chageContracts({
+					uuid: _contractChageUuid as string,
+					activityUuid: _uuid as string,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
@@ -142,6 +161,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 			if (data) {
 				onClose();
 				setForm({
+					uuidContract: '',
 					uuidActivity: '',
 					nameActivity: '',
 					code: '',
@@ -156,7 +176,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					advanceGuaranteeEndDate: '',
 				});
 				queryClient.invalidateQueries([QUERY_KEY.detail_activity_contract]);
-				queryClient.invalidateQueries([QUERY_KEY.table_list_work]);
+				// queryClient.invalidateQueries([QUERY_KEY.detail_contract]);
 				queryClient.invalidateQueries([QUERY_KEY.table_contract_by_activity]);
 			}
 		},
@@ -173,14 +193,14 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 			return toastWarn({msg: 'Thời gian thực hiện hợp đồng không hợp lệ!'});
 		}
 
-		return funcUpdateContract.mutate();
+		return funcCreateChageContract.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-			<Loading loading={funcUpdateContract.isLoading} />
+			<Loading loading={funcCreateChageContract.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Chỉnh sửa hợp đồng</h4>
+				<h4 className={styles.title}>Thêm mới hợp đồng</h4>
 				<div className={styles.form}>
 					<div className={styles.head}>
 						<h4>Thông tin hợp đồng</h4>
@@ -390,7 +410,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
-									Cập nhật
+									Lưu lại
 								</Button>
 							</div>
 						)}
@@ -404,4 +424,4 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 	);
 }
 
-export default FormUpdateContract;
+export default FormChangeContract;

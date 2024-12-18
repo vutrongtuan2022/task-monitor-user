@@ -18,7 +18,7 @@ import Progress from '~/components/common/Progress';
 import StateActive from '~/components/common/StateActive';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import IconCustom from '~/components/common/IconCustom';
-import {AddSquare, DiscountShape, Edit, FolderOpen, PenAdd, TickCircle} from 'iconsax-react';
+import {AddSquare, DiscountShape, Edit, Eye, FolderOpen, PenAdd, TickCircle} from 'iconsax-react';
 import Tippy from '@tippyjs/react';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
@@ -32,6 +32,7 @@ import projectServices from '~/services/projectServices';
 import PositionContainer from '~/components/common/PositionContainer';
 import FormCreateContract from '../FormCreateContract';
 import FormUpdateContract from '../FormUpdateContract';
+import {PATH} from '~/constants/config';
 
 function MainPageWork({}: PropsMainPageWork) {
 	const router = useRouter();
@@ -603,6 +604,12 @@ function MainPageWork({}: PropsMainPageWork) {
 												}}
 											/>
 										)}
+										<IconCustom
+											color='#005994'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+											href={`${PATH.Work}/${data?.activity?.uuid}`}
+										/>
 									</div>
 								),
 							},
