@@ -39,7 +39,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuid, _contractChangeUuid} = router.query;
+	const {_uuid, _contractCancelUuid} = router.query;
 
 	const [form, setForm] = useState<IFormCancelContract>({
 		nameActivity: nameActivity,
@@ -90,7 +90,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 				showMessageSuccess: true,
 				msgSuccess: 'Thêm mới hợp đồng thành công!',
 				http: contractsServices.changeContracts({
-					uuid: _contractChangeUuid as string,
+					uuid: _contractCancelUuid as string,
 					activityUuid: _uuid as string,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
