@@ -5,7 +5,7 @@ import styles from './DetailReportDisbursement.module.scss';
 import GridColumn from '~/components/layouts/GridColumn';
 import Moment from 'react-moment';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_CONTRACT_WORK, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -193,10 +193,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									)}
 								</p>
 							</div>
-							{/* <div className={styles.item}>
-								<p>Mô tả</p>
-								<p>{detailContractFund?.note || '---'}</p>
-							</div> */}
+
 							{detailContractFund?.state === STATE_REPORT_DISBURSEMENT.REJECTED && (
 								<div className={styles.item}>
 									<p>Lý do từ chối báo cáo giải ngân</p>
@@ -261,6 +258,35 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IContractFund) => <>{data?.contractor?.name}</>,
+									},
+									{
+										title: 'Trạng thái',
+										render: (data: IContractFund) => (
+											<StateActive
+												stateActive={data?.state}
+												listState={[
+													{
+														state: STATE_CONTRACT_WORK.EXPIRED,
+														text: 'Hết hạn',
+														textColor: '#fff',
+														backgroundColor: '#16C1F3',
+													},
+													{
+														state: STATE_CONTRACT_WORK.PROCESSING,
+														text: 'Đang thực hiện',
+														textColor: '#fff',
+
+														backgroundColor: '#06D7A0',
+													},
+													{
+														state: STATE_CONTRACT_WORK.END,
+														text: 'Đã hủy',
+														textColor: '#fff',
+														backgroundColor: '#F37277',
+													},
+												]}
+											/>
+										),
 									},
 									{
 										title: 'Mô tả',

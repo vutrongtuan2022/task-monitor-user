@@ -23,17 +23,69 @@ export interface IDetailContractFund {
 	uuid: string;
 }
 export interface IContractFund {
+	// activity: {
+	// 	name: string;
+	// 	state: number;
+	// 	contracts: {
+	// 		code: string;
+	// 		status: number;
+	// 		uuid: string;
+	// 	};
+	// 	uuid: string;
+	// };
+	// amount: number;
+	// releaseDate: string;
+	// contractor: {
+	// 	code: string;
+	// 	name: string;
+	// 	contractorCat: {
+	// 		id: number;
+	// 		code: string;
+	// 		name: string;
+	// 		isDefault: number;
+	// 		uuid: string;
+	// 	};
+	// 	uuid: string;
+	// };
+	// contractorGroup: {
+	// 	id: number;
+	// 	code: string;
+	// 	name: string;
+	// 	isDefault: number;
+	// 	uuid: string;
+	// };
+	// note: string;
+	// code: string;
+	// status: number;
+	// uuid: string;
+
+	// projectAmount: number;
+	// reverseAmount: number;
+	// state: number;
 	activity: {
 		name: string;
 		state: number;
+		project: {
+			code: string;
+			name: string;
+			state: number;
+			leader: {
+				fullname: string;
+				code: string;
+				uuid: string;
+			};
+			uuid: string;
+		};
 		contracts: {
 			code: string;
+			state: number;
 			status: number;
 			uuid: string;
 		};
 		uuid: string;
 	};
-	amount: number;
+	projectAmount: number;
+	reverseAmount: number;
 	releaseDate: string;
 	contractor: {
 		code: string;
@@ -56,9 +108,7 @@ export interface IContractFund {
 	};
 	note: string;
 	code: string;
+	state: number;
 	status: number;
 	uuid: string;
-
-	projectAmount: number;
-	reverseAmount: number;
 }

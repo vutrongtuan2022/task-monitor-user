@@ -130,33 +130,6 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				<div className={styles.basic_info}>
 					<div className={styles.head}>
 						<h4>Thông tin cơ bản</h4>
-						<div className={styles.state}>
-							<p>Trạng thái hợp đồng:</p>
-							<StateActive
-								stateActive={detailActivityContract?.contracts?.state!}
-								listState={[
-									{
-										state: STATE_CONTRACT_WORK.EXPIRED,
-										text: 'Hết hạn',
-										textColor: '#fff',
-										backgroundColor: '#16C1F3',
-									},
-									{
-										state: STATE_CONTRACT_WORK.PROCESSING,
-										text: 'Đang thực hiện',
-										textColor: '#fff',
-
-										backgroundColor: '#06D7A0',
-									},
-									{
-										state: STATE_CONTRACT_WORK.END,
-										text: 'Đã hủy',
-										textColor: '#fff',
-										backgroundColor: '#F37277',
-									},
-								]}
-							/>
-						</div>
 					</div>
 					<div className={styles.progress_group}>
 						<GridColumn col_3>
@@ -167,10 +140,6 @@ function DetailPageWork({}: PropsDetailPageWork) {
 							<div className={styles.item}>
 								<p>Tên công việc</p>
 								<p>{detailActivityContract?.name || '---'}</p>
-							</div>
-							<div className={styles.item}>
-								<p>Hợp đồng hiện tại</p>
-								<p style={{color: '#2970FF'}}>{detailActivityContract?.contracts?.code || '---'}</p>
 							</div>
 						</GridColumn>
 					</div>
