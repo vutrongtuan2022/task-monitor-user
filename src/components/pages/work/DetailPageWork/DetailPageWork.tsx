@@ -198,6 +198,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 										title: 'Tên nhà thầu',
 										render: (data: IContractByActivity) => <>{data?.contractor?.name}</>,
 									},
+									
 									{
 										title: 'Giá trị BLTHHĐ (VND) ',
 										render: (data: IContractByActivity) => <>{convertCoin(data?.contractExecution?.amount)}</>,
@@ -223,6 +224,10 @@ function DetailPageWork({}: PropsDetailPageWork) {
 											) : (
 												'---'
 											),
+									},
+									{
+										title: 'Người tạo hợp đồng',
+										render: (data: IContractByActivity) => <>{data?.user?.fullname}</>,
 									},
 									{
 										title: 'Trạng thái',
