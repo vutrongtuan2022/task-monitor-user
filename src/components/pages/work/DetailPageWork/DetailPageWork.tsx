@@ -227,6 +227,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 									},
 									{
 										title: 'Trạng thái',
+										fixedRight: true,
 										render: (data: IContractByActivity) => (
 											<StateActive
 												stateActive={data?.state}
@@ -274,7 +275,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				note={
 					<span>
 						Bạn có chắn chắn muốn kết thúc hợp đồng không? <br />
-						Nếu kết thúc hợp đồng thì phải thêm mới hợp đồng bổ sung?
+						Nếu kết thúc hợp đồng thì phải thêm mới hợp đồng?
 					</span>
 				}
 				titleCancel='Hủy bỏ'

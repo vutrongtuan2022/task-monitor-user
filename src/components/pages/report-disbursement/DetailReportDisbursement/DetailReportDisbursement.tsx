@@ -259,35 +259,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										title: 'Tên nhà thầu',
 										render: (data: IContractFund) => <>{data?.contractor?.name}</>,
 									},
-									{
-										title: 'Trạng thái',
-										render: (data: IContractFund) => (
-											<StateActive
-												stateActive={data?.state}
-												listState={[
-													{
-														state: STATE_CONTRACT_WORK.EXPIRED,
-														text: 'Hết hạn',
-														textColor: '#fff',
-														backgroundColor: '#16C1F3',
-													},
-													{
-														state: STATE_CONTRACT_WORK.PROCESSING,
-														text: 'Đang thực hiện',
-														textColor: '#fff',
-
-														backgroundColor: '#06D7A0',
-													},
-													{
-														state: STATE_CONTRACT_WORK.END,
-														text: 'Đã hủy',
-														textColor: '#fff',
-														backgroundColor: '#F37277',
-													},
-												]}
-											/>
-										),
-									},
+								
 									{
 										title: 'Mô tả',
 										render: (data: IContractFund) => (
