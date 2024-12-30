@@ -75,7 +75,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 					},
 					{
 						path: '',
-						title: 'Chi tiết công việc và hợp đồng',
+						title: 'Chi tiết công việc',
 					},
 				]}
 				action={
@@ -167,7 +167,10 @@ function DetailPageWork({}: PropsDetailPageWork) {
 										fixedLeft: true,
 										render: (data: IContractByActivity) => (
 											<Tippy content='Chi tiết hợp đồng'>
-												<Link href={`${PATH.ContractReportDisbursement}/${data?.uuid}`} className={styles.link}>
+												<Link
+													href={`${PATH.ContractWork}/${data?.uuid}?_uuidWork=${_uuid}`}
+													className={styles.link}
+												>
 													{data?.code}
 												</Link>
 											</Tippy>
