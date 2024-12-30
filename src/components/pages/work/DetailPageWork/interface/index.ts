@@ -44,6 +44,11 @@ export interface IContractByActivity {
 		endDate: string;
 		type: number;
 	};
+	user: {
+		fullname: string;
+		code:string;
+		uuid:string;
+	};
 	activityName: string;
 	state: number;
 	status: number;
