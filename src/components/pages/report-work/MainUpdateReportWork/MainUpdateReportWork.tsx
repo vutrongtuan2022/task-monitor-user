@@ -227,6 +227,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 										name='year'
 										value={form.year}
 										placeholder='Chọn'
+										readOnly={true}
 									>
 										{years?.map((v: any) => (
 											<Option
@@ -253,6 +254,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 											name='month'
 											value={form.month}
 											placeholder='Chọn'
+											readOnly={true}
 										>
 											{months?.map((v: any) => (
 												<Option
@@ -280,6 +282,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 									name='projectUuid'
 									value={form.projectUuid}
 									placeholder='Chọn'
+									readOnly={true}
 								>
 									{listProject?.map((v: any) => (
 										<Option
