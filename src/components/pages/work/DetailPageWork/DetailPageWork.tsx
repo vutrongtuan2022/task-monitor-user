@@ -106,7 +106,24 @@ function DetailPageWork({}: PropsDetailPageWork) {
 
 						{(detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.EXPIRED ||
 							detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.END) && (
+							<>
 							<Button
+									p_14_24
+									rounded_8
+									primaryLinear
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_contractUuid: detailActivityContract?.contracts?.uuid,
+											},
+										});
+									}}
+								>
+									Chỉnh sửa
+								</Button>
+								<Button
 								p_14_24
 								rounded_8
 								green
@@ -122,6 +139,8 @@ function DetailPageWork({}: PropsDetailPageWork) {
 							>
 								Thay thế hợp đồng
 							</Button>
+							</>	
+							
 						)}
 					</div>
 				}

@@ -55,33 +55,6 @@ function FormChangeContract({onClose, nameActivity}: PropsFormChangeContract) {
 		advanceGuaranteeEndDate: '',
 	});
 
-	useQuery([QUERY_KEY.detail_contract], {
-		queryFn: () =>
-			httpRequest({
-				http: contractsServices.detailContracts({
-					uuid: _contractChangeUuid as string,
-				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setForm({
-					nameActivity: data?.activityDTO?.name || '',
-					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.uuid || '',
-					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayAdvantage || null,
-					amount: convertCoin(data?.amount),
-					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
-					contractExecutionEndDate: data?.contractExecution?.endDate || '',
-					advanceGuaranteeAmount: convertCoin(data?.advanceGuarantee?.amount),
-					advanceGuaranteeEndDate: data?.advanceGuarantee?.endDate || '',
-				});
-			}
-		},
-		enabled: !!_contractChangeUuid,
-	});
-
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
 			httpRequest({
