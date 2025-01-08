@@ -107,23 +107,23 @@ function DetailPageWork({}: PropsDetailPageWork) {
 						{(detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.EXPIRED ||
 							detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.END) && (
 							<>
-							<Button
-								p_14_24
-								rounded_8
-								green
-								onClick={() => {
-									router.replace({
-										pathname: router.pathname,
-										query: {
-											...router.query,
-											_contractChangeUuid: detailActivityContract?.contracts?.uuid,
-										},
-									});
-								}}
-							>
-								Thay thế hợp đồng
-							</Button>
-							<Button
+								<Button
+									p_14_24
+									rounded_8
+									green
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_contractChangeUuid: detailActivityContract?.contracts?.uuid,
+											},
+										});
+									}}
+								>
+									Thay thế hợp đồng
+								</Button>
+								<Button
 									p_14_24
 									rounded_8
 									primaryLinear
@@ -139,9 +139,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 								>
 									Chỉnh sửa hợp đồng
 								</Button>
-								
-							</>	
-							
+							</>
 						)}
 					</div>
 				}
@@ -295,7 +293,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				note={
 					<span>
 						Bạn có chắn chắn muốn kết thúc hợp đồng không? <br />
-						Nếu kết thúc hợp đồng thì phải thêm hợp đồng mới?
+						Nếu kết thúc hợp đồng thì phải thêm hợp đồng mới!
 					</span>
 				}
 				titleCancel='Hủy bỏ'
