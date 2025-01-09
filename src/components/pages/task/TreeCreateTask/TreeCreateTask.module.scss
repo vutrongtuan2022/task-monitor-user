@@ -1,0 +1,201 @@
+$margin-container: 24px;
+
+.container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	& + & {
+		margin-top: $margin-container;
+	}
+
+	&.child {
+		position: relative;
+
+		&::after {
+			content: '';
+			position: absolute;
+			height: 1px;
+			width: 30px;
+			bottom: 20px;
+			left: -30px;
+			background: #888888;
+		}
+	}
+}
+
+.icon {
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	&:active {
+		transform: scale(0.9);
+	}
+
+	&.disabled {
+		cursor: no-drop !important;
+		opacity: 0.4 !important;
+		pointer-events: none;
+	}
+}
+
+.box_input {
+	position: relative;
+
+	.index {
+		position: absolute;
+		top: 50%;
+		left: 24px;
+		transform: translate(-50%, -50%);
+		color: #23262f;
+		font-size: 16px;
+		font-weight: 500;
+		padding-right: 12px;
+		border-right: 1px solid #b1b5c3;
+	}
+}
+
+.input {
+	min-width: 480px;
+	width: auto;
+	height: 42px;
+	border-radius: 8px;
+	border: 1px solid #cdd5df;
+	background: #fff;
+	color: #141416;
+	font-size: 16px;
+	font-weight: 500;
+	padding: 8px 12px 8px 44px;
+
+	&::placeholder {
+		color: #b1b5c3;
+		font-size: 16px;
+		font-weight: 400;
+	}
+
+	&:disabled {
+		border: 1px solid #cdd5df;
+		background: #f4f7fa;
+	}
+}
+
+.list_task {
+	height: 42px;
+	padding: 8px 12px;
+	border-radius: 8px;
+	border: 1px solid #cdd5df;
+	background: #f4f7fa;
+	display: flex;
+	align-items: center;
+
+	& > p {
+		color: #23262f;
+		font-size: 16px;
+		font-weight: 500;
+
+		& > span {
+			color: #2970ff;
+			margin-left: 4px;
+		}
+	}
+}
+
+.line {
+	height: 100%;
+	width: 1px;
+	background-color: #b1b5c3;
+	margin: 0 8px;
+}
+
+.control {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.delele_task {
+	width: 42px;
+	height: 42px;
+	border-radius: 6px;
+	background: #ee464c;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	&:active {
+		transform: scale(0.9);
+	}
+}
+
+.listTree {
+	position: relative;
+	padding: $margin-container 0 0 0;
+	margin-bottom: $margin-container;
+	padding-left: 40px;
+
+	&.tree_loading {
+		&::after {
+			display: none;
+		}
+	}
+
+	&.level_1 {
+		&:last-child {
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		width: 1px;
+		height: calc(100% - 12px);
+		left: 10px;
+		top: -8px;
+		bottom: 0;
+		background: #888888;
+		z-index: 1;
+	}
+
+	&:last-child {
+		position: relative;
+
+		&::before {
+			content: '';
+			position: absolute;
+			width: 1px;
+			height: 100%;
+			left: -30px;
+			top: -20px;
+			bottom: 0;
+			background: #fff;
+			z-index: 10;
+		}
+	}
+}
+
+.loading {
+	width: fit-content;
+	height: fit-content;
+	animation: spinner 0.7s linear infinite;
+}
+
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}

@@ -12,6 +12,7 @@ import folder_open from '../../../public/static/images/folder_open.svg';
 import success from '../../../public/static/images/success.svg';
 import question_1 from '../../../public/static/images/question_1.svg';
 import exportExcel from '../../../public/static/images/export_excel.svg';
+import XSL from '../../../public/static/images/XSL.svg';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -29,4 +30,5 @@ export default {
 	success,
 	question_1,
 	exportExcel,
+	XSL,
 };

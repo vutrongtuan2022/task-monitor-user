@@ -19,6 +19,11 @@ export enum QUERY_KEY {
 	table_contract_fund_for_overview,
 	table_contract_for_project,
 	table_contract_by_activity,
+	table_list_account,
+	table_branches,
+	table_contractor,
+	table_group_contractor,
+	table_task_cat,
 
 	dropdown_branches,
 	dropdown_project,
@@ -32,6 +37,7 @@ export enum QUERY_KEY {
 	dropdown_group_contractor,
 	dropdown_task_report,
 	dropdown_contractor_in_project,
+	dropdown_role,
 
 	detail_project,
 	detail_budget_project,
@@ -54,7 +60,13 @@ export enum QUERY_KEY {
 	detail_contract_report_fund_for_update,
 	detail_progress_contract_fund_project,
 	detail_activity_contract,
+	detail_account,
+	detail_branches,
+	detail_contractor,
+	detail_task,
+	detail_user,
 
+	tree_task,
 	count_unseen_noti,
 	list_notify,
 }
@@ -167,4 +179,15 @@ export enum TYPE_NOTIFY {
 	CONTRACT,
 	OVERVIEW,
 	CONTRACT_FUND,
+}
+
+export enum STATUS_ACCOUNT {
+	NOT_HAVE = 0,
+	HAVE = 1,
+	LOCK = 2,
+}
+
+export enum TYPE_SPECIAL {
+	NORMAL,
+	SENIOR,
 }

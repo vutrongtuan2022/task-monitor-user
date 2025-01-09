@@ -5,6 +5,7 @@ interface IUser {
 	userName: string;
 	userUuid: string;
 	uuid: string;
+	special: number;
 }
 
 export interface UserState {

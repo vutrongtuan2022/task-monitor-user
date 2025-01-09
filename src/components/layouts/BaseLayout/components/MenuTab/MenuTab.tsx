@@ -1,5 +1,5 @@
 import {RootState} from '~/redux/store';
-import {useCallback, useContext} from 'react';
+import {useCallback, useContext, useMemo} from 'react';
 
 import {ContextBaseLayout} from '../../BaseLayout';
 import {PropsMenuTab} from './interfaces';
@@ -12,11 +12,14 @@ import {Menu, PATH} from '~/constants/config';
 import ImageFill from '~/components/common/ImageFill';
 import icons from '~/constants/images/icons';
 import clsx from 'clsx';
+import {TYPE_SPECIAL} from '~/constants/config/enum';
 
 function MenuTab({}: PropsMenuTab) {
 	const router = useRouter();
 
 	const {isMobile} = useSelector((state: RootState) => state.site);
+	const {infoUser} = useSelector((state: RootState) => state.user);
+
 	const context = useContext<TContextBaseLayout>(ContextBaseLayout);
 
 	const checkActive = useCallback(
@@ -27,6 +30,14 @@ function MenuTab({}: PropsMenuTab) {
 		},
 		[router]
 	);
+
+	const menus = useMemo(() => {
+		if (infoUser?.special == TYPE_SPECIAL.SENIOR) {
+			return Menu;
+		} else {
+			return Menu?.filter((v) => v?.isSpecial == TYPE_SPECIAL.NORMAL);
+		}
+	}, [infoUser]);
 
 	return (
 		<div id='menuTab' className={styles.container}>
@@ -48,7 +59,7 @@ function MenuTab({}: PropsMenuTab) {
 				</Link>
 			</div>
 			<div className={clsx(styles.menu)}>
-				{Menu.map((v, i) => (
+				{menus.map((v, i) => (
 					<Link
 						href={v.path}
 						key={i}

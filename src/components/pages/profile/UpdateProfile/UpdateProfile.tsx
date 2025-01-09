@@ -138,6 +138,7 @@ function UpdateProfile({onClose}: PropsUpdateProfile) {
 						uuid: infoUser?.uuid!,
 						userName: infoUser?.userName!,
 						userUuid: infoUser?.userUuid!,
+						special: infoUser?.special!,
 						fullname: form?.fullName,
 					})
 				);

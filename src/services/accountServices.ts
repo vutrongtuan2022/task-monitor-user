@@ -28,6 +28,7 @@ const accountServices = {
 			password: string;
 			userUuid: string;
 			roleUuid: string;
+			special: number;
 		},
 		tokenAxios?: any
 	) => {

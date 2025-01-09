@@ -1,5 +1,18 @@
-import {ArchiveBook, DocumentForward, DocumentText1, ElementEqual, Moneys, Note} from 'iconsax-react';
-import {TYPE_DATE} from './enum';
+import {
+	ArchiveBook,
+	Buildings2,
+	Data,
+	DocumentForward,
+	DocumentText1,
+	ElementEqual,
+	Moneys,
+	Note,
+	Receipt21,
+	ReceiptItem,
+	TagUser,
+	UserOctagon,
+} from 'iconsax-react';
+import {TYPE_DATE, TYPE_SPECIAL} from './enum';
 
 export const MAXIMUM_FILE = 10; //MB
 
@@ -48,11 +61,26 @@ export enum PATH {
 
 	ReportOverview = '/report-overview',
 	ReportOverviewCreate = '/report-overview/create',
+
+	Task = '/task',
+	CreateTask = '/task/create',
+	UpdateTask = '/task/update',
+
+	Branch = '/branch',
+
+	Contractor = '/contractor',
+
+	GroupContractor = '/group-contractor',
+
+	User = '/user',
+
+	Account = '/account',
 }
 
 export const Menu: {
 	title: string;
 	path: string;
+	isSpecial?: TYPE_SPECIAL;
 	pathActive?: string;
 	icon: any;
 }[] = [
@@ -67,30 +95,77 @@ export const Menu: {
 		path: PATH.Project,
 		pathActive: '/project',
 		icon: DocumentText1,
+		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
 		title: 'Báo cáo công việc',
 		path: PATH.ReportWork,
 		pathActive: PATH.ReportWork,
 		icon: DocumentForward,
+		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
 		title: 'Báo cáo giải ngân',
 		path: PATH.ReportDisbursement,
 		pathActive: PATH.ReportDisbursement,
 		icon: Moneys,
+		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
 		title: 'Công việc cần làm',
 		path: PATH.Work,
 		pathActive: PATH.Work,
 		icon: Note,
+		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
 		title: 'Báo cáo tổng hợp',
 		path: PATH.ReportOverview,
 		pathActive: PATH.ReportOverview,
 		icon: ArchiveBook,
+		isSpecial: TYPE_SPECIAL.NORMAL,
+	},
+	{
+		title: 'Quản lý quy trình',
+		path: PATH.Task,
+		pathActive: PATH.Task,
+		icon: ReceiptItem,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Quản lý chi nhánh',
+		path: PATH.Branch,
+		pathActive: PATH.Branch,
+		icon: Data,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Quản lý nhóm nhà thầu',
+		path: PATH.GroupContractor,
+		pathActive: PATH.GroupContractor,
+		icon: Buildings2,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Quản lý nhà thầu',
+		path: PATH.Contractor,
+		pathActive: PATH.Contractor,
+		icon: Receipt21,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Quản lý nhân viên',
+		path: PATH.User,
+		pathActive: PATH.User,
+		icon: UserOctagon,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Quản lý tài khoản',
+		path: PATH.Account,
+		pathActive: PATH.Account,
+		icon: TagUser,
+		isSpecial: TYPE_SPECIAL.SENIOR,
 	},
 ];
 

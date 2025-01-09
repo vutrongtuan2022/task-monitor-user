@@ -1,6 +1,30 @@
 import axiosClient from '.';
 
 const userServices = {
+	listUser: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number | null;
+			isHaveAcc: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/User/get-page-list-user`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	updateStatus: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/User/update-status`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	categoryUser: (
 		data: {
 			keyword: string;
