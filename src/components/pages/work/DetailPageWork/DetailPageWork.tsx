@@ -1,22 +1,12 @@
 import React, {useState} from 'react';
 import styles from './DetailPageWork.module.scss';
-import {IContractByActivity, IDetailActivityContract, PropsDetailPageWork} from './interface';
+import {IDetailActivityContract, PropsDetailPageWork} from './interface';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
-import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_CONTRACT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_CONTRACT_WORK} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
 import {clsx} from 'clsx';
-import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
-import DataWrapper from '~/components/common/DataWrapper';
-import Noti from '~/components/common/DataWrapper/components/Noti';
-import Table from '~/components/common/Table';
-import Tippy from '@tippyjs/react';
-import Link from 'next/link';
-import {convertCoin} from '~/common/funcs/convertCoin';
-import Moment from 'react-moment';
-import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import PositionContainer from '~/components/common/PositionContainer';
@@ -24,14 +14,17 @@ import FormUpdateContract from '../FormUpdateContract';
 import FormChangeContract from '../FormChangeContract';
 import {httpRequest} from '~/services';
 import activityServices from '~/services/activityServices';
-import contractsServices from '~/services/contractsServices';
 import FormCancelContract from '../FormCancelContract';
 import Dialog from '~/components/common/Dialog';
+import TabNavLink from '~/components/common/TabNavLink';
+import TableContractHistory from './components/TableContractHistory';
+import TableContractAppendices from './components/TableContractAppendices';
+import FormAppendicesContract from '../FromAppendicesContract';
 
 function DetailPageWork({}: PropsDetailPageWork) {
 	const router = useRouter();
 
-	const {_page, _pageSize, _uuid, _contractChangeUuid, _contractCancelUuid, _contractUuid} = router.query;
+	const {_uuid, _contractChangeUuid, _contractCancelUuid, _contractUuid, _appendicesUuid, _type} = router.query;
 
 	const [openCancelContract, setOpenCancelContract] = useState<boolean>(false);
 
@@ -39,23 +32,6 @@ function DetailPageWork({}: PropsDetailPageWork) {
 		queryFn: () =>
 			httpRequest({
 				http: activityServices.getDetailActivityContract({
-					uuid: _uuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
-
-	const {data: listContractByActivity} = useQuery([QUERY_KEY.table_contract_by_activity, _page, _pageSize, _uuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractsServices.listContractsByActivity({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
 					uuid: _uuid as string,
 				}),
 			}),
@@ -80,6 +56,24 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				]}
 				action={
 					<div className={styles.group_button}>
+						<>
+							<Button
+								p_14_24
+								rounded_8
+								primaryLinear
+								onClick={() => {
+									router.replace({
+										pathname: router.pathname,
+										query: {
+											...router.query,
+											_appendicesUuid: detailActivityContract?.contracts?.uuid,
+										},
+									});
+								}}
+							>
+								Thêm phụ lục hợp đồng
+							</Button>
+						</>
 						{detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.PROCESSING && (
 							<>
 								<Button p_14_24 rounded_8 blueLinear onClick={() => setOpenCancelContract(true)}>
@@ -88,7 +82,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 								<Button
 									p_14_24
 									rounded_8
-									primaryLinear
+									blueRedLinear
 									onClick={() => {
 										router.replace({
 											pathname: router.pathname,
@@ -126,7 +120,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 								<Button
 									p_14_24
 									rounded_8
-									primaryLinear
+									blueRedLinear
 									onClick={() => {
 										router.replace({
 											pathname: router.pathname,
@@ -162,127 +156,31 @@ function DetailPageWork({}: PropsDetailPageWork) {
 						</GridColumn>
 					</div>
 				</div>
+
 				<div className={clsx(styles.basic_info, styles.mt)}>
-					<div className={styles.head}>
-						<h4>Lịch sử hợp đồng công việc</h4>
-					</div>
-					<WrapperScrollbar>
-						<DataWrapper
-							data={listContractByActivity?.items || []}
-							loading={listContractByActivity?.isLoading}
-							noti={<Noti title='Danh sách hợp đồng trống!' des='Hiện tại chưa có hợp đồng nào!' />}
-						>
-							<Table
-								fixedHeader={true}
-								data={listContractByActivity?.items || []}
-								column={[
-									{
-										title: 'STT',
-										render: (data: IContractByActivity, index: number) => <>{index + 1}</>,
-									},
-									{
-										title: 'Số hợp đồng',
-										fixedLeft: true,
-										render: (data: IContractByActivity) => (
-											<Tippy content='Chi tiết hợp đồng'>
-												<Link
-													href={`${PATH.ContractWork}/${data?.uuid}?_uuidWork=${_uuid}`}
-													className={styles.link}
-												>
-													{data?.code}
-												</Link>
-											</Tippy>
-										),
-									},
-									{
-										title: 'Giá trị hợp đồng (VND)',
-										render: (data: IContractByActivity) => <>{convertCoin(data?.amount)}</>,
-									},
-									{
-										title: 'Ngày ký hợp đồng',
-										render: (data: IContractByActivity) => (
-											<>{data?.startDate ? <Moment date={data?.startDate} format='DD/MM/YYYY' /> : '---'}</>
-										),
-									},
-									{
-										title: 'Ngày THHĐ',
-										render: (data: IContractByActivity) => <>{data?.totalDayAdvantage}</>,
-									},
-									{
-										title: 'Nhóm nhà  thầu',
-										render: (data: IContractByActivity) => <>{data?.contractor?.contractorCat?.name}</>,
-									},
-									{
-										title: 'Tên nhà thầu',
-										render: (data: IContractByActivity) => <>{data?.contractor?.name}</>,
-									},
-
-									{
-										title: 'Giá trị BLTHHĐ (VND) ',
-										render: (data: IContractByActivity) => <>{convertCoin(data?.contractExecution?.amount)}</>,
-									},
-									{
-										title: 'Ngày kết thúc BLTHHĐ',
-										render: (data: IContractByActivity) =>
-											data?.contractExecution?.endDate ? (
-												<Moment date={data?.contractExecution?.endDate} format='DD/MM/YYYY' />
-											) : (
-												'---'
-											),
-									},
-									{
-										title: 'Giá trị BLTƯ (VND)',
-										render: (data: IContractByActivity) => <>{convertCoin(data?.advanceGuarantee?.amount)}</>,
-									},
-									{
-										title: 'Ngày kết thúc BLTƯ',
-										render: (data: IContractByActivity) =>
-											data?.advanceGuarantee?.endDate ? (
-												<Moment date={data?.advanceGuarantee?.endDate} format='DD/MM/YYYY' />
-											) : (
-												'---'
-											),
-									},
-									{
-										title: 'Trạng thái',
-										fixedRight: true,
-										render: (data: IContractByActivity) => (
-											<StateActive
-												stateActive={data?.state}
-												listState={[
-													{
-														state: STATE_CONTRACT_WORK.EXPIRED,
-														text: 'Hết hạn',
-														textColor: '#fff',
-														backgroundColor: '#16C1F3',
-													},
-													{
-														state: STATE_CONTRACT_WORK.PROCESSING,
-														text: 'Đang thực hiện',
-														textColor: '#fff',
-
-														backgroundColor: '#06D7A0',
-													},
-													{
-														state: STATE_CONTRACT_WORK.END,
-														text: 'Đã hủy',
-														textColor: '#fff',
-														backgroundColor: '#F37277',
-													},
-												]}
-											/>
-										),
-									},
-								]}
-							/>
-						</DataWrapper>
-						<Pagination
-							currentPage={Number(_page) || 1}
-							pageSize={Number(_pageSize) || 10}
-							total={listContractByActivity?.pagination?.totalCount}
-							dependencies={[_pageSize, _uuid]}
+					<div className={styles.main_tab}>
+						<TabNavLink
+							query='_type'
+							listHref={[
+								{
+									pathname: PATH.ProjectCreate,
+									query: null,
+									title: 'Lịch sử hợp đồng chính',
+								},
+								{
+									pathname: PATH.ProjectCreate,
+									query: 'appendices',
+									title: 'Danh sách phụ lục hợp đồng',
+								},
+							]}
+							listKeyRemove={['_page', '_pageSize', '_keyword', '_state']}
 						/>
-					</WrapperScrollbar>
+					</div>
+					<div className={styles.line}></div>
+					<div className={styles.main_table}>
+						{!_type && <TableContractHistory />}
+						{_type == 'appendices' && <TableContractAppendices />}
+					</div>
 				</div>
 			</div>
 
@@ -310,6 +208,34 @@ function DetailPageWork({}: PropsDetailPageWork) {
 					});
 				}}
 			/>
+
+			<PositionContainer
+				open={!!_appendicesUuid}
+				onClose={() => {
+					const {_appendicesUuid, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormAppendicesContract
+					nameActivity={detailActivityContract?.name!}
+					onClose={() => {
+						const {_appendicesUuid, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
 
 			<PositionContainer
 				open={!!_contractCancelUuid}
