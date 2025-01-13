@@ -24,6 +24,7 @@ export enum QUERY_KEY {
 	table_contractor,
 	table_group_contractor,
 	table_task_cat,
+	table_contract_by_appendices,
 
 	dropdown_branches,
 	dropdown_project,
