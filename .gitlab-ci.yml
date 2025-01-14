@@ -1,0 +1,20 @@
+stages:
+    - build
+    - deploy
+build:
+    variables:
+        GIT_STRATEGY: clone
+    stage: build
+    script:
+        - docker build -t viettin-fe-1:lastest .
+    tags:
+        - viettin-runner
+deploy:
+    variables:
+        GIT_STRATEGY: none
+    stage: deploy
+    script:
+        - docker run --name viettin-fe-1 -dp 80:80 viettin-fe-1:lastest
+    tags:
+        - viettin-runner
+
