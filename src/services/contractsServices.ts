@@ -107,5 +107,51 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+
+	listContractsByAddium: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-page-list-contracts-addium-by-activity`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	insertAddendum: (
+		data: {
+			uuid: string;
+			activityUuid: string;
+			code: string;
+			contractorUuid: string;
+			startDate: string;
+			totalDayAdvantage: number;
+			amount: number;
+			contractExecutionAmount: number;
+			advanceGuaranteeAmount: number;
+			contractExecutionEndDate: string | null;
+			advanceGuaranteeEndDate: string | null;
+			contractParentUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/insert-contracts-addendum`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	detailContractsAddium: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/contract-for-contract-addium`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsServices;
