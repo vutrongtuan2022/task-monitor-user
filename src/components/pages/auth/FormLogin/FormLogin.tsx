@@ -99,7 +99,7 @@ function FormLogin({}: PropsFormLogin) {
 			<Loading loading={login.isLoading} />
 			<div className={styles.container}>
 				<div className={styles.box_logo}>
-					<ImageFill src={icons.logoSmall} className={styles.logo} alt='Logo viettinbank' />
+					<ImageFill src={icons.logoSmall} className={styles.logo} alt='Logo VietinBank' />
 				</div>
 				<h4 className={styles.title}>ĐĂNG NHẬP TÀI KHOẢN</h4>
 				<p className={styles.des}>
