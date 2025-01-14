@@ -6,15 +6,17 @@ build:
         GIT_STRATEGY: clone
     stage: build
     script:
-        - docker build -t viettin-fe-1:lastest .
+        - whoami
+        - pwd
+        - ls
     tags:
         - viettin-runner
-deploy:
-    variables:
-        GIT_STRATEGY: none
-    stage: deploy
-    script:
-        - docker run --name viettin-fe-1 -dp 4242:4242 viettin-fe-1:lastest
-    tags:
-        - viettin-runner
+# deploy:
+#     variables:
+#         GIT_STRATEGY: none
+#     stage: deploy
+#     script:
+#         - docker run --name viettin-fe-1 -dp 4242:4242 viettin-fe-1:lastest
+#     tags:
+#         - viettin-runner
 
