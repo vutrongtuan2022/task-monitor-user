@@ -25,7 +25,7 @@ function TableContractAppendices() {
 	const {data: listContractByActivity} = useQuery([QUERY_KEY.table_contract_by_appendices, _page, _pageSize, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: contractsServices.listContractsByActivity({
+				http: contractsServices.listContractsByAddium({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 10,
 					keyword: '',
@@ -63,7 +63,7 @@ function TableContractAppendices() {
 								fixedLeft: true,
 								render: (data: IContractByAppendices) => (
 									<Tippy content='Chi tiết hợp đồng'>
-										<Link href={`${PATH.ContractWork}/${data?.uuid}?_uuidWork=${_uuid}`} className={styles.link}>
+										<Link href={`${PATH.AppendicesWork}/${data?.uuid}?_uuidWork=${_uuid}`} className={styles.link}>
 											{data?.code}
 										</Link>
 									</Tippy>
