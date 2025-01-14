@@ -153,7 +153,21 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 						<h4>Thông tin hợp đồng</h4>
 					</div>
 					<div className={styles.main_form}>
-						<div className={clsx(styles.col_2)}>
+						<div>
+							<Input
+								label={
+									<span>
+										Hợp đồng chính <span style={{color: 'red'}}>*</span>
+									</span>
+								}
+								placeholder='Nhập hợp đồng chính '
+								type='text'
+								name='nameActivity'
+								readOnly={true}
+								value={form?.nameActivity}
+							/>
+						</div>
+						<div className={clsx(styles.col_2, styles.mt)}>
 							<Input
 								label={
 									<span>
