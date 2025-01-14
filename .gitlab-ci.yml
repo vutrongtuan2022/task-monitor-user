@@ -1,6 +1,6 @@
 stages:
     - build
-    - deploy
+    # - deploy
 build:
     variables:
         GIT_STRATEGY: clone
