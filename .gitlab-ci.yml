@@ -14,7 +14,7 @@ deploy:
         GIT_STRATEGY: none
     stage: deploy
     script:
-        - docker run --name viettin-fe-1 -dp 80:80 viettin-fe-1:lastest
+        - docker run --name viettin-fe-1 -dp 4242:4242 viettin-fe-1:lastest
     tags:
         - viettin-runner
 
