@@ -22,6 +22,7 @@ import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
 
 interface IFormAppendicesContract {
+	codeParentContract: string;
 	nameActivity: string;
 	code: string;
 	contractorUuid: string;
@@ -36,13 +37,14 @@ interface IFormAppendicesContract {
 	contractParentUuid: string;
 }
 
-function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesContract) {
+function FormAppendicesContract({onClose, nameActivity, codeParentContract}: PropsFormAppendicesContract) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_appendicesUuid} = router.query;
 
 	const [form, setForm] = useState<IFormAppendicesContract>({
+		codeParentContract: codeParentContract,
 		nameActivity: nameActivity,
 		code: '',
 		contractorUuid: '',
@@ -67,6 +69,7 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 		onSuccess(data) {
 			if (data) {
 				setForm({
+					codeParentContract: data?.parentContract?.code || '',
 					nameActivity: data?.activity?.name || '',
 					code: '',
 					contractorUuid: data?.contractor?.name || '',
@@ -115,6 +118,7 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 			if (data) {
 				onClose();
 				setForm({
+					codeParentContract: '',
 					nameActivity: '',
 					code: '',
 					contractorUuid: '',
@@ -166,9 +170,9 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 								}
 								placeholder='Nhập hợp đồng chính '
 								type='text'
-								name='nameActivity'
+								name='codeParentContract'
 								readOnly={true}
-								value={form?.nameActivity}
+								value={form?.codeParentContract}
 							/>
 						</div>
 						<div className={clsx(styles.col_2, styles.mt)}>

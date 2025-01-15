@@ -22,6 +22,7 @@ import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
 
 interface IFormUpdateAppendices {
+	codeParentContract: string;
 	uuidActivity: string;
 	nameActivity: string;
 	code: string;
@@ -43,6 +44,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 	const {_uuid} = router.query;
 
 	const [form, setForm] = useState<IFormUpdateAppendices>({
+		codeParentContract: '',
 		uuidActivity: '',
 		nameActivity: '',
 		code: '',
@@ -67,11 +69,12 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 		onSuccess(data) {
 			if (data) {
 				setForm({
+					codeParentContract: data?.parent?.code || '',
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.uuid || '',
+					contractorUuid: data?.contractorDTO?.name || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.name || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -85,35 +88,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 		enabled: !!_uuid,
 	});
 
-	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorServices.categoryContractorInProject({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: form?.uuidActivity,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!form?.uuidActivity,
-	});
-
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
-
-	const funcUpdateContract = useMutation({
+	const funcUpdateAppendices = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
@@ -142,6 +117,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 			if (data) {
 				onClose();
 				setForm({
+					codeParentContract: '',
 					uuidActivity: '',
 					nameActivity: '',
 					code: '',
@@ -156,7 +132,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					advanceGuaranteeEndDate: '',
 				});
 				queryClient.invalidateQueries([QUERY_KEY.detail_contract]);
-				queryClient.invalidateQueries([QUERY_KEY.table_contract_fund_detail]);
+				queryClient.invalidateQueries([QUERY_KEY.table_contract_by_appendices]);
 			}
 		},
 	});
@@ -169,12 +145,12 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
 		}
 
-		return funcUpdateContract.mutate();
+		return funcUpdateAppendices.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-			<Loading loading={funcUpdateContract.isLoading} />
+			<Loading loading={funcUpdateAppendices.isLoading} />
 			<div className={styles.container}>
 				<h4 className={styles.title}>Chỉnh sửa hợp đồng</h4>
 				<div className={styles.form}>
@@ -182,7 +158,21 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 						<h4>Thông tin hợp đồng</h4>
 					</div>
 					<div className={styles.main_form}>
-						<div className={clsx(styles.col_2)}>
+						<div className={clsx(styles.mt)}>
+							<Input
+								label={
+									<span>
+										Hợp đồng chính <span style={{color: 'red'}}>*</span>
+									</span>
+								}
+								placeholder='Nhập hợp đồng chính '
+								type='text'
+								name='codeParentContract'
+								readOnly={true}
+								value={form?.codeParentContract}
+							/>
+						</div>
+						<div className={clsx(styles.col_2, styles.mt)}>
 							<Input
 								label={
 									<span>
@@ -212,59 +202,32 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 						</div>
 
 						<div className={clsx(styles.col_2, styles.mt)}>
-							<Select
-								isSearch
-								name='contractorUuid'
-								value={form.contractorUuid}
-								placeholder='Lựa chọn'
+							<Input
 								label={
 									<span>
 										Tên nhà thầu <span style={{color: 'red'}}>*</span>
 									</span>
 								}
-							>
-								{dropdownContractorInProject?.map((v: any) => (
-									<Option
-										key={v?.uuid}
-										title={v?.name}
-										value={v?.uuid}
-										onClick={() =>
-											setForm((prev) => ({
-												...prev,
-												contractorUuid: v?.uuid,
-												contractorGroupUuid: v?.contractorCat?.uuid,
-											}))
-										}
-									/>
-								))}
-							</Select>
+								placeholder='Nhập Tên nhà thầu '
+								type='text'
+								name='contractorUuid'
+								value={form.contractorUuid}
+								readOnly={true}
+							/>
+
 							<div>
-								<Select
-									isSearch
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									placeholder='Lựa chọn'
-									readOnly={true}
+								<Input
 									label={
 										<span>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 										</span>
 									}
-								>
-									{listGroupContractor?.map((v: any) => (
-										<Option
-											key={v?.uuid}
-											title={v?.name}
-											value={v?.uuid}
-											onClick={() =>
-												setForm((prev) => ({
-													...prev,
-													contractorGroupUuid: v?.uuid,
-												}))
-											}
-										/>
-									))}
-								</Select>
+									placeholder='Nhập nhóm nhà thầu '
+									type='text'
+									name='contractorGroupUuid'
+									value={form.contractorGroupUuid}
+									readOnly={true}
+								/>
 							</div>
 						</div>
 
