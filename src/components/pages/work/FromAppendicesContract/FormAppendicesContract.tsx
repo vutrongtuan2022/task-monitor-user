@@ -37,14 +37,14 @@ interface IFormAppendicesContract {
 	contractParentUuid: string;
 }
 
-function FormAppendicesContract({onClose, nameActivity, codeParentContract}: PropsFormAppendicesContract) {
+function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesContract) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_appendicesUuid} = router.query;
 
 	const [form, setForm] = useState<IFormAppendicesContract>({
-		codeParentContract: codeParentContract,
+		codeParentContract: '',
 		nameActivity: nameActivity,
 		code: '',
 		contractorUuid: '',
