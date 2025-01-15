@@ -1,1 +1,1 @@
-export {default} from './FormAppendicesContract'
+export {default} from './FormAppendicesContract';
