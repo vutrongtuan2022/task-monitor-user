@@ -43,7 +43,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 		enabled: !!_uuid,
 	});
 
-	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_fund_detail, _page, _pageSize, _uuid], {
+	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_by_appendices, _page, _pageSize, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractsServices.contractsReportFundpaged({
