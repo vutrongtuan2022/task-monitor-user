@@ -152,7 +152,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<Loading loading={funcUpdateAppendices.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Chỉnh sửa hợp đồng</h4>
+				<h4 className={styles.title}>Chỉnh sửa phụ lục hợp đồng</h4>
 				<div className={styles.form}>
 					<div className={styles.head}>
 						<h4>Thông tin hợp đồng</h4>
