@@ -60,6 +60,12 @@ export interface IDetailContract {
 		};
 		uuid: string;
 	};
+	parent: {
+		code: string;
+		state: number;
+		status: number;
+		uuid: string;
+	};
 	creator: {
 		fullname: string;
 		code: string;
