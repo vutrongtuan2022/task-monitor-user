@@ -79,7 +79,8 @@ function DetailAppendices({}: PropsDetailAppendices) {
 				]}
 				action={
 					<div className={styles.group_button}>
-						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING && (
+						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING ||
+						detailContract?.state === STATE_CONTRACT_WORK.EXPIRED ? (
 							<Button
 								p_14_24
 								rounded_8
@@ -96,7 +97,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 							>
 								Chỉnh sửa
 							</Button>
-						)}
+						) : null}
 					</div>
 				}
 			/>
