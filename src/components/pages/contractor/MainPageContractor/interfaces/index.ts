@@ -6,7 +6,7 @@ export interface IContractor {
 		code: string;
 		name: string;
 		uuid: string;
-	};
+	}[];
 	updated: string;
 	created: string;
 	status: number;
