@@ -39,6 +39,7 @@ const contractorcatServices = {
 			keyword: string;
 			status: number;
 			isDefault?: number;
+			uuid?: string;
 		},
 		tokenAxios?: any
 	) => {
