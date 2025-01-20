@@ -90,7 +90,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 				http: contractorServices.categoryContractor({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					type: Number(_contractorCat) || null,
+					type: (_contractorCat as string) || '',
 				}),
 			}),
 		select(data) {
