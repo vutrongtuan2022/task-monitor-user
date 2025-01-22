@@ -606,13 +606,12 @@ function MainPageWork({}: PropsMainPageWork) {
 										)}
 										{data?.type == TYPE_WORK.TASK && (
 											<IconCustom
-											color='#005994'
-											icon={<Eye fontSize={20} fontWeight={600} />}
-											tooltip='Xem chi tiết'
-											href={`${PATH.Work}/${data?.activity?.uuid}`}
-										/>
+												color='#005994'
+												icon={<Eye fontSize={20} fontWeight={600} />}
+												tooltip='Xem chi tiết'
+												href={`${PATH.Work}/${data?.activity?.uuid}`}
+											/>
 										)}
-										
 									</div>
 								),
 							},
