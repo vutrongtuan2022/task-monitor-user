@@ -57,22 +57,24 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				action={
 					<div className={styles.group_button}>
 						<>
-							<Button
-								p_14_24
-								rounded_8
-								primaryLinear
-								onClick={() => {
-									router.replace({
-										pathname: router.pathname,
-										query: {
-											...router.query,
-											_appendicesUuid: detailActivityContract?.contracts?.uuid,
-										},
-									});
-								}}
-							>
-								Thêm phụ lục hợp đồng
-							</Button>
+							{detailActivityContract?.uuid === '' && (
+								<Button
+									p_14_24
+									rounded_8
+									primaryLinear
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_appendicesUuid: detailActivityContract?.contracts?.uuid,
+											},
+										});
+									}}
+								>
+									Thêm phụ lục hợp đồng
+								</Button>
+							)}
 						</>
 						{detailActivityContract?.contracts?.state === STATE_CONTRACT_WORK.PROCESSING && (
 							<>
