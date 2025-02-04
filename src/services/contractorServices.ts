@@ -58,7 +58,7 @@ const contractorServices = {
 			status: number;
 			projectUuid: string;
 			contractorUuid: string;
-			contractorCat: number | null;
+			contractorCat: string;
 		},
 		tokenAxios?: any
 	) => {

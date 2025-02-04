@@ -114,6 +114,7 @@ function TableTreeWorkCreate({listTree, onClose}: PropsTableTreeWorkCreate) {
 						data={listTree || []}
 						loading={false}
 						noti={<Noti title='Danh sách trống!' des='Danh sách công việc trống!' />}
+						showScroll={true}
 					>
 						{listTree?.map((v: IActivityRegister, index: number) => (
 							<TreeReportWork

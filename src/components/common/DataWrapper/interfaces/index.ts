@@ -4,4 +4,5 @@ export interface PropsDataWrapper {
 	children: any;
 	noti?: any;
 	iconEmpty?: any;
+	showScroll?: boolean;
 }

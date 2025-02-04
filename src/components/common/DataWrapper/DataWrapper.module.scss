@@ -9,6 +9,13 @@
 	overflow: auto;
 }
 
+.showScroll::-webkit-scrollbar {
+	width: 10px;
+}
+.showScroll::-webkit-scrollbar-thumb {
+	background: #b3b1b1;
+}
+
 .loading {
 	min-height: 55vh;
 	display: flex;
