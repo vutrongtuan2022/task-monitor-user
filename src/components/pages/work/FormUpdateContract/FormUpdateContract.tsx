@@ -71,7 +71,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
 					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.uuid || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.map((v: any) => v?.uuid) || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -100,17 +100,20 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		enabled: !!form?.uuidActivity,
 	});
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: form?.contractorUuid,
+					activityUuid: form?.uuidActivity,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
+		enabled: !!form?.contractorUuid,
 	});
 
 	const funcUpdateContract = useMutation({
@@ -124,6 +127,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					activityUuid: form?.uuidActivity,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
+					contractorCatUuid: form?.contractorGroupUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -248,7 +252,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 									name='contractorGroupUuid'
 									value={form.contractorGroupUuid}
 									placeholder='Lựa chọn'
-									readOnly={true}
 									label={
 										<span>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>

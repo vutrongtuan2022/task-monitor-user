@@ -40,6 +40,8 @@ const contractorcatServices = {
 			status: number;
 			isDefault?: number;
 			uuid?: string;
+			contractorUuid?: string;
+			activityUuid?: string;
 		},
 		tokenAxios?: any
 	) => {

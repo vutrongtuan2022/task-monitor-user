@@ -124,6 +124,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					activityUuid: form?.uuidActivity,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
+					contractorCatUuid: form?.contractorGroupUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),

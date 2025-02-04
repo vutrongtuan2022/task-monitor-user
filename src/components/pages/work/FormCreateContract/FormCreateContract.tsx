@@ -70,17 +70,20 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 		enabled: !!_activityUuid,
 	});
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: form?.contractorUuid,
+					activityUuid: _activityUuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
+		enabled: !!form?.contractorUuid && !!_activityUuid,
 	});
 
 	const funcCreateContract = useMutation({
@@ -94,6 +97,7 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 					activityUuid: _activityUuid as string,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
+					contractorCatUuid: form?.contractorGroupUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -215,7 +219,6 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 									name='contractorGroupUuid'
 									value={form.contractorGroupUuid}
 									placeholder='Lựa chọn'
-									readOnly={true}
 									label={
 										<span>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
