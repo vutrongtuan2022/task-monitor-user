@@ -84,8 +84,28 @@ function TableContractHistory() {
 								render: (data: IContractByActivity) => <>{data?.totalDayAdvantage}</>,
 							},
 							{
-								title: 'Nhóm nhà  thầu',
-								render: (data: IContractByActivity) => <>{data?.contractor?.contractorCat?.name}</>,
+								title: 'Nhóm nhà thầu',
+								render: (data: IContractByActivity) => (
+									<>
+										{data?.contractor?.contractorCat?.[0]?.name}
+										{data?.contractor?.contractorCat?.length! > 1 && (
+											<Tippy
+												content={
+													<ol style={{paddingLeft: '16px'}}>
+														{[...data?.contractor?.contractorCat!]?.slice(1)?.map((v, i) => (
+															<li key={i}>{v?.name}</li>
+														))}
+													</ol>
+												}
+											>
+												<span className={styles.link_contractor}>
+													{' '}
+													và {data?.contractor?.contractorCat?.length! - 1} nhóm khác
+												</span>
+											</Tippy>
+										)}
+									</>
+								),
 							},
 							{
 								title: 'Tên nhà thầu',

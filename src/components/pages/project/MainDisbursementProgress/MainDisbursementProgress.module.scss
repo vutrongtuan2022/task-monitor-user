@@ -111,7 +111,7 @@
 
 .name {
 	width: fit-content;
-	max-width: 400px;
+	max-width: 360px;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
@@ -120,6 +120,20 @@
 	font-weight: 600;
 	transition: 0.3s;
 	cursor: pointer;
+
+	&:hover {
+		opacity: 0.8;
+	}
+}
+
+.link_contractor {
+	cursor: pointer;
+	color: #2970ff;
+	font-size: 15px;
+	font-weight: 400;
+	text-decoration: underline;
+	margin-left: 6px;
+	transition: 0.3s;
 
 	&:hover {
 		opacity: 0.8;
