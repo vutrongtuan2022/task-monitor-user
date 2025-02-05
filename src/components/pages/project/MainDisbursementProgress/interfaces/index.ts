@@ -33,7 +33,7 @@ export interface IContractsForProject {
 			name: string;
 			isDefault: number;
 			uuid: string;
-		};
+		}[];
 		uuid: string;
 	};
 	advanceGuarantee: {

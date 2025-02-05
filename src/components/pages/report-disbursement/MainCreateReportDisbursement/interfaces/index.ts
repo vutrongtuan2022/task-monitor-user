@@ -56,7 +56,7 @@ export interface IContractsReportFund {
 			name: string;
 			isDefault: number;
 			uuid: string;
-		};
+		}[];
 		uuid: string;
 	};
 	creator: {

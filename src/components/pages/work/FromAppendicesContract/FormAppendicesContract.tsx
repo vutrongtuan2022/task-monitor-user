@@ -73,7 +73,7 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 					nameActivity: data?.activity?.name || '',
 					code: '',
 					contractorUuid: data?.contractor?.name || '',
-					contractorGroupUuid: data?.contractor?.contractorCat?.name || '',
+					contractorGroupUuid: data?.contractor?.contractorCat?.map((v: any) => v?.name) || '',
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: convertCoin(data?.amount),
