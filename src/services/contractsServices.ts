@@ -101,6 +101,7 @@ const contractsServices = {
 			advanceGuaranteeAmount: number;
 			contractExecutionEndDate: string | null;
 			advanceGuaranteeEndDate: string | null;
+			contractorCatUuid: string;
 		},
 		tokenAxios?: any
 	) => {

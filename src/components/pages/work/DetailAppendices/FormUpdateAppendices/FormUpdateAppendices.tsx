@@ -74,7 +74,8 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
 					contractorUuid: data?.contractorDTO?.name || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.name || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.map((v: any) => v?.name) || '',
+
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
