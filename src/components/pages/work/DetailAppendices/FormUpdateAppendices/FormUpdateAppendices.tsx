@@ -35,6 +35,7 @@ interface IFormUpdateAppendices {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
+	contractorCatUuid: string;
 }
 
 function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
@@ -50,6 +51,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 		code: '',
 		contractorUuid: '',
 		contractorGroupUuid: '',
+		contractorCatUuid: '',
 		startDate: '',
 		totalDayAdvantage: null,
 		amount: 0,
@@ -73,9 +75,9 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.name || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.map((v: any) => v?.name) || '',
-
+					contractorUuid: data?.contractorDTO?.uuid || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.name || '',
+					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -100,6 +102,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					activityUuid: form?.uuidActivity,
 					code: form?.code,
 					contractorUuid: form?.contractorUuid,
+					contractorCatUuid: form?.contractorCatUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -121,6 +124,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					codeParentContract: '',
 					uuidActivity: '',
 					nameActivity: '',
+					contractorCatUuid: '',
 					code: '',
 					contractorUuid: '',
 					contractorGroupUuid: '',
