@@ -70,12 +70,14 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 		enabled: !!_uuid,
 	});
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: form?.contractorUuid,
+					activityUuid: _uuid as string,
 				}),
 			}),
 		select(data) {
@@ -101,6 +103,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 					contractExecutionEndDate: form?.contractExecutionEndDate
 						? moment(form?.contractExecutionEndDate).format('YYYY-MM-DD')
 						: null,
+					contractorCatUuid: form?.contractorGroupUuid,
 					advanceGuaranteeAmount: price(form?.advanceGuaranteeAmount),
 					advanceGuaranteeEndDate: form?.advanceGuaranteeEndDate
 						? moment(form?.advanceGuaranteeEndDate).format('YYYY-MM-DD')
@@ -216,7 +219,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 									name='contractorGroupUuid'
 									value={form.contractorGroupUuid}
 									placeholder='Lựa chọn'
-									readOnly={true}
+									// readOnly={true}
 									label={
 										<span>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>

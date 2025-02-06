@@ -34,6 +34,7 @@ interface IFormUpdateContract {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
+	contractorCatUuid: string;
 }
 
 function FormUpdateContract({onClose}: PropsFormUpdateContract) {
@@ -55,6 +56,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		contractExecutionEndDate: '',
 		advanceGuaranteeAmount: 0,
 		advanceGuaranteeEndDate: '',
+		contractorCatUuid: '',
 	});
 
 	useQuery([QUERY_KEY.detail_contract], {
@@ -71,7 +73,8 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
 					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.uuid || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid,
+					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -100,12 +103,14 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		enabled: !!form?.uuidActivity,
 	});
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: form?.contractorUuid,
+					activityUuid: form?.uuidActivity,
 				}),
 			}),
 		select(data) {
@@ -126,6 +131,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					contractorUuid: form?.contractorUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
+					contractorCatUuid: form?.contractorGroupUuid,
 					amount: price(form?.amount),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
@@ -147,6 +153,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					code: '',
 					contractorUuid: '',
 					contractorGroupUuid: '',
+					contractorCatUuid: '',
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: 0,
@@ -244,7 +251,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 									name='contractorGroupUuid'
 									value={form.contractorGroupUuid}
 									placeholder='Lựa chọn'
-									readOnly={true}
+									// readOnly={true}
 									label={
 										<span>
 											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>

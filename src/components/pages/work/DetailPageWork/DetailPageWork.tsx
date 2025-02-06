@@ -57,7 +57,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				action={
 					<div className={styles.group_button}>
 						<>
-							{detailActivityContract?.uuid == '' ? null : (
+							{detailActivityContract?.contracts == null ? null : (
 								<Button
 									p_14_24
 									rounded_8

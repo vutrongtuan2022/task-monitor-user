@@ -34,6 +34,7 @@ interface IFormUpdateContract {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
+	contractorCatUuid: string;
 }
 
 function FormUpdateContract({onClose}: PropsFormUpdateContract) {
@@ -55,6 +56,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		contractExecutionEndDate: '',
 		advanceGuaranteeAmount: 0,
 		advanceGuaranteeEndDate: '',
+		contractorCatUuid: '',
 	});
 
 	useQuery([QUERY_KEY.detail_contract], {
@@ -71,7 +73,8 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
 					contractorUuid: data?.contractorDTO?.uuid || '',
-					contractorGroupUuid: data?.contractorDTO?.contractorCat?.map((v: any) => v?.uuid) || '',
+					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
+					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -150,6 +153,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					nameActivity: '',
 					code: '',
 					contractorUuid: '',
+					contractorCatUuid: '',
 					contractorGroupUuid: '',
 					startDate: '',
 					totalDayAdvantage: null,

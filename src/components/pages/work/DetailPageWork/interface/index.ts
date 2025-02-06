@@ -13,7 +13,7 @@ export interface IDetailActivityContract {
 		};
 		uuid: string;
 	};
-	contracts: {code: string; state: number; status: number; uuid: string};
+	contracts: {code: string; state: number; status: number; uuid: string} | null;
 	uuid: string;
 }
 export interface IContractByActivity {
@@ -31,7 +31,7 @@ export interface IContractByActivity {
 			name: string;
 			isDefault: number;
 			uuid: string;
-		};
+		}[];
 		uuid: string;
 	};
 	advanceGuarantee: {
@@ -46,8 +46,8 @@ export interface IContractByActivity {
 	};
 	user: {
 		fullname: string;
-		code:string;
-		uuid:string;
+		code: string;
+		uuid: string;
 	};
 	activityName: string;
 	state: number;
