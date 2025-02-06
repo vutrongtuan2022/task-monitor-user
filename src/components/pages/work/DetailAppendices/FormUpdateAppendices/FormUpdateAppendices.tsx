@@ -27,6 +27,7 @@ interface IFormUpdateAppendices {
 	nameActivity: string;
 	code: string;
 	contractorUuid: string;
+	contractorName: string;
 	contractorGroupUuid: string;
 	startDate: string;
 	totalDayAdvantage: number | null;
@@ -50,6 +51,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 		nameActivity: '',
 		code: '',
 		contractorUuid: '',
+		contractorName: '',
 		contractorGroupUuid: '',
 		contractorCatUuid: '',
 		startDate: '',
@@ -76,6 +78,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
 					contractorUuid: data?.contractorDTO?.uuid || '',
+					contractorName: data?.contractorDTO?.name || '',
 					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.name || '',
 					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
@@ -126,6 +129,7 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					nameActivity: '',
 					contractorCatUuid: '',
 					code: '',
+					contractorName: '',
 					contractorUuid: '',
 					contractorGroupUuid: '',
 					startDate: '',
@@ -215,8 +219,8 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 								}
 								placeholder='Nhập Tên nhà thầu '
 								type='text'
-								name='contractorUuid'
-								value={form.contractorUuid}
+								name='contractorName'
+								value={form.contractorName}
 								readOnly={true}
 							/>
 
