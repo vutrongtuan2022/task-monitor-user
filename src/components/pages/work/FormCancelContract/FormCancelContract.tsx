@@ -4,7 +4,7 @@ import {PropsFormCancelContract} from './interfaces';
 import styles from './FormCancelContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
-import {FolderOpen} from 'iconsax-react';
+import {AddCircle, FolderOpen, Trash} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import clsx from 'clsx';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -20,12 +20,15 @@ import contractsServices from '~/services/contractsServices';
 import moment from 'moment';
 import {price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
+import GridColumn from '~/components/layouts/GridColumn';
 
 interface IFormCancelContract {
 	nameActivity: string;
 	code: string;
-	contractorUuid: string;
-	contractorGroupUuid: string;
+	contractorAndCat: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
 	startDate: string;
 	totalDayAdvantage: number | null;
 	amount: number | string;
@@ -44,8 +47,12 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 	const [form, setForm] = useState<IFormCancelContract>({
 		nameActivity: nameActivity,
 		code: '',
-		contractorUuid: '',
-		contractorGroupUuid: '',
+		contractorAndCat: [
+			{
+				contractorUuid: '',
+				contractorCatUuid: '',
+			},
+		],
 		startDate: '',
 		totalDayAdvantage: null,
 		amount: 0,
@@ -55,35 +62,35 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 		advanceGuaranteeEndDate: '',
 	});
 
-	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorServices.categoryContractorInProject({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: _uuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
+	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorServices.categoryContractorInProject({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				uuid: _uuid as string,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!_uuid,
+	// });
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					contractorUuid: form?.contractorUuid,
-					activityUuid: _uuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
+	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorcatServices.categoryContractorCat({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				contractorUuid: form?.contractorUuid,
+	// 				activityUuid: _uuid as string,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// });
 
 	const funcCreateContractAdditional = useMutation({
 		mutationFn: () => {
@@ -95,7 +102,10 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 					uuid: _contractCancelUuid as string,
 					activityUuid: _uuid as string,
 					code: form?.code,
-					contractorUuid: form?.contractorUuid,
+					contractorAndCat: form?.contractorAndCat?.map((v) => ({
+						contractorUuid: v?.contractorUuid,
+						contractorCatUuid: v?.contractorCatUuid,
+					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -103,7 +113,6 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 					contractExecutionEndDate: form?.contractExecutionEndDate
 						? moment(form?.contractExecutionEndDate).format('YYYY-MM-DD')
 						: null,
-					contractorCatUuid: form?.contractorGroupUuid,
 					advanceGuaranteeAmount: price(form?.advanceGuaranteeAmount),
 					advanceGuaranteeEndDate: form?.advanceGuaranteeEndDate
 						? moment(form?.advanceGuaranteeEndDate).format('YYYY-MM-DD')
@@ -117,8 +126,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 				setForm({
 					nameActivity: '',
 					code: '',
-					contractorUuid: '',
-					contractorGroupUuid: '',
+					contractorAndCat: [],
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: 0,
@@ -134,7 +142,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorUuid) {
+		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
 			return toastWarn({msg: 'Chọn nhà thầu!'});
 		}
 		if (!form?.startDate) {
@@ -186,7 +194,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 							</div>
 						</div>
 
-						<div className={clsx(styles.col_2, styles.mt)}>
+						{/* <div className={clsx(styles.col_2, styles.mt)}>
 							<Select
 								isSearch
 								name='contractorUuid'
@@ -241,7 +249,7 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 									))}
 								</Select>
 							</div>
-						</div>
+						</div> */}
 
 						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker
@@ -293,6 +301,44 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 							/>
 						</div>
 					</div>
+
+					<div className={styles.head}>
+						<h4>Thông tin nhà thầu</h4>
+					</div>
+					<div className={styles.main_form}>
+						<GridColumn col_2>
+							<p className={styles.label}>
+								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+							<p className={styles.label}>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+						</GridColumn>
+						{form?.contractorAndCat?.map((v, i) => (
+							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+						))}
+						<div
+							className={clsx(styles.mt, styles.btn_add)}
+							onClick={() =>
+								setForm((prev) => ({
+									...prev,
+									contractorAndCat: [
+										...prev.contractorAndCat,
+										{
+											contractorUuid: '',
+											contractorCatUuid: '',
+										},
+									],
+								}))
+							}
+						>
+							<div>
+								<AddCircle size={20} />
+							</div>
+							<p>Thêm nhóm nhà thầu</p>
+						</div>
+					</div>
+
 					<div className={styles.head}>
 						<h4>Thông tin bảo lãnh hợp đồng</h4>
 					</div>
@@ -376,3 +422,108 @@ function FormCancelContract({onClose, nameActivity}: PropsFormCancelContract) {
 }
 
 export default FormCancelContract;
+
+function ItemContractorProject({
+	index,
+	data,
+	form,
+	setForm,
+}: {
+	index: number;
+	data: {contractorUuid: string; contractorCatUuid: string};
+	form: IFormCancelContract;
+	setForm: (any: any) => void;
+}) {
+	const router = useRouter();
+	const {_activityUuid} = router.query;
+
+	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.categoryContractorInProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					uuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_activityUuid,
+	});
+
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryContractorCat({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: data?.contractorUuid,
+					activityUuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!data?.contractorUuid && !!_activityUuid,
+	});
+
+	const handleChangeValue = (index: number, name: string, value: any) => {
+		const newData = [...form.contractorAndCat];
+
+		// newData[index] = {
+		// 	...newData[index],
+		// 	[name]: value,
+		// };
+
+		newData[index] = {
+			...newData[index],
+			[name]: value,
+			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+		};
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: newData,
+		}));
+	};
+
+	const handleDelete = () => {
+		const updateData = [...form.contractorAndCat];
+		updateData.splice(index, 1);
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: [...updateData],
+		}));
+	};
+	return (
+		<div className={clsx(styles.contractorProject, styles.col_2)}>
+			<Select isSearch={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
+				{dropdownContractorInProject?.map((v: any) => (
+					<Option
+						key={v.uuid}
+						value={v.uuid}
+						title={v?.name}
+						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+					/>
+				))}
+			</Select>
+			<div className={styles.grid}>
+				<Select isSearch={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
+					{listGroupContractor?.map((v: any) => (
+						<Option
+							key={v.uuid}
+							value={v.uuid}
+							title={v?.name}
+							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
+						/>
+					))}
+				</Select>
+				<div className={styles.delete} onClick={handleDelete}>
+					<Trash size={22} color='#fff' />
+				</div>
+			</div>
+		</div>
+	);
+}

@@ -4,7 +4,7 @@ import {PropsFormUpdateContract} from './interfaces';
 import styles from './FormUpdateContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
-import {FolderOpen} from 'iconsax-react';
+import {AddCircle, FolderOpen, Trash} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import clsx from 'clsx';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -20,12 +20,16 @@ import contractsServices from '~/services/contractsServices';
 import moment from 'moment';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
+import GridColumn from '~/components/layouts/GridColumn';
 
 interface IFormUpdateContract {
 	uuidActivity: string;
 	nameActivity: string;
 	code: string;
-	contractorUuid: string;
+	contractorAndCat: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
 	contractorGroupUuid: string;
 	startDate: string;
 	totalDayAdvantage: number | null;
@@ -34,7 +38,6 @@ interface IFormUpdateContract {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
-	contractorCatUuid: string;
 }
 
 function FormUpdateContract({onClose}: PropsFormUpdateContract) {
@@ -47,7 +50,12 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		uuidActivity: '',
 		nameActivity: '',
 		code: '',
-		contractorUuid: '',
+		contractorAndCat: [
+			{
+				contractorUuid: '',
+				contractorCatUuid: '',
+			},
+		],
 		contractorGroupUuid: '',
 		startDate: '',
 		totalDayAdvantage: null,
@@ -56,7 +64,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		contractExecutionEndDate: '',
 		advanceGuaranteeAmount: 0,
 		advanceGuaranteeEndDate: '',
-		contractorCatUuid: '',
 	});
 
 	useQuery([QUERY_KEY.detail_contract], {
@@ -72,9 +79,19 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.uuid || '',
+					contractorAndCat:
+						data?.contractor?.length == 0
+							? [
+									{
+										contractorUuid: '',
+										contractorCatUuid: '',
+									},
+							  ]
+							: data?.contractor?.map((v: any) => ({
+									contractorUuid: v?.uuid || '',
+									contractorCatUuid: v?.contractorCat?.[0]?.uuid || '',
+							  })),
 					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid,
-					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
@@ -88,35 +105,35 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		enabled: !!_uuid,
 	});
 
-	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorServices.categoryContractorInProject({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: form?.uuidActivity,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!form?.uuidActivity,
-	});
+	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorServices.categoryContractorInProject({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				uuid: form?.uuidActivity,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!form?.uuidActivity,
+	// });
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					contractorUuid: form?.contractorUuid,
-					activityUuid: form?.uuidActivity,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
+	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorcatServices.categoryContractorCat({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				contractorUuid: form?.contractorUuid,
+	// 				activityUuid: form?.uuidActivity,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// });
 
 	const funcUpdateContract = useMutation({
 		mutationFn: () => {
@@ -128,10 +145,13 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					uuid: _uuid as string,
 					activityUuid: form?.uuidActivity,
 					code: form?.code,
-					contractorUuid: form?.contractorUuid,
+					contractorAndCat: form?.contractorAndCat?.map((v) => ({
+						contractorUuid: v?.contractorUuid,
+						contractorCatUuid: v?.contractorCatUuid,
+					})),
+					// contractorCatUuid: form?.contractorGroupUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
-					contractorCatUuid: form?.contractorGroupUuid,
 					amount: price(form?.amount),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
@@ -151,9 +171,8 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					uuidActivity: '',
 					nameActivity: '',
 					code: '',
-					contractorUuid: '',
+					contractorAndCat: [],
 					contractorGroupUuid: '',
-					contractorCatUuid: '',
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: 0,
@@ -169,7 +188,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorUuid) {
+		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
 			return toastWarn({msg: 'Chọn nhà thầu!'});
 		}
 		if (!form?.startDate) {
@@ -218,7 +237,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 							</div>
 						</div>
 
-						<div className={clsx(styles.col_2, styles.mt)}>
+						{/* <div className={clsx(styles.col_2, styles.mt)}>
 							<Select
 								isSearch
 								name='contractorUuid'
@@ -273,7 +292,7 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 									))}
 								</Select>
 							</div>
-						</div>
+						</div> */}
 
 						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker
@@ -325,6 +344,44 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 							/>
 						</div>
 					</div>
+
+					<div className={styles.head}>
+						<h4>Thông tin nhà thầu</h4>
+					</div>
+					<div className={styles.main_form}>
+						<GridColumn col_2>
+							<p className={styles.label}>
+								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+							<p className={styles.label}>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+						</GridColumn>
+						{form?.contractorAndCat?.map((v, i) => (
+							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+						))}
+						<div
+							className={clsx(styles.mt, styles.btn_add)}
+							onClick={() =>
+								setForm((prev) => ({
+									...prev,
+									contractorAndCat: [
+										...prev.contractorAndCat,
+										{
+											contractorUuid: '',
+											contractorCatUuid: '',
+										},
+									],
+								}))
+							}
+						>
+							<div>
+								<AddCircle size={20} />
+							</div>
+							<p>Thêm nhóm nhà thầu</p>
+						</div>
+					</div>
+
 					<div className={styles.head}>
 						<h4>Thông tin bảo lãnh hợp đồng</h4>
 					</div>
@@ -408,3 +465,105 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 }
 
 export default FormUpdateContract;
+
+function ItemContractorProject({
+	index,
+	data,
+	form,
+	setForm,
+}: {
+	index: number;
+	data: {contractorUuid: string; contractorCatUuid: string};
+	form: IFormUpdateContract;
+	setForm: (any: any) => void;
+}) {
+	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.categoryContractorInProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					uuid: form?.uuidActivity,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!form?.uuidActivity,
+	});
+
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryContractorCat({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: data?.contractorUuid,
+					activityUuid: form?.uuidActivity,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!data?.contractorUuid,
+	});
+
+	const handleChangeValue = (index: number, name: string, value: any) => {
+		const newData = [...form.contractorAndCat];
+
+		// newData[index] = {
+		// 	...newData[index],
+		// 	[name]: value,
+		// };
+
+		newData[index] = {
+			...newData[index],
+			[name]: value,
+			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+		};
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: newData,
+		}));
+	};
+
+	const handleDelete = () => {
+		const updateData = [...form.contractorAndCat];
+		updateData.splice(index, 1);
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: [...updateData],
+		}));
+	};
+	return (
+		<div className={clsx(styles.contractorProject, styles.col_2)}>
+			<Select isSearch={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
+				{dropdownContractorInProject?.map((v: any) => (
+					<Option
+						key={v.uuid}
+						value={v.uuid}
+						title={v?.name}
+						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+					/>
+				))}
+			</Select>
+			<div className={styles.grid}>
+				<Select isSearch={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
+					{listGroupContractor?.map((v: any) => (
+						<Option
+							key={v.uuid}
+							value={v.uuid}
+							title={v?.name}
+							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
+						/>
+					))}
+				</Select>
+				<div className={styles.delete} onClick={handleDelete}>
+					<Trash size={22} color='#fff' />
+				</div>
+			</div>
+		</div>
+	);
+}
