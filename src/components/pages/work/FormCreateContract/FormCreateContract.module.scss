@@ -39,6 +39,12 @@
 	}
 }
 
+.label {
+	font-size: 16px;
+	font-weight: 500;
+	margin-bottom: 8px;
+}
+
 .main_form {
 	padding: 16px 24px;
 }
@@ -61,6 +67,12 @@
 
 	&:active {
 		transform: scale(0.9);
+	}
+}
+
+.contractorProject {
+	& + & {
+		margin-top: 12px;
 	}
 }
 

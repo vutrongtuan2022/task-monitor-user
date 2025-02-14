@@ -4,7 +4,7 @@ import {PropsFormUpdateContract} from './interfaces';
 import styles from './FormUpdateContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
-import {FolderOpen} from 'iconsax-react';
+import {FolderOpen, Trash} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import clsx from 'clsx';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -25,7 +25,10 @@ interface IFormUpdateContract {
 	uuidActivity: string;
 	nameActivity: string;
 	code: string;
-	contractorUuid: string;
+	contractorAndCat: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
 	contractorGroupUuid: string;
 	startDate: string;
 	totalDayAdvantage: number | null;
@@ -34,7 +37,7 @@ interface IFormUpdateContract {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
-	contractorCatUuid: string;
+	
 }
 
 function FormUpdateContract({onClose}: PropsFormUpdateContract) {
@@ -47,7 +50,12 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		uuidActivity: '',
 		nameActivity: '',
 		code: '',
-		contractorUuid: '',
+		contractorAndCat: [
+			{
+				contractorUuid: '',
+				contractorCatUuid: '',
+			},
+		],
 		contractorGroupUuid: '',
 		startDate: '',
 		totalDayAdvantage: null,
@@ -56,7 +64,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		contractExecutionEndDate: '',
 		advanceGuaranteeAmount: 0,
 		advanceGuaranteeEndDate: '',
-		contractorCatUuid: '',
 	});
 
 	useQuery([QUERY_KEY.detail_contract], {
@@ -72,9 +79,19 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					contractorUuid: data?.contractorDTO?.uuid || '',
+					// contractorUuid: data?.contractorDTO?.uuid || '',
+					// contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
+					contractorAndCat:data?.contractor?.length==0
+					?[
+						{													
+							contractorUuid:'',
+							contractorCatUuid:''
+						  },
+					]:data?.contractor?.map((v:any)=>({
+
+
+					})),
 					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
-					contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
