@@ -258,38 +258,29 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
 						</GridColumn>
-						<div>
 						{form?.contractorAndCat?.map((v, i) => (
-									<ItemContractorProject
-										key={i}
-										index={i}
-										data={v}
-										form={form?.contractorAndCat}
-										setForm={setForm}
-									/>
-								))}
-						</div>
+							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+						))}
 						<div
-								className={clsx(styles.mt, styles.btn_add)}
-								onClick={() =>
-									setForm((prev) => ({
-										...prev,
-										contractorAndCat: [
-											...prev.contractorAndCat,
-											{
-												contractorUuid:'',
-												contractorCatUuid:''
-											},
-										],
-									}))
-								}
-							>
+							className={clsx(styles.mt, styles.btn_add)}
+							onClick={() =>
+								setForm((prev) => ({
+									...prev,
+									contractorAndCat: [
+										...prev.contractorAndCat,
+										{
+											contractorUuid: '',
+											contractorCatUuid: '',
+										},
+									],
+								}))
+							}
+						>
 							<div>
 								<AddCircle size={20} />
 							</div>
 							<p>Thêm nhóm nhà thầu</p>
 						</div>
-						
 					</div>
 
 					<div className={styles.head}>
@@ -384,10 +375,7 @@ function ItemContractorProject({
 }: {
 	index: number;
 	data: {contractorUuid: string; contractorCatUuid: string};
-	form: {
-		contractorUuid: string;
-		contractorCatUuid: string;
-	}[];
+	form: IFormCreateContract;
 	setForm: (any: any) => void;
 }) {
 	const router = useRouter();
@@ -408,71 +396,72 @@ function ItemContractorProject({
 		enabled: !!_activityUuid,
 	});
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.[0]?.contractorUuid], {
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorcatServices.categoryContractorCat({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					contractorUuid: form?.[0]?.contractorUuid!,
+					contractorUuid: data?.contractorUuid,
 					activityUuid: _activityUuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!form?.[0]?.contractorUuid && !!_activityUuid,
+		enabled: !!data?.contractorUuid && !!_activityUuid,
 	});
 
 	const handleChangeValue = (index: number, name: string, value: any) => {
-		const newData = [...form];
+		const newData = [...form.contractorAndCat];
 
 		newData[index] = {
 			...newData[index],
 			[name]: value,
 		};
 
-		setForm(newData);
-		console.log(12);
-		
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: newData,
+		}));
 	};
 
 	const handleDelete = () => {
-		const updateData = [...form];
+		const updateData = [...form.contractorAndCat];
 		updateData.splice(index, 1);
-		setForm([...updateData]);
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: [...updateData],
+		}));
 	};
 	return (
-		<div className={clsx(styles.col_2, styles.mt)}>
-			
-				<Select isSearch={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
-					{dropdownContractorInProject?.map((v: any) => (
+		<div className={clsx(styles.contractorProject, styles.col_2)}>
+			<Select isSearch={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
+				{dropdownContractorInProject?.map((v: any) => (
+					<Option
+						key={v.uuid}
+						value={v.uuid}
+						title={v?.name}
+						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+					/>
+				))}
+			</Select>
+			<div className={styles.grid}>
+				<Select isSearch={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
+					{listGroupContractor?.map((v: any) => (
 						<Option
 							key={v.uuid}
 							value={v.uuid}
 							title={v?.name}
-							onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
 						/>
 					))}
 				</Select>
-				<div className={styles.grid}>
-					<Select isSearch={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
-						{listGroupContractor?.map((v: any) => (
-							<Option
-								key={v.contractorCatUuid}
-								value={v.contractorCatUuid}
-								title={v?.name}
-								onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.contractorCatUuid)}
-							/>
-						))}
-					</Select>
-					{index >= 1 && (
-						<div className={styles.delete} onClick={handleDelete}>
-							<Trash size={22} color='#fff' />
-						</div>
-					)}
+				<div className={styles.delete} onClick={handleDelete}>
+					<Trash size={22} color='#fff' />
 				</div>
-			
+			</div>
 		</div>
 	);
 }
