@@ -38,7 +38,6 @@ interface IFormUpdateContract {
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
-	
 }
 
 function FormUpdateContract({onClose}: PropsFormUpdateContract) {
@@ -80,18 +79,18 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					// contractorUuid: data?.contractorDTO?.uuid || '',
-					// contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
-					contractorAndCat:data?.contractor?.length==0
-					?[
-						{													
-							contractorUuid:'',
-							contractorCatUuid:''
-						  },
-					]:data?.contractor?.map((v:any)=>({
-
-
-					})),
+					contractorAndCat:
+						data?.contractor?.length == 0
+							? [
+									{
+										contractorUuid: '',
+										contractorCatUuid: '',
+									},
+							  ]
+							: data?.contractor?.map((v: any) => ({
+									contractorUuid: v?.uuid || '',
+									contractorCatUuid: v?.contractorCat?.[0]?.uuid || '',
+							  })),
 					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
 					totalDayAdvantage: data?.totalDayAdvantage || null,
@@ -105,37 +104,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		},
 		enabled: !!_contractUuid,
 	});
-
-	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorServices.categoryContractorInProject({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				uuid: form?.uuidActivity,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!form?.uuidActivity,
-	// });
-
-	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorcatServices.categoryContractorCat({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				contractorUuid: form?.contractorUuid,
-	// 				activityUuid: form?.uuidActivity,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!form?.contractorUuid,
-	// });
 
 	const funcUpdateContract = useMutation({
 		mutationFn: () => {
@@ -241,63 +209,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 								/>
 							</div>
 						</div>
-
-						{/* <div className={clsx(styles.col_2, styles.mt)}>
-							<Select
-								isSearch
-								name='contractorUuid'
-								value={form.contractorUuid}
-								placeholder='Lựa chọn'
-								label={
-									<span>
-										Tên nhà thầu <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-							>
-								{dropdownContractorInProject?.map((v: any) => (
-									<Option
-										key={v?.uuid}
-										title={v?.name}
-										value={v?.uuid}
-										onClick={() =>
-											setForm((prev) => ({
-												...prev,
-												contractorUuid: v?.uuid,
-												contractorGroupUuid: v?.contractorCat?.uuid,
-											}))
-										}
-									/>
-								))}
-							</Select>
-							<div>
-								<Select
-									isSearch
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									placeholder='Lựa chọn'
-									label={
-										<span>
-											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-								>
-									{listGroupContractor?.map((v: any) => (
-										<Option
-											key={v?.uuid}
-											title={v?.name}
-											value={v?.uuid}
-											onClick={() =>
-												setForm((prev) => ({
-													...prev,
-													contractorGroupUuid: v?.uuid,
-												}))
-											}
-										/>
-									))}
-								</Select>
-							</div>
-						</div> */}
-
 						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker
 								onClean={true}
@@ -481,7 +392,6 @@ function ItemContractorProject({
 	form: IFormUpdateContract;
 	setForm: (any: any) => void;
 }) {
-	
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
 			httpRequest({
@@ -516,9 +426,15 @@ function ItemContractorProject({
 	const handleChangeValue = (index: number, name: string, value: any) => {
 		const newData = [...form.contractorAndCat];
 
+		// newData[index] = {
+		// 	...newData[index],
+		// 	[name]: value,
+		// };
+
 		newData[index] = {
 			...newData[index],
 			[name]: value,
+			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
 		};
 
 		setForm((prev: any) => ({

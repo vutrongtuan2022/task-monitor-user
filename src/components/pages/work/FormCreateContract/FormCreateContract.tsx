@@ -62,38 +62,6 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 		advanceGuaranteeEndDate: '',
 	});
 
-	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorServices.categoryContractorInProject({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				uuid: _activityUuid as string,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!_activityUuid,
-	// });
-
-	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorAndCat?.[0]?.contractorUuid], {
-	// 	// map((v)=>(v.contractorUuid))], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorcatServices.categoryContractorCat({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				contractorUuid: form?.contractorAndCat?.[0]?.contractorUuid,
-	// 				activityUuid: _activityUuid as string,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!form?.contractorAndCat?.[0]?.contractorUuid && !!_activityUuid,
-	// });
-
 	const funcCreateContract = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -415,9 +383,15 @@ function ItemContractorProject({
 	const handleChangeValue = (index: number, name: string, value: any) => {
 		const newData = [...form.contractorAndCat];
 
+		// newData[index] = {
+		// 	...newData[index],
+		// 	[name]: value,
+		// };
+
 		newData[index] = {
 			...newData[index],
 			[name]: value,
+			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
 		};
 
 		setForm((prev: any) => ({
