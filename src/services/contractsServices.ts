@@ -5,8 +5,10 @@ const contractsServices = {
 			uuid: string;
 			activityUuid: string;
 			code: string;
-			contractorUuid: string;
-			contractorCatUuid?: string;
+			contractorAndCat: {
+				contractorUuid: string;
+				contractorCatUuid: string;
+			}[];
 			startDate: string;
 			totalDayAdvantage: number;
 			amount: number;
