@@ -20,13 +20,18 @@ import contractsServices from '~/services/contractsServices';
 import moment from 'moment';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
+import GridColumn from '~/components/layouts/GridColumn';
 
 interface IFormAppendicesContract {
 	codeParentContract: string;
 	nameActivity: string;
 	code: string;
-	contractorUuid: string;
-	contractorGroupUuid: string;
+	// contractorUuid: string;
+	// contractorGroupUuid: string;
+	contractorAndCat: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
 	startDate: string;
 	totalDayAdvantage: number | null;
 	amount: number | string;
@@ -47,8 +52,12 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 		codeParentContract: '',
 		nameActivity: nameActivity,
 		code: '',
-		contractorUuid: '',
-		contractorGroupUuid: '',
+		contractorAndCat: [
+			{
+				contractorUuid: '',
+				contractorCatUuid: '',
+			},
+		],
 		startDate: '',
 		totalDayAdvantage: null,
 		amount: 0,
@@ -72,8 +81,20 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 					codeParentContract: data?.parentContract?.code || '',
 					nameActivity: data?.activity?.name || '',
 					code: '',
-					contractorUuid: data?.contractor?.name || '',
-					contractorGroupUuid: data?.contractor?.contractorCat?.map((v: any) => v?.name) || '',
+					// contractorUuid: data?.contractor?.name || '',
+					// contractorGroupUuid: data?.contractor?.contractorCat?.map((v: any) => v?.name) || '',
+					contractorAndCat:
+						data?.contractor?.length == 0
+							? [
+									{
+										contractorUuid: '',
+										contractorCatUuid: '',
+									},
+							  ]
+							: data?.contractor?.map((v: any) => ({
+									contractorUuid: v?.uuid || '',
+									contractorCatUuid: v?.contractorCat?.[0]?.uuid || '',
+							  })),
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: convertCoin(data?.amount),
@@ -98,7 +119,10 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 					uuid: '',
 					activityUuid: '',
 					code: form?.code,
-					contractorUuid: '',
+					contractorAndCat: form?.contractorAndCat?.map((v) => ({
+						contractorUuid: v?.contractorUuid,
+						contractorCatUuid: v?.contractorCatUuid,
+					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -121,8 +145,7 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 					codeParentContract: '',
 					nameActivity: '',
 					code: '',
-					contractorUuid: '',
-					contractorGroupUuid: '',
+					contractorAndCat: [],
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: 0,
@@ -138,7 +161,7 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorUuid) {
+		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
 			return toastWarn({msg: 'Chọn nhà thầu!'});
 		}
 		if (!form?.startDate) {
@@ -205,36 +228,6 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 						</div>
 
 						<div className={clsx(styles.col_2, styles.mt)}>
-							<Input
-								label={
-									<span>
-										Tên nhà thầu <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-								placeholder='Nhập Tên nhà thầu '
-								type='text'
-								name='contractorUuid'
-								value={form.contractorUuid}
-								readOnly={true}
-							/>
-
-							<div>
-								<Input
-									label={
-										<span>
-											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập nhóm nhà thầu '
-									type='text'
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									readOnly={true}
-								/>
-							</div>
-						</div>
-
-						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker
 								onClean={true}
 								icon={true}
@@ -284,7 +277,45 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 							/>
 						</div>
 					</div>
+
 					<div className={styles.head}>
+						<h4>Thông tin nhà thầu</h4>
+					</div>
+					<div className={styles.main_form}>
+						<GridColumn col_2>
+							<p className={styles.label}>
+								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+							<p className={styles.label}>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+						</GridColumn>
+						{form?.contractorAndCat?.map((v, i) => (
+							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+						))}
+						<div
+							className={clsx(styles.mt, styles.btn_add)}
+							onClick={() =>
+								setForm((prev) => ({
+									...prev,
+									contractorAndCat: [
+										...prev.contractorAndCat,
+										{
+											contractorUuid: '',
+											contractorCatUuid: '',
+										},
+									],
+								}))
+							}
+						>
+							{/* <div>
+								<AddCircle size={20} />
+							</div>
+							<p>Thêm nhóm nhà thầu</p> */}
+						</div>
+					</div>
+
+					<div className={clsx(styles.head, styles.mt)}>
 						<h4>Thông tin bảo lãnh hợp đồng</h4>
 					</div>
 					<div className={styles.main_form}>
@@ -367,3 +398,107 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 }
 
 export default FormAppendicesContract;
+
+function ItemContractorProject({
+	index,
+	data,
+	form,
+	setForm,
+}: {
+	index: number;
+	data: {contractorUuid: string; contractorCatUuid: string};
+	form: IFormAppendicesContract;
+	setForm: (any: any) => void;
+}) {
+	const router = useRouter();
+	const {_activityUuid} = router.query;
+	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.categoryContractorInProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					uuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_activityUuid,
+	});
+
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryContractorCat({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: data?.contractorUuid,
+					activityUuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!data?.contractorUuid && !!_activityUuid,
+	});
+
+	const handleChangeValue = (index: number, name: string, value: any) => {
+		const newData = [...form.contractorAndCat];
+
+		// newData[index] = {
+		// 	...newData[index],
+		// 	[name]: value,
+		// };
+
+		newData[index] = {
+			...newData[index],
+			[name]: value,
+			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+		};
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: newData,
+		}));
+	};
+
+	// const handleDelete = () => {
+	// 	const updateData = [...form.contractorAndCat];
+	// 	updateData.splice(index, 1);
+
+	// 	setForm((prev: any) => ({
+	// 		...prev,
+	// 		contractorAndCat: [...updateData],
+	// 	}));
+	// };
+	return (
+		<div className={clsx(styles.contractorProject, styles.col_2)}>
+			<Select isSearch={true} readOnly={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
+				{dropdownContractorInProject?.map((v: any) => (
+					<Option
+						key={v.uuid}
+						value={v.uuid}
+						title={v?.name}
+						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+					/>
+				))}
+			</Select>
+			<div className={styles.grid}>
+				<Select isSearch={true} readOnly={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
+					{listGroupContractor?.map((v: any) => (
+						<Option
+							key={v.uuid}
+							value={v.uuid}
+							title={v?.name}
+							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
+						/>
+					))}
+				</Select>
+				{/* <div className={styles.delete} onClick={handleDelete}>
+					<Trash size={22} color='#fff' />
+				</div> */}
+			</div>
+		</div>
+	);
+}

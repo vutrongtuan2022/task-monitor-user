@@ -95,15 +95,17 @@ const contractsServices = {
 			uuid: string;
 			activityUuid: string;
 			code: string;
-			contractorUuid: string;
-			startDate: string;
+			contractorAndCat: {
+				contractorUuid: string;
+				contractorCatUuid: string;
+			}[];
+			startDate: string | null;
 			totalDayAdvantage: number;
 			amount: number;
 			contractExecutionAmount: number;
 			advanceGuaranteeAmount: number;
 			contractExecutionEndDate: string | null;
 			advanceGuaranteeEndDate: string | null;
-			contractorCatUuid: string;
 		},
 		tokenAxios?: any
 	) => {
@@ -131,8 +133,11 @@ const contractsServices = {
 			uuid: string;
 			activityUuid: string;
 			code: string;
-			contractorUuid: string;
-			startDate: string;
+			contractorAndCat: {
+				contractorUuid: string;
+				contractorCatUuid: string;
+			}[];
+			startDate: string | null;
 			totalDayAdvantage: number;
 			amount: number;
 			contractExecutionAmount: number;
