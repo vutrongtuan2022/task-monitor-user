@@ -4,7 +4,7 @@ import {PropsFormCreateContract} from './interfaces';
 import styles from './FormCreateContract.module.scss';
 import Button from '~/components/common/Button';
 import Form, {FormContext, Input} from '~/components/common/Form';
-import {FolderOpen} from 'iconsax-react';
+import {AddCircle, FolderOpen, Trash} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import clsx from 'clsx';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -20,12 +20,15 @@ import contractsServices from '~/services/contractsServices';
 import moment from 'moment';
 import {price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
+import GridColumn from '~/components/layouts/GridColumn';
 
 interface IFormCreateContract {
 	nameActivity: string;
 	code: string;
-	contractorUuid: string;
-	contractorGroupUuid: string;
+	contractorAndCat: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
 	startDate: string;
 	totalDayAdvantage: number | null;
 	amount: number;
@@ -44,8 +47,12 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 	const [form, setForm] = useState<IFormCreateContract>({
 		nameActivity: nameActivity,
 		code: '',
-		contractorUuid: '',
-		contractorGroupUuid: '',
+		contractorAndCat: [
+			{
+				contractorUuid: '',
+				contractorCatUuid: '',
+			},
+		],
 		startDate: '',
 		totalDayAdvantage: null,
 		amount: 0,
@@ -55,36 +62,37 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 		advanceGuaranteeEndDate: '',
 	});
 
-	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorServices.categoryContractorInProject({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: _activityUuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_activityUuid,
-	});
+	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorServices.categoryContractorInProject({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				uuid: _activityUuid as string,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!_activityUuid,
+	// });
 
-	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					contractorUuid: form?.contractorUuid,
-					activityUuid: _activityUuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!form?.contractorUuid && !!_activityUuid,
-	});
+	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorAndCat?.[0]?.contractorUuid], {
+	// 	// map((v)=>(v.contractorUuid))], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractorcatServices.categoryContractorCat({
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				contractorUuid: form?.contractorAndCat?.[0]?.contractorUuid,
+	// 				activityUuid: _activityUuid as string,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!form?.contractorAndCat?.[0]?.contractorUuid && !!_activityUuid,
+	// });
 
 	const funcCreateContract = useMutation({
 		mutationFn: () => {
@@ -96,8 +104,10 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 					uuid: '',
 					activityUuid: _activityUuid as string,
 					code: form?.code,
-					contractorUuid: form?.contractorUuid,
-					contractorCatUuid: form?.contractorGroupUuid,
+					contractorAndCat: form?.contractorAndCat?.map((v) => ({
+						contractorUuid: v?.contractorUuid,
+						contractorCatUuid: v?.contractorCatUuid,
+					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -118,8 +128,7 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 				setForm({
 					nameActivity: '',
 					code: '',
-					contractorUuid: '',
-					contractorGroupUuid: '',
+					contractorAndCat: [],
 					startDate: '',
 					totalDayAdvantage: null,
 					amount: 0,
@@ -134,7 +143,7 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorUuid) {
+		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
 			return toastWarn({msg: 'Chọn nhà thầu!'});
 		}
 		if (!form?.startDate) {
@@ -183,62 +192,6 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 									value={form?.code}
 									isRequired={true}
 								/>
-							</div>
-						</div>
-
-						<div className={clsx(styles.col_2, styles.mt)}>
-							<Select
-								isSearch
-								name='contractorUuid'
-								value={form.contractorUuid}
-								placeholder='Lựa chọn'
-								label={
-									<span>
-										Tên nhà thầu <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-							>
-								{dropdownContractorInProject?.map((v: any) => (
-									<Option
-										key={v?.uuid}
-										title={v?.name}
-										value={v?.uuid}
-										onClick={() =>
-											setForm((prev) => ({
-												...prev,
-												contractorUuid: v?.uuid,
-												contractorGroupUuid: v?.contractorCat?.uuid,
-											}))
-										}
-									/>
-								))}
-							</Select>
-							<div>
-								<Select
-									isSearch
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									placeholder='Lựa chọn'
-									label={
-										<span>
-											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-								>
-									{listGroupContractor?.map((v: any) => (
-										<Option
-											key={v?.uuid}
-											title={v?.name}
-											value={v?.uuid}
-											onClick={() =>
-												setForm((prev) => ({
-													...prev,
-													contractorGroupUuid: v?.uuid,
-												}))
-											}
-										/>
-									))}
-								</Select>
 							</div>
 						</div>
 
@@ -292,6 +245,53 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 							/>
 						</div>
 					</div>
+
+					<div className={styles.head}>
+						<h4>Thông tin nhà thầu</h4>
+					</div>
+					<div className={styles.main_form}>
+						<GridColumn col_2>
+							<p className={styles.label}>
+								Tên nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+							<p className={styles.label}>
+								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
+							</p>
+						</GridColumn>
+						<div>
+						{form?.contractorAndCat?.map((v, i) => (
+									<ItemContractorProject
+										key={i}
+										index={i}
+										data={v}
+										form={form?.contractorAndCat}
+										setForm={setForm}
+									/>
+								))}
+						</div>
+						<div
+								className={clsx(styles.mt, styles.btn_add)}
+								onClick={() =>
+									setForm((prev) => ({
+										...prev,
+										contractorAndCat: [
+											...prev.contractorAndCat,
+											{
+												contractorUuid:'',
+												contractorCatUuid:''
+											},
+										],
+									}))
+								}
+							>
+							<div>
+								<AddCircle size={20} />
+							</div>
+							<p>Thêm nhóm nhà thầu</p>
+						</div>
+						
+					</div>
+
 					<div className={styles.head}>
 						<h4>Thông tin bảo lãnh hợp đồng</h4>
 					</div>
@@ -375,3 +375,104 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 }
 
 export default FormCreateContract;
+
+function ItemContractorProject({
+	index,
+	data,
+	form,
+	setForm,
+}: {
+	index: number;
+	data: {contractorUuid: string; contractorCatUuid: string};
+	form: {
+		contractorUuid: string;
+		contractorCatUuid: string;
+	}[];
+	setForm: (any: any) => void;
+}) {
+	const router = useRouter();
+	const {_activityUuid} = router.query;
+
+	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.categoryContractorInProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					uuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!_activityUuid,
+	});
+
+	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.[0]?.contractorUuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorcatServices.categoryContractorCat({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					contractorUuid: form?.[0]?.contractorUuid!,
+					activityUuid: _activityUuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+		enabled: !!form?.[0]?.contractorUuid && !!_activityUuid,
+	});
+
+	const handleChangeValue = (index: number, name: string, value: any) => {
+		const newData = [...form];
+
+		newData[index] = {
+			...newData[index],
+			[name]: value,
+		};
+
+		setForm(newData);
+		console.log(12);
+		
+	};
+
+	const handleDelete = () => {
+		const updateData = [...form];
+		updateData.splice(index, 1);
+		setForm([...updateData]);
+	};
+	return (
+		<div className={clsx(styles.col_2, styles.mt)}>
+			
+				<Select isSearch={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
+					{dropdownContractorInProject?.map((v: any) => (
+						<Option
+							key={v.uuid}
+							value={v.uuid}
+							title={v?.name}
+							onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
+						/>
+					))}
+				</Select>
+				<div className={styles.grid}>
+					<Select isSearch={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
+						{listGroupContractor?.map((v: any) => (
+							<Option
+								key={v.contractorCatUuid}
+								value={v.contractorCatUuid}
+								title={v?.name}
+								onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.contractorCatUuid)}
+							/>
+						))}
+					</Select>
+					{index >= 1 && (
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#fff' />
+						</div>
+					)}
+				</div>
+			
+		</div>
+	);
+}
