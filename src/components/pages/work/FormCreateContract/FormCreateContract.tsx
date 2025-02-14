@@ -249,7 +249,12 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 					<div className={styles.head}>
 						<h4>Thông tin nhà thầu</h4>
 					</div>
-					<div className={styles.main_form}>
+
+					<div className={clsx(styles.col_2, styles.mt)}>
+							
+						</div>
+
+					{/* <div className={styles.main_form}>
 						<GridColumn col_2>
 							<p className={styles.label}>
 								Tên nhà thầu <span style={{color: 'red'}}>*</span>
@@ -290,7 +295,7 @@ function FormCreateContract({onClose, nameActivity}: PropsFormCreateContract) {
 							<p>Thêm nhóm nhà thầu</p>
 						</div>
 						
-					</div>
+					</div> */}
 
 					<div className={styles.head}>
 						<h4>Thông tin bảo lãnh hợp đồng</h4>
