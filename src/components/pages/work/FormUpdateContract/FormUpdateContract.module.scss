@@ -39,6 +39,12 @@
 	}
 }
 
+.label {
+	font-size: 16px;
+	font-weight: 500;
+	margin-bottom: 8px;
+}
+
 .main_form {
 	padding: 16px 24px;
 }
@@ -64,6 +70,12 @@
 	}
 }
 
+.contractorProject {
+	& + & {
+		margin-top: 12px;
+	}
+}
+
 .col_2 {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -72,4 +84,52 @@
 
 .mt {
 	margin-top: 20px;
+}
+
+.btn_add {
+	width: fit-content;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: #2970ff;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.7;
+	}
+
+	&:active {
+		transform: scale(0.9);
+	}
+}
+
+.grid {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.delete {
+	width: 44px;
+	height: 44px;
+	border-radius: 8px;
+	background: #ee464c;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.7;
+	}
+
+	&:active {
+		transform: scale(0.9);
+	}
 }
