@@ -30,6 +30,8 @@ export interface IDetailContract {
 		};
 		uuid: string;
 	};
+	totalContractor: number;
+	totalContractorCat: number;
 	contractorDTO: {
 		qh: {
 			code: string;

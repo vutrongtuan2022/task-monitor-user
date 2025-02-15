@@ -105,36 +105,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 		enabled: !!_uuid,
 	});
 
-	// const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorServices.categoryContractorInProject({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				uuid: form?.uuidActivity,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// 	enabled: !!form?.uuidActivity,
-	// });
-
-	// const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, form?.contractorUuid], {
-	// 	queryFn: () =>
-	// 		httpRequest({
-	// 			http: contractorcatServices.categoryContractorCat({
-	// 				keyword: '',
-	// 				status: STATUS_CONFIG.ACTIVE,
-	// 				contractorUuid: form?.contractorUuid,
-	// 				activityUuid: form?.uuidActivity,
-	// 			}),
-	// 		}),
-	// 	select(data) {
-	// 		return data;
-	// 	},
-	// });
-
 	const funcUpdateContract = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -149,7 +119,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
 					})),
-					// contractorCatUuid: form?.contractorGroupUuid,
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: form?.totalDayAdvantage!,
 					amount: price(form?.amount),
@@ -188,9 +157,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
-			return toastWarn({msg: 'Chọn nhà thầu!'});
-		}
 		if (!form?.startDate) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
 		}
@@ -236,63 +202,6 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 								/>
 							</div>
 						</div>
-
-						{/* <div className={clsx(styles.col_2, styles.mt)}>
-							<Select
-								isSearch
-								name='contractorUuid'
-								value={form.contractorUuid}
-								placeholder='Lựa chọn'
-								label={
-									<span>
-										Tên nhà thầu <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-							>
-								{dropdownContractorInProject?.map((v: any) => (
-									<Option
-										key={v?.uuid}
-										title={v?.name}
-										value={v?.uuid}
-										onClick={() =>
-											setForm((prev) => ({
-												...prev,
-												contractorUuid: v?.uuid,
-												contractorGroupUuid: v?.contractorCat?.uuid,
-											}))
-										}
-									/>
-								))}
-							</Select>
-							<div>
-								<Select
-									isSearch
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									placeholder='Lựa chọn'
-									// readOnly={true}
-									label={
-										<span>
-											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-								>
-									{listGroupContractor?.map((v: any) => (
-										<Option
-											key={v?.uuid}
-											title={v?.name}
-											value={v?.uuid}
-											onClick={() =>
-												setForm((prev) => ({
-													...prev,
-													contractorGroupUuid: v?.uuid,
-												}))
-											}
-										/>
-									))}
-								</Select>
-							</div>
-						</div> */}
 
 						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker

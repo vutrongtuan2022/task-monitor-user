@@ -17,6 +17,7 @@ import Moment from 'react-moment';
 import StateActive from '~/components/common/StateActive';
 import Pagination from '~/components/common/Pagination';
 import clsx from 'clsx';
+
 function TableContractAppendices() {
 	const router = useRouter();
 
@@ -88,22 +89,13 @@ function TableContractAppendices() {
 								render: (data: IContractByAppendices) => <>{data?.totalDayAdvantage}</>,
 							},
 							{
-								title: 'Các nhóm nhà thầu',
-								render: (data: IContractByAppendices) => (
-									<>
-										<span style={{color: '#2970FF'}}>{data?.totalContractorCat}</span>
-									</>
-								),
+								title: 'Số nhóm nhà thầu',
+								render: (data: IContractByAppendices) => <span style={{color: '#2970FF'}}>{data?.totalContractorCat}</span>,
 							},
 							{
-								title: 'Tên nhà thầu',
-								render: (data: IContractByAppendices) => (
-									<>
-										<span style={{color: '#2970FF'}}>{data?.totalContractor}</span>
-									</>
-								),
+								title: 'Số nhà thầu',
+								render: (data: IContractByAppendices) => <span style={{color: '#2970FF'}}>{data?.totalContractor}</span>,
 							},
-
 							{
 								title: 'Giá trị BLTHHĐ (VND) ',
 								render: (data: IContractByAppendices) => <>{convertCoin(data?.contractExecution?.amount)}</>,

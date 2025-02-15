@@ -8,19 +8,17 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
-import Form, {FormContext} from '~/components/common/Form';
+import Form from '~/components/common/Form';
 import Loading from '~/components/common/Loading';
 import {PATH} from '~/constants/config';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import Button from '~/components/common/Button';
 import Select, {Option} from '~/components/common/Select';
-import TextArea from '~/components/common/Form/components/TextArea';
 import contractsFundServices from '~/services/contractFundServices';
 import ContractItemUpdate from './ContractItemUpdate';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import moment from 'moment';
 import {toastWarn} from '~/common/funcs/toast';
-import {Note} from 'iconsax-react';
 
 function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 	const router = useRouter();
@@ -146,9 +144,6 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 		if (form?.contracts?.length == 0) {
 			return toastWarn({msg: 'Hiện tại chưa có hợp đồng nào!'});
 		}
-		// if (form?.contracts?.some((v) => !v?.releaseDate)) {
-		// 	return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
-		// }
 
 		return funcUpdateReportFund.mutate();
 	};
@@ -287,10 +282,6 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 									))}
 								</Select>
 							</div>
-
-							{/* <div className={styles.mt}>
-								<TextArea name='description' placeholder='Nhập mô tả' label='Mô tả' />
-							</div> */}
 						</div>
 					</div>
 					{form?.contracts?.map((v, i) => (

@@ -77,6 +77,8 @@ export interface IDetailContract {
 		state: number;
 		uuid: string;
 	};
+	totalContractor: number;
+	totalContractorCat: number;
 	totalDayAdvantage: number;
 	amount: number;
 	accumAmount: number;

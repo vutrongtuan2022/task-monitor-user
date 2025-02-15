@@ -26,8 +26,6 @@ interface IFormAppendicesContract {
 	codeParentContract: string;
 	nameActivity: string;
 	code: string;
-	// contractorUuid: string;
-	// contractorGroupUuid: string;
 	contractorAndCat: {
 		contractorUuid: string;
 		contractorCatUuid: string;
@@ -81,8 +79,6 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 					codeParentContract: data?.parentContract?.code || '',
 					nameActivity: data?.activity?.name || '',
 					code: '',
-					// contractorUuid: data?.contractor?.name || '',
-					// contractorGroupUuid: data?.contractor?.contractorCat?.map((v: any) => v?.name) || '',
 					contractorAndCat:
 						data?.contractor?.length == 0
 							? [
@@ -291,28 +287,8 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 							</p>
 						</GridColumn>
 						{form?.contractorAndCat?.map((v, i) => (
-							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+							<ItemContractorProject key={i} data={v} />
 						))}
-						<div
-							className={clsx(styles.mt, styles.btn_add)}
-							onClick={() =>
-								setForm((prev) => ({
-									...prev,
-									contractorAndCat: [
-										...prev.contractorAndCat,
-										{
-											contractorUuid: '',
-											contractorCatUuid: '',
-										},
-									],
-								}))
-							}
-						>
-							{/* <div>
-								<AddCircle size={20} />
-							</div>
-							<p>Thêm nhóm nhà thầu</p> */}
-						</div>
 					</div>
 
 					<div className={clsx(styles.head, styles.mt)}>
@@ -399,19 +375,11 @@ function FormAppendicesContract({onClose, nameActivity}: PropsFormAppendicesCont
 
 export default FormAppendicesContract;
 
-function ItemContractorProject({
-	index,
-	data,
-	form,
-	setForm,
-}: {
-	index: number;
-	data: {contractorUuid: string; contractorCatUuid: string};
-	form: IFormAppendicesContract;
-	setForm: (any: any) => void;
-}) {
+function ItemContractorProject({data}: {data: {contractorUuid: string; contractorCatUuid: string}}) {
 	const router = useRouter();
+
 	const {_activityUuid} = router.query;
+
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
 			httpRequest({
@@ -443,61 +411,19 @@ function ItemContractorProject({
 		enabled: !!data?.contractorUuid && !!_activityUuid,
 	});
 
-	const handleChangeValue = (index: number, name: string, value: any) => {
-		const newData = [...form.contractorAndCat];
-
-		// newData[index] = {
-		// 	...newData[index],
-		// 	[name]: value,
-		// };
-
-		newData[index] = {
-			...newData[index],
-			[name]: value,
-			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
-		};
-
-		setForm((prev: any) => ({
-			...prev,
-			contractorAndCat: newData,
-		}));
-	};
-
-	// const handleDelete = () => {
-	// 	const updateData = [...form.contractorAndCat];
-	// 	updateData.splice(index, 1);
-
-	// 	setForm((prev: any) => ({
-	// 		...prev,
-	// 		contractorAndCat: [...updateData],
-	// 	}));
-	// };
 	return (
 		<div className={clsx(styles.contractorProject, styles.col_2)}>
 			<Select isSearch={true} readOnly={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
 				{dropdownContractorInProject?.map((v: any) => (
-					<Option
-						key={v.uuid}
-						value={v.uuid}
-						title={v?.name}
-						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
-					/>
+					<Option key={v.uuid} value={v.uuid} title={v?.name} />
 				))}
 			</Select>
 			<div className={styles.grid}>
 				<Select isSearch={true} readOnly={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
 					{listGroupContractor?.map((v: any) => (
-						<Option
-							key={v.uuid}
-							value={v.uuid}
-							title={v?.name}
-							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
-						/>
+						<Option key={v.uuid} value={v.uuid} title={v?.name} />
 					))}
 				</Select>
-				{/* <div className={styles.delete} onClick={handleDelete}>
-					<Trash size={22} color='#fff' />
-				</div> */}
 			</div>
 		</div>
 	);

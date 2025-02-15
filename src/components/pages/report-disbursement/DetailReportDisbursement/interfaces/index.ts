@@ -6,6 +6,11 @@ export interface IDetailContractFund {
 		name: string;
 		state: number;
 		uuid: string;
+		branch: {
+			code: string;
+			name: string;
+			uuid: string;
+		};
 	};
 	creator: {
 		fullname: string;
@@ -23,45 +28,6 @@ export interface IDetailContractFund {
 	uuid: string;
 }
 export interface IContractFund {
-	// activity: {
-	// 	name: string;
-	// 	state: number;
-	// 	contracts: {
-	// 		code: string;
-	// 		status: number;
-	// 		uuid: string;
-	// 	};
-	// 	uuid: string;
-	// };
-	// amount: number;
-	// releaseDate: string;
-	// contractor: {
-	// 	code: string;
-	// 	name: string;
-	// 	contractorCat: {
-	// 		id: number;
-	// 		code: string;
-	// 		name: string;
-	// 		isDefault: number;
-	// 		uuid: string;
-	// 	};
-	// 	uuid: string;
-	// };
-	// contractorGroup: {
-	// 	id: number;
-	// 	code: string;
-	// 	name: string;
-	// 	isDefault: number;
-	// 	uuid: string;
-	// };
-	// note: string;
-	// code: string;
-	// status: number;
-	// uuid: string;
-
-	// projectAmount: number;
-	// reverseAmount: number;
-	// state: number;
 	activity: {
 		name: string;
 		state: number;
@@ -111,4 +77,6 @@ export interface IContractFund {
 	state: number;
 	status: number;
 	uuid: string;
+	totalContractor: number;
+	totalContractorCat: number;
 }

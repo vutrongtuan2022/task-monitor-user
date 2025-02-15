@@ -10,8 +10,6 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
-import TextArea from '~/components/common/Form/components/TextArea';
-import Tippy from '@tippyjs/react';
 
 function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: PropsContractItemUpdate) {
 	return (
@@ -73,32 +71,12 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								<p>{contract?.detailContractsDTO?.activityDTO?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thuộc nhóm nhà thầu</p>
-								<p>
-									{contract?.detailContractsDTO?.contractorDTO?.contractorCat?.[0]?.name}
-									{contract?.detailContractsDTO?.contractorDTO?.contractorCat?.length! > 1 && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...contract?.detailContractsDTO?.contractorDTO?.contractorCat!]
-														?.slice(1)
-														?.map((v, i) => (
-															<li key={i}>{v?.name}</li>
-														))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{' '}
-												và {contract?.detailContractsDTO?.contractorDTO?.contractorCat?.length! - 1} nhóm khác
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p>Số nhóm nhà thầu</p>
+								<p>{contract?.detailContractsDTO?.totalContractorCat}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tên nhà thầu</p>
-								<p>{contract?.detailContractsDTO?.contractorDTO?.name || '---'}</p>
+								<p>Số nhà thầu</p>
+								<p>{contract?.detailContractsDTO?.totalContractor}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>

@@ -153,14 +153,12 @@ function FormUpdateContract({onClose}: PropsFormUpdateContract) {
 				queryClient.invalidateQueries([QUERY_KEY.detail_activity_contract]);
 				queryClient.invalidateQueries([QUERY_KEY.table_list_work]);
 				queryClient.invalidateQueries([QUERY_KEY.table_contract_by_activity]);
+				queryClient.invalidateQueries([QUERY_KEY.table_contract_by_appendices]);
 			}
 		},
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
-			return toastWarn({msg: 'Chọn nhà thầu!'});
-		}
 		if (!form?.startDate) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
 		}

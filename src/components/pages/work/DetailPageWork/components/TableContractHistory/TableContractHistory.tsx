@@ -17,6 +17,7 @@ import Moment from 'react-moment';
 import StateActive from '~/components/common/StateActive';
 import Pagination from '~/components/common/Pagination';
 import clsx from 'clsx';
+
 function TableContractHistory() {
 	const router = useRouter();
 
@@ -86,20 +87,15 @@ function TableContractHistory() {
 							{
 								title: 'Số nhóm nhà thầu',
 								render: (data: IContractByActivity) => (
-									<>
-										<span style={{color: '#2970FF'}}>{data?.totalContractorCat}</span>
-									</>
+									<span style={{color: '#2970FF'}}>{data?.totalContractorCat || '---'}</span>
 								),
 							},
 							{
 								title: 'Số nhà thầu',
 								render: (data: IContractByActivity) => (
-									<>
-										<span style={{color: '#2970FF'}}>{data?.totalContractor}</span>
-									</>
+									<span style={{color: '#2970FF'}}>{data?.totalContractor || '---'}</span>
 								),
 							},
-
 							{
 								title: 'Giá trị BLTHHĐ (VND) ',
 								render: (data: IContractByActivity) => <>{convertCoin(data?.contractExecution?.amount)}</>,

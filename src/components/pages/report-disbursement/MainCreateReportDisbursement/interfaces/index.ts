@@ -64,6 +64,8 @@ export interface IContractsReportFund {
 		code: string;
 		uuid: string;
 	};
+	totalContractor: number;
+	totalContractorCat: number;
 	totalDayAdvantage: number;
 	amount: number;
 	accumAmount: number;

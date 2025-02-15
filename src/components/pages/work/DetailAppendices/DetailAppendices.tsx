@@ -169,9 +169,10 @@ function DetailAppendices({}: PropsDetailAppendices) {
 								<p>{detailContract?.activityDTO?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thuộc nhóm nhà thầu</p>
+								<p>Số nhóm nhà thầu</p>
 								<p>
-									{detailContract?.contractorDTO?.contractorCat?.[0]?.name}
+									{detailContract?.totalContractorCat}
+									{/* {detailContract?.contractorDTO?.contractorCat?.[0]?.name}
 									{detailContract?.contractorDTO?.contractorCat?.length! > 1 && (
 										<Tippy
 											content={
@@ -187,12 +188,13 @@ function DetailAppendices({}: PropsDetailAppendices) {
 												và {detailContract?.contractorDTO?.contractorCat?.length! - 1} nhóm khác
 											</span>
 										</Tippy>
-									)}
+									)} */}
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tên nhà thầu</p>
-								<p>{detailContract?.contractorDTO?.name || '---'}</p>
+								<p>Số nhà thầu</p>
+								<p>{detailContract?.totalContractor}</p>
+								{/* <p>{detailContract?.contractorDTO?.name || '---'}</p> */}
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>

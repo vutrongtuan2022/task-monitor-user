@@ -11,6 +11,11 @@ export interface IDetailActivityContract {
 			code: string;
 			uuid: string;
 		};
+		branch: {
+			code: string;
+			name: string;
+			uuid: string;
+		};
 		uuid: string;
 	};
 	contracts: {code: string; state: number; status: number; uuid: string} | null;

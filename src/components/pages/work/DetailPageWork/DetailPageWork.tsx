@@ -155,6 +155,13 @@ function DetailPageWork({}: PropsDetailPageWork) {
 								<p>Tên công việc</p>
 								<p>{detailActivityContract?.name || '---'}</p>
 							</div>
+							<div className={styles.item}>
+								<p>Chi nhánh</p>
+								<p>
+									<span style={{color: '#2970FF'}}>{detailActivityContract?.project?.branch?.code || '---'}</span> -
+									<span style={{marginLeft: '4px'}}>{detailActivityContract?.project?.branch?.name || '---'}</span>
+								</p>
+							</div>
 						</GridColumn>
 					</div>
 				</div>

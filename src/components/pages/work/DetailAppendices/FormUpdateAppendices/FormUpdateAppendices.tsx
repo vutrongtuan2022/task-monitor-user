@@ -84,8 +84,6 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 					uuidActivity: data?.activityDTO?.uuid || '',
 					nameActivity: data?.activityDTO?.name || '',
 					code: data?.code || '',
-					// contractorUuid: data?.contractorDTO?.uuid || '',
-					// contractorCatUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					contractorAndCat:
 						data?.contractor?.length == 0
 							? [
@@ -167,9 +165,6 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 	});
 
 	const handleSubmit = () => {
-		if (!form?.contractorAndCat?.[0]?.contractorUuid) {
-			return toastWarn({msg: 'Chọn nhà thầu!'});
-		}
 		if (!form?.startDate) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
 		}
@@ -229,36 +224,6 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 								/>
 							</div>
 						</div>
-
-						{/* <div className={clsx(styles.col_2, styles.mt)}>
-							<Input
-								label={
-									<span>
-										Tên nhà thầu <span style={{color: 'red'}}>*</span>
-									</span>
-								}
-								placeholder='Nhập Tên nhà thầu '
-								type='text'
-								name='contractorName'
-								value={form.contractorName}
-								readOnly={true}
-							/>
-
-							<div>
-								<Input
-									label={
-										<span>
-											Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập nhóm nhà thầu '
-									type='text'
-									name='contractorGroupUuid'
-									value={form.contractorGroupUuid}
-									readOnly={true}
-								/>
-							</div>
-						</div> */}
 
 						<div className={clsx(styles.col_2, styles.mt)}>
 							<DatePicker
@@ -324,28 +289,8 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 							</p>
 						</GridColumn>
 						{form?.contractorAndCat?.map((v, i) => (
-							<ItemContractorProject key={i} index={i} data={v} form={form} setForm={setForm} />
+							<ItemContractorProject key={i} data={v} />
 						))}
-						<div
-							className={clsx(styles.mt, styles.btn_add)}
-							onClick={() =>
-								setForm((prev) => ({
-									...prev,
-									contractorAndCat: [
-										...prev.contractorAndCat,
-										{
-											contractorUuid: '',
-											contractorCatUuid: '',
-										},
-									],
-								}))
-							}
-						>
-							{/* <div>
-								<AddCircle size={20} />
-							</div>
-							<p>Thêm nhóm nhà thầu</p> */}
-						</div>
 					</div>
 
 					<div className={styles.head}>
@@ -432,32 +377,24 @@ function FormUpdateAppendices({onClose}: PropsFormUpdateAppendices) {
 
 export default FormUpdateAppendices;
 
-function ItemContractorProject({
-	index,
-	data,
-	form,
-	setForm,
-}: {
-	index: number;
-	data: {contractorUuid: string; contractorCatUuid: string};
-	form: IFormUpdateAppendices;
-	setForm: (any: any) => void;
-}) {
+function ItemContractorProject({data}: {data: {contractorUuid: string; contractorCatUuid: string}}) {
 	const router = useRouter();
-	const {_activityUuid} = router.query;
+
+	const {_uuidWork} = router.query;
+
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorServices.categoryContractorInProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					uuid: _activityUuid as string,
+					uuid: _uuidWork as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!_activityUuid,
+		enabled: !!_uuidWork,
 	});
 
 	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
@@ -467,70 +404,28 @@ function ItemContractorProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 					contractorUuid: data?.contractorUuid,
-					activityUuid: _activityUuid as string,
+					activityUuid: _uuidWork as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!data?.contractorUuid && !!_activityUuid,
+		enabled: !!data?.contractorUuid && !!_uuidWork,
 	});
 
-	const handleChangeValue = (index: number, name: string, value: any) => {
-		const newData = [...form.contractorAndCat];
-
-		// newData[index] = {
-		// 	...newData[index],
-		// 	[name]: value,
-		// };
-
-		newData[index] = {
-			...newData[index],
-			[name]: value,
-			...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
-		};
-
-		setForm((prev: any) => ({
-			...prev,
-			contractorAndCat: newData,
-		}));
-	};
-
-	// const handleDelete = () => {
-	// 	const updateData = [...form.contractorAndCat];
-	// 	updateData.splice(index, 1);
-
-	// 	setForm((prev: any) => ({
-	// 		...prev,
-	// 		contractorAndCat: [...updateData],
-	// 	}));
-	// };
 	return (
 		<div className={clsx(styles.contractorProject, styles.col_2)}>
 			<Select isSearch={true} readOnly={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
 				{dropdownContractorInProject?.map((v: any) => (
-					<Option
-						key={v.uuid}
-						value={v.uuid}
-						title={v?.name}
-						onClick={() => handleChangeValue(index, 'contractorUuid', v?.uuid)}
-					/>
+					<Option key={v.uuid} value={v.uuid} title={v?.name} />
 				))}
 			</Select>
 			<div className={styles.grid}>
 				<Select isSearch={true} readOnly={true} name='contractorCatUuid' value={data?.contractorCatUuid} placeholder='Chọn'>
 					{listGroupContractor?.map((v: any) => (
-						<Option
-							key={v.uuid}
-							value={v.uuid}
-							title={v?.name}
-							onClick={() => handleChangeValue(index, 'contractorCatUuid', v?.uuid)}
-						/>
+						<Option key={v.uuid} value={v.uuid} title={v?.name} />
 					))}
 				</Select>
-				{/* <div className={styles.delete} onClick={handleDelete}>
-					<Trash size={22} color='#fff' />
-				</div> */}
 			</div>
 		</div>
 	);

@@ -383,11 +383,6 @@ function ItemContractorProject({
 	const handleChangeValue = (index: number, name: string, value: any) => {
 		const newData = [...form.contractorAndCat];
 
-		// newData[index] = {
-		// 	...newData[index],
-		// 	[name]: value,
-		// };
-
 		newData[index] = {
 			...newData[index],
 			[name]: value,

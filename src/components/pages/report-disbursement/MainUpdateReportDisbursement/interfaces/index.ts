@@ -7,6 +7,8 @@ export interface IContractUpdateReportFund {
 	note: string;
 	releaseDate: string;
 	detailContractsDTO: {
+		totalContractor: number;
+		totalContractorCat: number;
 		advanceGuarantee: {
 			amount: number;
 			endDate: string;

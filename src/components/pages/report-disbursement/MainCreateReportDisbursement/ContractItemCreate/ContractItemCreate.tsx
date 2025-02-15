@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './ContractItemCreate.module.scss';
 import {PropsContractItemCreate} from './interfaces';
 import StateActive from '~/components/common/StateActive';
@@ -10,7 +10,6 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
-import TextArea from '~/components/common/Form/components/TextArea';
 import Tippy from '@tippyjs/react';
 
 function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: PropsContractItemCreate) {
@@ -74,30 +73,12 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 								<p>{contract?.activityDTO?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thuộc nhóm nhà thầu</p>
-								<p>
-									{contract?.contractorDTO?.contractorCat?.[0]?.name}
-									{contract?.contractorDTO?.contractorCat?.length! > 1 && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...contract?.contractorDTO?.contractorCat!]?.slice(1)?.map((v, i) => (
-														<li key={i}>{v?.name}</li>
-													))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{' '}
-												và {contract?.contractorDTO?.contractorCat?.length! - 1} nhóm khác
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p>Số nhóm nhà thầu</p>
+								<p>{contract?.totalContractorCat}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tên nhà thầu</p>
-								<p>{contract?.contractorDTO?.name || '---'}</p>
+								<p>Số nhà thầu</p>
+								<p>{contract?.totalContractor}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>
