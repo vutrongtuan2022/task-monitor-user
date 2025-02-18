@@ -10,6 +10,7 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Moment from 'react-moment';
 import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
+import Tippy from '@tippyjs/react';
 
 function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: PropsContractItemUpdate) {
 	return (
@@ -72,11 +73,51 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 							</div>
 							<div className={styles.item}>
 								<p>Số nhóm nhà thầu</p>
-								<p>{contract?.detailContractsDTO?.totalContractorCat}</p>
+								<p>
+									{contract?.detailContractsDTO?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{[
+														...new Set(
+															contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorCatName)
+														),
+													].map((catName, i) => (
+														<li key={i}>{catName}</li>
+													))}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>
+												{contract?.detailContractsDTO?.totalContractorCat || '---'}
+											</span>
+										</Tippy>
+									)}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Số nhà thầu</p>
-								<p>{contract?.detailContractsDTO?.totalContractor}</p>
+								<p>
+									{contract?.detailContractsDTO?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{[
+														...new Set(
+															contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorName)
+														),
+													].map((catName, i) => (
+														<li key={i}>{catName}</li>
+													))}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>
+												{contract?.detailContractsDTO?.totalContractor || '---'}
+											</span>
+										</Tippy>
+									)}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>

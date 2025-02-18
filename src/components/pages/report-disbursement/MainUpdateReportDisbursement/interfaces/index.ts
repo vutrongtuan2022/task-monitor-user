@@ -37,6 +37,11 @@ export interface IContractUpdateReportFund {
 			};
 			uuid: string;
 		};
+		contractorInfos: {
+			contractorName: string;
+			contractorCatName: string;
+			createDate: string;
+		}[];
 		contractorDTO: {
 			qh: {
 				code: string;

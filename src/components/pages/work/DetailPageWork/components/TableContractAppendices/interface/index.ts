@@ -16,6 +16,11 @@ export interface IContractByAppendices {
 		endDate: string;
 		type: number;
 	};
+	contractorInfos: {
+		contractorName: string;
+		contractorCatName: string;
+		createDate: string;
+	}[];
 	parent: {
 		code: string;
 		state: number;

@@ -50,6 +50,11 @@ export interface IContractFund {
 		};
 		uuid: string;
 	};
+	contractorInfos: {
+		contractorName: string;
+		contractorCatName: string;
+		createDate: string;
+	}[];
 	projectAmount: number;
 	reverseAmount: number;
 	releaseDate: string;

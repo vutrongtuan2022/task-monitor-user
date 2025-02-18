@@ -33,6 +33,20 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	detailPageListContractors: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/contract-detail-page-list-contractors`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	getContractsReportFund: (
 		data: {
 			year: number;
