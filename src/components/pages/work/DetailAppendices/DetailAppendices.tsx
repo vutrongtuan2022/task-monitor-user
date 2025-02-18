@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {IContractDetailFund, IDetailContract, PropsDetailAppendices} from './interfaces';
+import {IDetailContract, PropsDetailAppendices} from './interfaces';
 import styles from './DetailAddenum.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
@@ -8,27 +8,25 @@ import Button from '~/components/common/Button';
 import GridColumn from '~/components/layouts/GridColumn';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_CONTRACT_WORK, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_CONTRACT_WORK} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsServices from '~/services/contractsServices';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Progress from '~/components/common/Progress';
 import Moment from 'react-moment';
 import clsx from 'clsx';
-import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
-import DataWrapper from '~/components/common/DataWrapper';
-import Noti from '~/components/common/DataWrapper/components/Noti';
-import Table from '~/components/common/Table';
-import Pagination from '~/components/common/Pagination';
 import StateActive from '~/components/common/StateActive';
 import PositionContainer from '~/components/common/PositionContainer';
 import Tippy from '@tippyjs/react';
 import FormUpdateAppendices from './FormUpdateAppendices';
+import TabNavLink from '~/components/common/TabNavLink';
+import TableContractFund from './components/TableContractFund';
+import TableContractors from './components/TableContractors';
 
 function DetailAppendices({}: PropsDetailAppendices) {
 	const router = useRouter();
 
-	const {_uuid, _page, _pageSize, _action, _uuidWork} = router.query;
+	const {_uuid, _action, _uuidWork, _type} = router.query;
 
 	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract], {
 		queryFn: () =>
@@ -43,22 +41,22 @@ function DetailAppendices({}: PropsDetailAppendices) {
 		enabled: !!_uuid,
 	});
 
-	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_by_appendices, _page, _pageSize, _uuid], {
-		queryFn: () =>
-			httpRequest({
-				http: contractsServices.contractsReportFundpaged({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: _uuid as string,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuid,
-	});
+	// const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_by_appendices, _page, _pageSize, _uuid], {
+	// 	queryFn: () =>
+	// 		httpRequest({
+	// 			http: contractsServices.contractsReportFundpaged({
+	// 				page: Number(_page) || 1,
+	// 				pageSize: Number(_pageSize) || 10,
+	// 				keyword: '',
+	// 				status: STATUS_CONFIG.ACTIVE,
+	// 				uuid: _uuid as string,
+	// 			}),
+	// 		}),
+	// 	select(data) {
+	// 		return data;
+	// 	},
+	// 	enabled: !!_uuid,
+	// });
 
 	return (
 		<div className={styles.container}>
@@ -171,30 +169,40 @@ function DetailAppendices({}: PropsDetailAppendices) {
 							<div className={styles.item}>
 								<p>Số nhóm nhà thầu</p>
 								<p>
-									{detailContract?.totalContractorCat}
-									{/* {detailContract?.contractorDTO?.contractorCat?.[0]?.name}
-									{detailContract?.contractorDTO?.contractorCat?.length! > 1 && (
+									{detailContract?.contractorInfos?.length && (
 										<Tippy
 											content={
 												<ol style={{paddingLeft: '16px'}}>
-													{[...detailContract?.contractorDTO?.contractorCat!]?.slice(1)?.map((v, i) => (
-														<li key={i}>{v?.name}</li>
-													))}
+													{[...new Set(detailContract?.contractorInfos?.map((v) => v.contractorCatName))].map(
+														(catName, i) => (
+															<li key={i}>{catName}</li>
+														)
+													)}
 												</ol>
 											}
 										>
-											<span className={styles.link_contractor}>
-												{' '}
-												và {detailContract?.contractorDTO?.contractorCat?.length! - 1} nhóm khác
-											</span>
+											<span className={styles.link_contractor}>{detailContract?.totalContractorCat || '---'}</span>
 										</Tippy>
-									)} */}
+									)}
 								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Số nhà thầu</p>
-								<p>{detailContract?.totalContractor}</p>
-								{/* <p>{detailContract?.contractorDTO?.name || '---'}</p> */}
+								<p>
+									{detailContract?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{...detailContract?.contractorInfos?.map((v, i) => (
+														<li key={i}>{v?.contractorName}</li>
+													))}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>{detailContract?.totalContractor || '---'}</span>
+										</Tippy>
+									)}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>
@@ -247,7 +255,34 @@ function DetailAppendices({}: PropsDetailAppendices) {
 						</GridColumn>
 					</div>
 				</div>
+
 				<div className={clsx(styles.basic_info, styles.mt)}>
+					<div className={styles.main_tab}>
+						<TabNavLink
+							query='_type'
+							listHref={[
+								{
+									pathname: PATH.ProjectCreate,
+									query: null,
+									title: 'Danh sách giải ngân',
+								},
+								{
+									pathname: PATH.ProjectCreate,
+									query: 'contractor',
+									title: 'Danh sách nhà thầu',
+								},
+							]}
+							listKeyRemove={['_page', '_pageSize', '_keyword', '_state']}
+						/>
+					</div>
+					<div className={styles.line}></div>
+					<div className={styles.main_table}>
+						{!_type && <TableContractFund />}
+						{_type == 'contractor' && <TableContractors />}
+					</div>
+				</div>
+
+				{/* <div className={clsx(styles.basic_info, styles.mt)}>
 					<div className={styles.head}>
 						<h4>Danh sách giải ngân</h4>
 					</div>
@@ -349,7 +384,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 							dependencies={[_pageSize, _uuid]}
 						/>
 					</WrapperScrollbar>
-				</div>
+				</div> */}
 			</div>
 
 			<PositionContainer

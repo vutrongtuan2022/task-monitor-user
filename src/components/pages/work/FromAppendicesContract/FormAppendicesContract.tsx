@@ -378,7 +378,7 @@ export default FormAppendicesContract;
 function ItemContractorProject({data}: {data: {contractorUuid: string; contractorCatUuid: string}}) {
 	const router = useRouter();
 
-	const {_activityUuid} = router.query;
+	const {_uuid} = router.query;
 
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
@@ -386,13 +386,13 @@ function ItemContractorProject({data}: {data: {contractorUuid: string; contracto
 				http: contractorServices.categoryContractorInProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					uuid: _activityUuid as string,
+					uuid: _uuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!_activityUuid,
+		enabled: !!_uuid,
 	});
 
 	const {data: listGroupContractor} = useQuery([QUERY_KEY.dropdown_group_contractor, data?.contractorUuid], {
@@ -402,13 +402,13 @@ function ItemContractorProject({data}: {data: {contractorUuid: string; contracto
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
 					contractorUuid: data?.contractorUuid,
-					activityUuid: _activityUuid as string,
+					activityUuid: _uuid as string,
 				}),
 			}),
 		select(data) {
 			return data;
 		},
-		enabled: !!data?.contractorUuid && !!_activityUuid,
+		enabled: !!data?.contractorUuid && !!_uuid,
 	});
 
 	return (
