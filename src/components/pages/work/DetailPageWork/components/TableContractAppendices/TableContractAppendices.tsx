@@ -118,7 +118,13 @@ function TableContractAppendices() {
 											<Tippy
 												content={
 													<ol style={{paddingLeft: '16px'}}>
-														{...data?.contractorInfos?.map((v, i) => <li key={i}>{v?.contractorName}</li>)}
+														{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map(
+															(catName, i) => (
+																<li key={i}>{catName}</li>
+															)
+														)}
+
+														{/* {...data?.contractorInfos?.map((v, i) => <li key={i}>{v?.contractorName}</li>)} */}
 													</ol>
 												}
 											>
