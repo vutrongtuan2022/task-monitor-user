@@ -89,7 +89,11 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 											}
 										>
 											<span className={styles.link_contractor}>
-												{contract?.detailContractsDTO?.totalContractorCat || '---'}
+												{[
+													...new Set(
+														contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorCatName)
+													),
+												]?.length || '---'}
 											</span>
 										</Tippy>
 									)}
@@ -113,7 +117,8 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 											}
 										>
 											<span className={styles.link_contractor}>
-												{contract?.detailContractsDTO?.totalContractor || '---'}
+												{[...new Set(contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorName))]
+													?.length || '---'}
 											</span>
 										</Tippy>
 									)}

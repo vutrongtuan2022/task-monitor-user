@@ -87,7 +87,9 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 												</ol>
 											}
 										>
-											<span className={styles.link_contractor}>{contract?.totalContractorCat || '---'}</span>
+											<span className={styles.link_contractor}>
+												{[...new Set(contract?.contractorInfos?.map((v) => v.contractorCatName))]?.length || '---'}
+											</span>
 										</Tippy>
 									)}
 								</p>
@@ -107,7 +109,9 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 												</ol>
 											}
 										>
-											<span className={styles.link_contractor}>{contract?.totalContractor || '---'}</span>
+											<span className={styles.link_contractor}>
+												{[...new Set(contract?.contractorInfos?.map((v) => v.contractorName))]?.length || '---'}
+											</span>
 										</Tippy>
 									)}
 								</p>
