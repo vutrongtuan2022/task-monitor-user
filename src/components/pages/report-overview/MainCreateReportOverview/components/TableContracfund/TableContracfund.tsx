@@ -126,23 +126,27 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Số nhà thầu',
-								render: (data: IContractFund) => {
-									data?.contractorInfos?.length && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))]?.length || '---'}
-											</span>
-										</Tippy>
-									);
-								},
+								render: (data: IContractFund) => (
+									<>
+										{data?.contractorInfos?.length && (
+											<Tippy
+												content={
+													<ol style={{paddingLeft: '16px'}}>
+														{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map(
+															(catName, i) => (
+																<li key={i}>{catName}</li>
+															)
+														)}
+													</ol>
+												}
+											>
+												<span className={styles.link_contractor}>
+													{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))]?.length || '---'}
+												</span>
+											</Tippy>
+										)}
+									</>
+								),
 								// <>{data?.contractor?.name}</>
 							},
 							{
