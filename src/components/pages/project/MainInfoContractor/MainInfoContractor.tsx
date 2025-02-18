@@ -9,7 +9,6 @@ import Button from '~/components/common/Button';
 import DataWrapper from '~/components/common/DataWrapper';
 import Pagination from '~/components/common/Pagination';
 import Table from '~/components/common/Table';
-import Search from '~/components/common/Search';
 import clsx from 'clsx';
 import icons from '~/constants/images/icons';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -316,6 +315,10 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IContractorProject) => <>{data?.contractor?.name || '---'}</>,
+									},
+									{
+										title: 'Ghi chú',
+										render: (data: IContractorProject) => <>{data?.note || '---'}</>,
 									},
 									{
 										title: 'Số lượng hợp đồng',
