@@ -332,7 +332,14 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 							</p>
 						</GridColumn>
 						{form?.contractorAndCat?.map((v, i) => (
-							<ItemContractorProject key={i} data={v} uuidActivity={form?.uuidActivity} />
+							<ItemContractorProject
+								key={i}
+								index={i}
+								data={v}
+								uuidActivity={form?.uuidActivity}
+								form={form}
+								setForm={setForm}
+							/>
 						))}
 					</div>
 
@@ -421,11 +428,17 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 export default FromUpdateContractAddendum;
 
 function ItemContractorProject({
-	data,
+	index,
 	uuidActivity,
+	data,
+	form,
+	setForm,
 }: {
-	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number | string};
+	index: number;
 	uuidActivity: string;
+	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number | string};
+	form: IFromUpdateContractAddendum;
+	setForm: (any: any) => void;
 }) {
 	const {data: dropdownContractorInProject} = useQuery([QUERY_KEY.dropdown_contractor_in_project], {
 		queryFn: () =>
@@ -458,6 +471,37 @@ function ItemContractorProject({
 		enabled: !!data?.contractorUuid && !!uuidActivity,
 	});
 
+	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+		const newData = [...form.contractorAndCat];
+
+		if (isConvert) {
+			if (!Number(price(value))) {
+				newData[index] = {
+					...newData[index],
+					[name]: 0,
+					...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+				};
+			}
+
+			newData[index] = {
+				...newData[index],
+				[name]: convertCoin(Number(price(value))),
+				...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+			};
+		} else {
+			newData[index] = {
+				...newData[index],
+				[name]: value,
+				...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
+			};
+		}
+
+		setForm((prev: any) => ({
+			...prev,
+			contractorAndCat: newData,
+		}));
+	};
+
 	return (
 		<div className={clsx(styles.contractorProject, styles.col_3)}>
 			<Select isSearch={true} readOnly={true} name='contractorUuid' value={data?.contractorUuid} placeholder='Chọn'>
@@ -480,7 +524,7 @@ function ItemContractorProject({
 						placeholder='Nhập tiền hợp đồng'
 						className={styles.input}
 						value={data?.amountInContract}
-						readOnly={true}
+						onChange={(e) => handleChangeValue(index, 'amountInContract', e.target.value, true)}
 					/>
 					<div className={styles.unit}>VNĐ</div>
 				</div>
