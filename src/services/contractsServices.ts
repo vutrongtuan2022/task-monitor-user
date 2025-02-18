@@ -1,4 +1,5 @@
 import axiosClient from '.';
+
 const contractsServices = {
 	upsertContracts: (
 		data: {
@@ -8,6 +9,7 @@ const contractsServices = {
 			contractorAndCat: {
 				contractorUuid: string;
 				contractorCatUuid: string;
+				amountInContract: number;
 			}[];
 			startDate: string;
 			totalDayAdvantage: number;
@@ -112,6 +114,7 @@ const contractsServices = {
 			contractorAndCat: {
 				contractorUuid: string;
 				contractorCatUuid: string;
+				amountInContract: number;
 			}[];
 			startDate: string | null;
 			totalDayAdvantage: number;
@@ -150,6 +153,7 @@ const contractsServices = {
 			contractorAndCat: {
 				contractorUuid: string;
 				contractorCatUuid: string;
+				amountInContract: number;
 			}[];
 			startDate: string | null;
 			totalDayAdvantage: number;

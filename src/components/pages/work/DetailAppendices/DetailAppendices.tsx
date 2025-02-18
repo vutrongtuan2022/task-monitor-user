@@ -18,17 +18,17 @@ import clsx from 'clsx';
 import StateActive from '~/components/common/StateActive';
 import PositionContainer from '~/components/common/PositionContainer';
 import Tippy from '@tippyjs/react';
-import FormUpdateAppendices from './FormUpdateAppendices';
 import TabNavLink from '~/components/common/TabNavLink';
 import TableContractFund from './components/TableContractFund';
 import TableContractors from './components/TableContractors';
+import FromUpdateContractAddendum from '~/components/utils/FromUpdateContractAddendum';
 
 function DetailAppendices({}: PropsDetailAppendices) {
 	const router = useRouter();
 
 	const {_uuid, _action, _uuidWork, _type} = router.query;
 
-	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract], {
+	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract_addendum, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractsServices.detailContracts({
@@ -281,7 +281,9 @@ function DetailAppendices({}: PropsDetailAppendices) {
 					});
 				}}
 			>
-				<FormUpdateAppendices
+				<FromUpdateContractAddendum
+					uuidContract={_uuid as string}
+					queryKeys={[QUERY_KEY.detail_contract_addendum]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 

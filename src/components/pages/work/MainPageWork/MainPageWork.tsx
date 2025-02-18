@@ -30,9 +30,9 @@ import Button from '~/components/common/Button';
 import {toastWarn} from '~/common/funcs/toast';
 import projectServices from '~/services/projectServices';
 import PositionContainer from '~/components/common/PositionContainer';
-import FormCreateContract from '../FormCreateContract';
-import FormUpdateContract from '../FormUpdateContract';
 import {PATH} from '~/constants/config';
+import FormCreateContract from '~/components/utils/FormCreateContract';
+import FormUpdateContract from '~/components/utils/FormUpdateContract';
 
 function MainPageWork({}: PropsMainPageWork) {
 	const router = useRouter();
@@ -727,6 +727,8 @@ function MainPageWork({}: PropsMainPageWork) {
 				>
 					<FormCreateContract
 						nameActivity={nameActivity}
+						uuidActivity={_activityUuid as string}
+						queryKeys={[QUERY_KEY.table_list_work]}
 						onClose={() => {
 							const {_activityUuid, ...rest} = router.query;
 
@@ -754,6 +756,8 @@ function MainPageWork({}: PropsMainPageWork) {
 					}}
 				>
 					<FormUpdateContract
+						uuidContract={_contractUuid as string}
+						queryKeys={[QUERY_KEY.table_list_work]}
 						onClose={() => {
 							const {_contractUuid, ...rest} = router.query;
 

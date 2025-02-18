@@ -17,18 +17,18 @@ import Moment from 'react-moment';
 import clsx from 'clsx';
 import StateActive from '~/components/common/StateActive';
 import PositionContainer from '~/components/common/PositionContainer';
-import FormUpdateContract from './FormUpdateContract';
 import Tippy from '@tippyjs/react';
 import TableContractFund from './components/TableContractFund';
 import TabNavLink from '~/components/common/TabNavLink';
 import TableContractors from './components/TableContractors';
+import FormUpdateContract from '~/components/utils/FormUpdateContract';
 
 function DetailContractWork({}: PropsDetailContractWork) {
 	const router = useRouter();
 
 	const {_uuid, _action, _uuidWork, _type} = router.query;
 
-	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract], {
+	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: contractsServices.detailContracts({
@@ -277,6 +277,8 @@ function DetailContractWork({}: PropsDetailContractWork) {
 				}}
 			>
 				<FormUpdateContract
+					uuidContract={_uuid as string}
+					queryKeys={[QUERY_KEY.detail_contract]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 

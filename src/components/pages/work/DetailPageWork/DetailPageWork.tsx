@@ -10,21 +10,23 @@ import {clsx} from 'clsx';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import PositionContainer from '~/components/common/PositionContainer';
-import FormUpdateContract from '../FormUpdateContract';
-import FormChangeContract from '../FormChangeContract';
 import {httpRequest} from '~/services';
 import activityServices from '~/services/activityServices';
-import FormCancelContract from '../FormCancelContract';
 import Dialog from '~/components/common/Dialog';
 import TabNavLink from '~/components/common/TabNavLink';
 import TableContractHistory from './components/TableContractHistory';
 import TableContractAppendices from './components/TableContractAppendices';
-import FormAppendicesContract from '../FromAppendicesContract';
+
+import FormCreateContract from '~/components/utils/FormCreateContract';
+import FormUpdateContract from '~/components/utils/FormUpdateContract';
+import FormCancelContract from '~/components/utils/FormCancelContract';
+import FormChangeContract from '~/components/utils/FormChangeContract';
+import FromCreateContractAddendum from '~/components/utils/FromCreateContractAddendum';
 
 function DetailPageWork({}: PropsDetailPageWork) {
 	const router = useRouter();
 
-	const {_uuid, _contractChangeUuid, _contractCancelUuid, _contractUuid, _appendicesUuid, _type} = router.query;
+	const {_uuid, _action, _type, _contractUuid} = router.query;
 
 	const [openCancelContract, setOpenCancelContract] = useState<boolean>(false);
 
@@ -57,7 +59,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				action={
 					<div className={styles.group_button}>
 						<>
-							{detailActivityContract?.contracts == null ? null : (
+							{detailActivityContract?.contracts == null && (
 								<Button
 									p_14_24
 									rounded_8
@@ -67,7 +69,27 @@ function DetailPageWork({}: PropsDetailPageWork) {
 											pathname: router.pathname,
 											query: {
 												...router.query,
-												_appendicesUuid: detailActivityContract?.contracts?.uuid,
+												_action: 'create',
+											},
+										});
+									}}
+								>
+									Thêm mới hợp đồng
+								</Button>
+							)}
+						</>
+						<>
+							{!!detailActivityContract?.contracts && (
+								<Button
+									p_14_24
+									rounded_8
+									primaryLinear
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_action: 'create-contract-addendum',
 											},
 										});
 									}}
@@ -112,7 +134,7 @@ function DetailPageWork({}: PropsDetailPageWork) {
 											pathname: router.pathname,
 											query: {
 												...router.query,
-												_contractChangeUuid: detailActivityContract?.contracts?.uuid,
+												_action: 'change-contract',
 											},
 										});
 									}}
@@ -212,16 +234,17 @@ function DetailPageWork({}: PropsDetailPageWork) {
 						pathname: router.pathname,
 						query: {
 							...router.query,
-							_contractCancelUuid: detailActivityContract?.contracts?.uuid,
+							_action: 'cancel-contract',
 						},
 					});
 				}}
 			/>
 
+			{/* Thêm phụ lục hợp đồng */}
 			<PositionContainer
-				open={!!_appendicesUuid}
+				open={_action == 'create-contract-addendum'}
 				onClose={() => {
-					const {_appendicesUuid, ...rest} = router.query;
+					const {_action, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -231,10 +254,12 @@ function DetailPageWork({}: PropsDetailPageWork) {
 					});
 				}}
 			>
-				<FormAppendicesContract
-					nameActivity={detailActivityContract?.name!}
+				<FromCreateContractAddendum
+					uuidActivity={_uuid as string}
+					uuidContract={detailActivityContract?.contracts?.uuid!}
+					queryKeys={[QUERY_KEY.detail_activity_contract]}
 					onClose={() => {
-						const {_appendicesUuid, ...rest} = router.query;
+						const {_action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -246,10 +271,11 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				/>
 			</PositionContainer>
 
+			{/* Kết thúc hợp đồng */}
 			<PositionContainer
-				open={!!_contractCancelUuid}
+				open={_action == 'cancel-contract'}
 				onClose={() => {
-					const {_contractCancelUuid, ...rest} = router.query;
+					const {_action, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -260,9 +286,12 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				}}
 			>
 				<FormCancelContract
+					uuidActivity={_uuid as string}
+					uuidContract={detailActivityContract?.contracts?.uuid!}
 					nameActivity={detailActivityContract?.name!}
+					queryKeys={[QUERY_KEY.detail_activity_contract]}
 					onClose={() => {
-						const {_contractCancelUuid, ...rest} = router.query;
+						const {_action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -274,10 +303,11 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				/>
 			</PositionContainer>
 
+			{/* Thay thế hợp đồng */}
 			<PositionContainer
-				open={!!_contractChangeUuid}
+				open={_action == 'change-contract'}
 				onClose={() => {
-					const {_contractChangeUuid, ...rest} = router.query;
+					const {_action, ...rest} = router.query;
 
 					router.replace({
 						pathname: router.pathname,
@@ -288,9 +318,12 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				}}
 			>
 				<FormChangeContract
+					uuidActivity={_uuid as string}
+					uuidContract={detailActivityContract?.contracts?.uuid!}
 					nameActivity={detailActivityContract?.name!}
+					queryKeys={[QUERY_KEY.detail_activity_contract]}
 					onClose={() => {
-						const {_contractChangeUuid, ...rest} = router.query;
+						const {_action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,
@@ -302,6 +335,38 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				/>
 			</PositionContainer>
 
+			{/* Thêm mới hợp đồng */}
+			<PositionContainer
+				open={_action == 'create'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormCreateContract
+					uuidActivity={_uuid as string}
+					nameActivity={detailActivityContract?.name!}
+					queryKeys={[QUERY_KEY.detail_activity_contract]}
+					onClose={() => {
+						const {_action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			{/* Chỉnh sửa hợp đồng */}
 			<PositionContainer
 				open={!!_contractUuid}
 				onClose={() => {
@@ -316,6 +381,8 @@ function DetailPageWork({}: PropsDetailPageWork) {
 				}}
 			>
 				<FormUpdateContract
+					uuidContract={_contractUuid as string}
+					queryKeys={[QUERY_KEY.detail_activity_contract]}
 					onClose={() => {
 						const {_contractUuid, ...rest} = router.query;
 
