@@ -276,7 +276,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 									},
 
 									{
-										title: 'Thời gian giải ngân',
+										title: 'Báo cáo tháng',
 										render: (data: IContractDetailFund) => (
 											<>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</>
 										),

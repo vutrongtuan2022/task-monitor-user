@@ -380,7 +380,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 															</ol>
 														}
 													>
-														<span style={{color: '#2970FF'}}>
+														<span className={styles.link_contractor}>
 															{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))]?.length ||
 																'---'}
 														</span>
@@ -405,7 +405,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 															</ol>
 														}
 													>
-														<span style={{color: '#2970FF'}}>
+														<span className={styles.link_contractor}>
 															{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))]?.length ||
 																'---'}
 														</span>

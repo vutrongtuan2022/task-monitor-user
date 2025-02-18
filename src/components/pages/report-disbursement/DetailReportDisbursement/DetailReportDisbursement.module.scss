@@ -145,3 +145,15 @@
 		opacity: 0.8;
 	}
 }
+.link_contractor {
+	cursor: pointer;
+	color: #2970ff;
+	font-size: 15px;
+	font-weight: 400;
+	margin-left: 6px;
+	transition: 0.3s;
+
+	&:hover {
+		opacity: 0.8;
+	}
+}

@@ -101,23 +101,23 @@ function TableContracfund({}: PropsTableContracFund) {
 								),
 							},
 							{
-								title: 'Thuộc nhóm',
+								title: 'Số nhóm nhà thầu',
 								render: (data: IContractFund) => (
 									<>
-										{data?.contractor?.contractorCat?.[0]?.name}
-										{data?.contractor?.contractorCat?.length! > 1 && (
+										{data?.contractorInfos?.length && (
 											<Tippy
 												content={
 													<ol style={{paddingLeft: '16px'}}>
-														{[...data?.contractor?.contractorCat!]?.slice(1)?.map((v, i) => (
-															<li key={i}>{v?.name}</li>
-														))}
+														{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))].map(
+															(catName, i) => (
+																<li key={i}>{catName}</li>
+															)
+														)}
 													</ol>
 												}
 											>
 												<span className={styles.link_contractor}>
-													{' '}
-													và {data?.contractor?.contractorCat?.length! - 1} nhóm khác
+													{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))]?.length || '---'}
 												</span>
 											</Tippy>
 										)}
@@ -125,8 +125,25 @@ function TableContracfund({}: PropsTableContracFund) {
 								),
 							},
 							{
-								title: 'Tên nhà thầu',
-								render: (data: IContractFund) => <>{data?.contractor?.name}</>,
+								title: 'Số nhà thầu',
+								render: (data: IContractFund) => {
+									data?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map((catName, i) => (
+														<li key={i}>{catName}</li>
+													))}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>
+												{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))]?.length || '---'}
+											</span>
+										</Tippy>
+									);
+								},
+								// <>{data?.contractor?.name}</>
 							},
 							{
 								title: 'Mô tả',

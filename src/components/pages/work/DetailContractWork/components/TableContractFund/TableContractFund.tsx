@@ -61,7 +61,7 @@ function TableContractFund() {
 							{
 								title: 'Báo cáo tháng',
 								render: (data: PropsTableContractFund) => (
-									<span style={{color: '#2970FF'}}>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</span>
+									<span>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}`}</span>
 								),
 							},
 							{
