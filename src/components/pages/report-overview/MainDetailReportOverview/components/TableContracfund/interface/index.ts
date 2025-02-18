@@ -13,6 +13,11 @@ export interface IContractFund {
 		}[];
 		uuid: string;
 	};
+	contractorInfos: {
+		contractorName: string;
+		contractorCatName: string;
+		createDate: string;
+	}[];
 	activity: {
 		name: string;
 		state: number;

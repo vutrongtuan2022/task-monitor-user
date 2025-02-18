@@ -74,11 +74,43 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							</div>
 							<div className={styles.item}>
 								<p>Số nhóm nhà thầu</p>
-								<p>{contract?.totalContractorCat}</p>
+								<p>
+									{contract?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{[...new Set(contract?.contractorInfos?.map((v) => v.contractorCatName))].map(
+														(catName, i) => (
+															<li key={i}>{catName}</li>
+														)
+													)}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>{contract?.totalContractorCat || '---'}</span>
+										</Tippy>
+									)}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Số nhà thầu</p>
-								<p>{contract?.totalContractor}</p>
+								<p>
+									{contract?.contractorInfos?.length && (
+										<Tippy
+											content={
+												<ol style={{paddingLeft: '16px'}}>
+													{[...new Set(contract?.contractorInfos?.map((v) => v.contractorName))].map(
+														(catName, i) => (
+															<li key={i}>{catName}</li>
+														)
+													)}
+												</ol>
+											}
+										>
+											<span className={styles.link_contractor}>{contract?.totalContractor || '---'}</span>
+										</Tippy>
+									)}
+								</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>
