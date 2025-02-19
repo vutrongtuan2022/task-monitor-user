@@ -56,6 +56,7 @@ export enum PATH {
 
 	ReportDisbursement = '/report-disbursement',
 	ReportDisbursementCreate = '/report-disbursement/create',
+	ReportDisbursementCreateHistory = '/report-disbursement/create-history',
 	ReportDisbursementUpdate = '/report-disbursement/update',
 
 	ContractReportDisbursement = '/report-disbursement/contract',

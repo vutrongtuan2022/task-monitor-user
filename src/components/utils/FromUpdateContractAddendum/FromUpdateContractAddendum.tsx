@@ -89,17 +89,17 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 	useQuery([QUERY_KEY.detail_contract_addium], {
 		queryFn: () =>
 			httpRequest({
-				http: contractsServices.detailContractsAddium({
+				http: contractsServices.detailContracts({
 					uuid: uuidContract,
 				}),
 			}),
 		onSuccess(data) {
 			if (data) {
 				setForm({
-					codeParentContract: data?.parentContract?.code || '',
-					uuidActivity: data?.activity?.uuid || '',
-					nameActivity: data?.activity?.name || '',
-					code: '',
+					codeParentContract: data?.parent?.code || '',
+					uuidActivity: data?.activityDTO?.uuid || '',
+					nameActivity: data?.activityDTO?.name || '',
+					code: data?.code || '',
 					contractorAndCat:
 						data?.contractor?.length == 0
 							? [
@@ -114,14 +114,14 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 									contractorCatUuid: v?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 									amountInContract: convertCoin(v?.amount) || 0,
 							  })),
-					startDate: '',
-					totalDayAdvantage: null,
+					startDate: data?.startDate || '',
+					totalDayAdvantage: data?.totalDayAdvantage || null,
 					amount: convertCoin(data?.amount),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
-					contractExecutionEndDate: '',
+					contractExecutionEndDate: data?.contractExecution?.endDate || '',
 					advanceGuaranteeAmount: convertCoin(data?.advanceGuarantee?.amount),
-					advanceGuaranteeEndDate: '',
-					contractParentUuid: data?.parentContract?.uuid || '',
+					advanceGuaranteeEndDate: data?.advanceGuarantee?.endDate || '',
+					contractParentUuid: data?.parent?.uuid || '',
 				});
 			}
 		},
@@ -134,7 +134,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Chỉnh sửa phụ lục hợp đồng thành công!',
-				http: contractsServices.insertAddendum({
+				http: contractsServices.upsertContracts({
 					uuid: uuidContract,
 					activityUuid: form?.uuidActivity,
 					code: form?.code,

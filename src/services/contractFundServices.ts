@@ -36,6 +36,24 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	createContractFundReportFundHistory: (
+		data: {
+			year: number | null;
+			projectUuid: string;
+			disbursementInfo: {
+				contractsUuid: string;
+				amount: number;
+				reverseAmount: number;
+				disbursementDay: string | null;
+				note: string;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/create-report-fund-history`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	detailContractFund: (
 		data: {
 			uuid: string;

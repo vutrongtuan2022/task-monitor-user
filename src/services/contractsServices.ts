@@ -18,6 +18,7 @@ const contractsServices = {
 			advanceGuaranteeAmount: number;
 			contractExecutionEndDate: string | null;
 			advanceGuaranteeEndDate: string | null;
+			contractParentUuid?: string;
 		},
 		tokenAxios?: any
 	) => {
@@ -58,6 +59,17 @@ const contractsServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Contracts/get-contracts-for-create-report-fund`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getContractsReportFundHistory: (
+		data: {
+			year: number;
+			projectUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-contracts-for-create-report-fund-history`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
@@ -177,6 +189,19 @@ const contractsServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Contracts/contract-for-contract-addium`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getContractsFundHistory: (
+		data: {
+			projectUuid: string;
+			pageSize: number;
+			page: number;
+			year: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-contracts-for-create-report-fund-history`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

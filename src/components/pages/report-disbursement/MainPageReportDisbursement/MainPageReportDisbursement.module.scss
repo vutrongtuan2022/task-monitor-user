@@ -84,3 +84,10 @@
 		opacity: 0.8;
 	}
 }
+
+.btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}

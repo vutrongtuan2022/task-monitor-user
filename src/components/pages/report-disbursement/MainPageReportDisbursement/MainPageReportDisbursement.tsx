@@ -155,15 +155,28 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 					</div>
 				</div>
 				<div className={styles.btn}>
-					<Button
-						p_10_24
-						rounded_8
-						light-blue
-						href={PATH.ReportDisbursementCreate}
-						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
-					>
-						Thêm mới báo cáo
-					</Button>
+					<div>
+						<Button
+							p_10_24
+							rounded_8
+							blueRedLinear
+							href={PATH.ReportDisbursementCreateHistory}
+							icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+						>
+							Giải ngân quá khứ
+						</Button>
+					</div>
+					<div>
+						<Button
+							p_10_24
+							rounded_8
+							light-blue
+							href={PATH.ReportDisbursementCreate}
+							icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+						>
+							Thêm mới báo cáo
+						</Button>
+					</div>
 				</div>
 			</div>
 			<WrapperScrollbar>
