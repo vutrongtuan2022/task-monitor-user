@@ -49,7 +49,7 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 		queryFn: () =>
 			httpRequest({
 				http: contractsServices.getContractsReportFundHistory({
-					year: form.year!,
+					year: form.year,
 					projectUuid: form.projectUuid,
 				}),
 			}),
@@ -70,7 +70,7 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 				}));
 			}
 		},
-		enabled: !!form.year && !!form.projectUuid,
+		enabled: !!form.projectUuid,
 	});
 
 	const funcCreateContractsReportFundHistory = useMutation({
