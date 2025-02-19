@@ -219,11 +219,7 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 								<div>
 									<Select
 										isSearch={true}
-										label={
-											<span>
-												Kế hoạch năm <span style={{color: 'red'}}>*</span>
-											</span>
-										}
+										label={<span>Kế hoạch năm</span>}
 										name='year'
 										value={form.year}
 										placeholder='Chọn'
