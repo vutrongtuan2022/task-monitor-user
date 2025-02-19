@@ -64,7 +64,7 @@ const contractsServices = {
 	},
 	getContractsReportFundHistory: (
 		data: {
-			year: number;
+			year: number | null;
 			projectUuid: string;
 		},
 		tokenAxios?: any
