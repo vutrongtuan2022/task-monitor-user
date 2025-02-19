@@ -108,9 +108,6 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 		if (form?.disbursementInfo?.length == 0) {
 			return toastWarn({msg: 'Hiện tại chưa có hợp đồng nào!'});
 		}
-		// if (form?.contracts?.some((v) => !v?.dayDisbursement)) {
-		// 	return toastWarn({msg: 'Vui lòng nhập đầy đủ thông tin giải ngân!'});
-		// }
 
 		return funcCreateContractsReportFundHistory.mutate();
 	};
@@ -180,7 +177,7 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 							</Button>
 
 							<div className={styles.btn}>
-								<Button p_14_24 rounded_8 blueLinear disable={!form.year || !form.projectUuid} onClick={handleSubmit}>
+								<Button p_14_24 rounded_8 blueLinear disable={!form.projectUuid} onClick={handleSubmit}>
 									Thêm giải ngân
 								</Button>
 							</div>
@@ -198,24 +195,24 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 									isSearch={true}
 									label={
 										<span>
-											Kế hoạch năm <span style={{color: 'red'}}>*</span>
+											Chọn dự án <span style={{color: 'red'}}>*</span>
 										</span>
 									}
-									name='year'
-									value={form.year}
+									name='projectUuid'
+									value={form.projectUuid}
 									placeholder='Chọn'
 								>
-									{years?.map((v: any) => (
+									{listProject?.map((v: any) => (
 										<Option
-											key={v}
-											value={v}
-											title={`Năm ${v}`}
-											onClick={() =>
+											key={v?.uuid}
+											value={v?.uuid}
+											title={v?.name}
+											onClick={() => {
 												setForm((prev: any) => ({
 													...prev,
-													year: v,
-												}))
-											}
+													projectUuid: v?.uuid,
+												}));
+											}}
 										/>
 									))}
 								</Select>
@@ -224,24 +221,24 @@ function MainCreateReportDisbursementHistory({}: PropsMainCreateReportDisburseme
 										isSearch={true}
 										label={
 											<span>
-												Chọn dự án <span style={{color: 'red'}}>*</span>
+												Kế hoạch năm <span style={{color: 'red'}}>*</span>
 											</span>
 										}
-										name='projectUuid'
-										value={form.projectUuid}
+										name='year'
+										value={form.year}
 										placeholder='Chọn'
 									>
-										{listProject?.map((v: any) => (
+										{years?.map((v: any) => (
 											<Option
-												key={v?.uuid}
-												value={v?.uuid}
-												title={v?.name}
-												onClick={() => {
+												key={v}
+												value={v}
+												title={`Năm ${v}`}
+												onClick={() =>
 													setForm((prev: any) => ({
 														...prev,
-														projectUuid: v?.uuid,
-													}));
-												}}
+														year: v,
+													}))
+												}
 											/>
 										))}
 									</Select>
