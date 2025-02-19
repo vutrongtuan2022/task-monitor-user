@@ -109,7 +109,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 							: data?.contractor?.map((v: any) => ({
 									contractorUuid: v?.contractorDTO?.uuid || '',
 									contractorCatUuid: v?.contractorDTO?.contractorCat?.[0]?.uuid || '',
-									amountInContract: convertCoin(v?.amount) || 0,
+									amountInContract: 0,
 							  })),
 					startDate: '',
 					totalDayAdvantage: null,
