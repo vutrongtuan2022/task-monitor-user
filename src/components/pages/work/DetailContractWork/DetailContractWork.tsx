@@ -284,7 +284,11 @@ function DetailContractWork({}: PropsDetailContractWork) {
 			>
 				<FormUpdateContract
 					uuidContract={_uuid as string}
-					queryKeys={[QUERY_KEY.detail_contract]}
+					queryKeys={[
+						QUERY_KEY.detail_activity_contract,
+						QUERY_KEY.table_contract_by_appendices,
+						QUERY_KEY.table_contract_by_activity,
+					]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 

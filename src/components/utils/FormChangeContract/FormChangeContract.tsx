@@ -125,7 +125,7 @@ function FormChangeContract({onClose, nameActivity, uuidActivity, uuidContract, 
 					advanceGuaranteeAmount: 0,
 					advanceGuaranteeEndDate: '',
 				});
-				queryClient.invalidateQueries(queryKeys);
+				queryKeys?.map((key) => queryClient.invalidateQueries([key]));
 			}
 		},
 	});
@@ -221,7 +221,7 @@ function FormChangeContract({onClose, nameActivity, uuidActivity, uuidContract, 
 							<Input
 								label={
 									<span>
-										Thời gian thực hiện hợp đồng <span style={{color: 'red'}}>*</span>
+										Thời gian thực hiện hợp đồng (ngày)<span style={{color: 'red'}}>*</span>
 									</span>
 								}
 								placeholder='Nhập số ngày'

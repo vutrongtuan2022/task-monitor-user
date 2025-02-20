@@ -289,7 +289,11 @@ function DetailAppendices({}: PropsDetailAppendices) {
 			>
 				<FromUpdateContractAddendum
 					uuidContract={_uuid as string}
-					queryKeys={[QUERY_KEY.detail_contract_addendum]}
+					queryKeys={[
+						QUERY_KEY.detail_activity_contract,
+						QUERY_KEY.table_contract_by_appendices,
+						QUERY_KEY.table_contract_by_activity,
+					]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 
