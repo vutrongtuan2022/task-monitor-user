@@ -282,11 +282,11 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 										),
 									},
 									{
-										title: 'Vốn dự phòng (VND)',
+										title: 'Sử dụng vốn dự phòng (VND)',
 										render: (data: IContractDetailFund) => <>{convertCoin(data?.reverseAmount) || '---'}</>,
 									},
 									{
-										title: 'Vốn dự án (VND)',
+										title: 'Sử dụng vốn dự án (VND)',
 										render: (data: IContractDetailFund) => <>{convertCoin(data?.projectAmount) || '---'}</>,
 									},
 									{

@@ -77,7 +77,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 			},
 		],
 		startDate: '',
-		totalDayAdvantage: null,
+		totalDayAdvantage: 0,
 		amount: 0,
 		contractExecutionAmount: 0,
 		contractExecutionEndDate: '',
@@ -115,7 +115,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 									amountInContract: convertCoin(v?.amount) || 0,
 							  })),
 					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayAdvantage || null,
+					totalDayAdvantage: data?.totalDayAdvantage || 0,
 					amount: convertCoin(data?.amount),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
 					contractExecutionEndDate: data?.contractExecution?.endDate || '',
@@ -168,7 +168,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 					code: '',
 					contractorAndCat: [],
 					startDate: '',
-					totalDayAdvantage: null,
+					totalDayAdvantage: 0,
 					amount: 0,
 					contractExecutionAmount: 0,
 					contractExecutionEndDate: '',
@@ -176,12 +176,12 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 					advanceGuaranteeEndDate: '',
 					contractParentUuid: '',
 				});
-				queryClient.invalidateQueries(queryKeys);
+				queryKeys?.map((key) => queryClient.invalidateQueries([key]));
 			}
 		},
 	});
 
-	// Tính tổng tiển giá trị hợp đồng qua tiền hợp đồng theo từng nhà thầu
+	// Tính tổng tiển giá trị phụ lục hợp đồng qua tiền hợp đồng theo từng nhà thầu
 	useEffect(() => {
 		const total = form?.contractorAndCat?.reduce((accumulator, currentValue) => accumulator + price(currentValue.amountInContract), 0);
 
@@ -193,10 +193,10 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 
 	const handleSubmit = () => {
 		if (!form?.startDate) {
-			return toastWarn({msg: 'Vui lòng chọn ngày ký hợp đồng!'});
+			return toastWarn({msg: 'Vui lòng chọn ngày ký phụ lục hợp đồng!'});
 		}
 		if (form?.totalDayAdvantage! < 0) {
-			return toastWarn({msg: 'Thời gian thực hiện hợp đồng không hợp lệ!'});
+			return toastWarn({msg: 'Thời gian gia hạn hợp đồng không hợp lệ!'});
 		}
 		if (form?.contractorAndCat?.length == 0) {
 			return toastWarn({msg: 'Vui lòng thêm nhà thầu!'});
@@ -252,10 +252,10 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 								<Input
 									label={
 										<span>
-											Số hợp đồng <span style={{color: 'red'}}>*</span>
+											Số phụ lục hợp đồng <span style={{color: 'red'}}>*</span>
 										</span>
 									}
-									placeholder='Nhập số hợp đồng '
+									placeholder='Nhập số phụ lục hợp đồng '
 									type='text'
 									name='code'
 									value={form?.code}
@@ -270,12 +270,12 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 								icon={true}
 								label={
 									<span>
-										Ngày ký hợp đồng <span style={{color: 'red'}}>*</span>
+										Ngày ký phụ lục hợp đồng <span style={{color: 'red'}}>*</span>
 									</span>
 								}
 								name='startDate'
 								value={form.startDate}
-								placeholder='Chọn ngày ký hợp đồng'
+								placeholder='Chọn ngày ký phụ lục hợp đồng'
 								onSetValue={(date) =>
 									setForm((prev) => ({
 										...prev,
@@ -284,16 +284,12 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 								}
 							/>
 							<Input
-								label={
-									<span>
-										Thời gian thực hiện hợp đồng <span style={{color: 'red'}}>*</span>
-									</span>
-								}
+								label={<span>Thời gian gia hạn hợp đồng</span>}
 								placeholder='Nhập số ngày'
 								type='number'
 								name='totalDayAdvantage'
 								value={form?.totalDayAdvantage}
-								isRequired={true}
+								// isRequired={true}
 							/>
 						</div>
 
@@ -301,10 +297,10 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 							<Input
 								label={
 									<span>
-										Giá trị hợp đồng <span style={{color: 'red'}}>*</span>
+										Giá trị phụ lục hợp đồng <span style={{color: 'red'}}>*</span>
 									</span>
 								}
-								placeholder='Nhập giá trị hợp đồng '
+								placeholder='Nhập giá trị phụ lục hợp đồng '
 								type='text'
 								isMoney
 								name='amount'
@@ -327,9 +323,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 							<p className={styles.label}>
 								Nhóm nhà thầu <span style={{color: 'red'}}>*</span>
 							</p>
-							<p className={styles.label}>
-								Tiền hợp đồng <span style={{color: 'red'}}>*</span>
-							</p>
+							<p className={styles.label}>Tiền phụ lục hợp đồng</p>
 						</GridColumn>
 						{form?.contractorAndCat?.map((v, i) => (
 							<ItemContractorProject
