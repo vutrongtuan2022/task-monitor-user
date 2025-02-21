@@ -113,7 +113,7 @@ function FormUpdateContract({onClose, uuidContract, queryKeys}: PropsFormUpdateC
 							  })),
 					contractorGroupUuid: data?.contractorDTO?.contractorCat?.[0]?.uuid || '',
 					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayAdvantage || null,
+					totalDayAdvantage: data?.totalDayss || null,
 					amount: convertCoin(data?.amount),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
 					contractExecutionEndDate: data?.contractExecution?.endDate || '',

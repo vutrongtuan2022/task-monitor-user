@@ -187,7 +187,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 							<input
 								name='value'
 								type='text'
-								placeholder='Nhập Sử dụng vốn dự phòng'
+								placeholder='Nhập vốn dự phòng'
 								className={styles.input}
 								value={contract?.guaranteeReverseAmount}
 								onChange={(e) => handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true)}
@@ -199,7 +199,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 							<input
 								name='value'
 								type='text'
-								placeholder='Nhập Sử dụng vốn dự án'
+								placeholder='Nhập vốn dự án'
 								className={styles.input}
 								value={contract?.guaranteeAmount}
 								onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true)}

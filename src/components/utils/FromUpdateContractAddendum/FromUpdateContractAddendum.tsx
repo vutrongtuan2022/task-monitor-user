@@ -115,7 +115,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 									amountInContract: convertCoin(v?.amount) || 0,
 							  })),
 					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayAdvantage || 0,
+					totalDayAdvantage: data?.totalDayss || 0,
 					amount: convertCoin(data?.amount),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
 					contractExecutionEndDate: data?.contractExecution?.endDate || '',
@@ -196,7 +196,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 			return toastWarn({msg: 'Vui lòng chọn ngày ký phụ lục hợp đồng!'});
 		}
 		if (form?.totalDayAdvantage! < 0) {
-			return toastWarn({msg: 'Thời gian gia hạn hợp đồng không hợp lệ!'});
+			return toastWarn({msg: 'Thời gian ra hạn hợp đồng (ngày) không hợp lệ!'});
 		}
 		if (form?.contractorAndCat?.length == 0) {
 			return toastWarn({msg: 'Vui lòng thêm nhà thầu!'});
@@ -284,7 +284,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 								}
 							/>
 							<Input
-								label={<span>Thời gian gia hạn hợp đồng</span>}
+								label={<span>Thời gian ra hạn hợp đồng (ngày)</span>}
 								placeholder='Nhập số ngày'
 								type='number'
 								name='totalDayAdvantage'
