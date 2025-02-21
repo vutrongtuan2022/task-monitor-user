@@ -192,7 +192,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 			return toastWarn({msg: 'Vui lòng chọn ngày ký phụ lục hợp đồng!'});
 		}
 		if (form?.totalDayAdvantage! < 0) {
-			return toastWarn({msg: 'Thời gian gia hạn hợp đồng không hợp lệ!'});
+			return toastWarn({msg: 'Thời gian ra hạn hợp đồng (ngày) không hợp lệ!'});
 		}
 		if (form?.contractorAndCat?.length == 0) {
 			return toastWarn({msg: 'Vui lòng thêm nhà thầu!'});
@@ -280,7 +280,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 								}
 							/>
 							<Input
-								label={<span>Thời gian gia hạn hợp đồng</span>}
+								label={<span>Thời gian ra hạn hợp đồng (ngày)</span>}
 								placeholder='Nhập số ngày'
 								type='number'
 								name='totalDayAdvantage'

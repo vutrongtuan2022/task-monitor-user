@@ -79,6 +79,7 @@ export interface IDetailContract {
 		createDate: string;
 	}[];
 	totalDayAdvantage: number;
+	totalDayss: number;
 	amount: number;
 	accumAmount: number;
 	progress: number;

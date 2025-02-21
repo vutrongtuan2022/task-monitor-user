@@ -96,6 +96,7 @@ export interface IDetailContract {
 	status: number;
 	uuid: string;
 	state: number;
+	totalDayss: number;
 }
 
 export interface IContractDetailFund {

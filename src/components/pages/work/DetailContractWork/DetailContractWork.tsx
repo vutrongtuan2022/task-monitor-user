@@ -199,8 +199,8 @@ function DetailContractWork({}: PropsDetailContractWork) {
 								<p>{convertCoin(detailContract?.amount!) || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thời gian THHĐ</p>
-								<p>{detailContract?.totalDayAdvantage}</p>
+								<p>Thời gian THHĐ (ngày)</p>
+								<p>{detailContract?.totalDayss}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Giá trị BLTHHĐ</p>
