@@ -278,7 +278,13 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 									{
 										title: 'Báo cáo tháng',
 										render: (data: IContractDetailFund) => (
-											<>{`Tháng ${data?.releasedMonth} - ${data?.releasedYear}` || '---'}</>
+											<>
+												{data?.releasedMonth && data?.releasedYear
+													? `Tháng ${data?.releasedMonth} - ${data?.releasedYear}`
+													: !data?.releasedMonth && data?.releasedYear
+													? `Năm ${data?.releasedYear}`
+													: '---'}
+											</>
 										),
 									},
 									{
