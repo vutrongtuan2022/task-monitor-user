@@ -139,7 +139,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								<p>{convertCoin(contract?.detailContractsDTO?.amount) || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thời gian THHĐ</p>
+								<p>Thời gian THHĐ (ngày)</p>
 								<p>{contract?.detailContractsDTO?.totalDayAdvantage || '---'}</p>
 							</div>
 							<div className={styles.item}>

@@ -81,7 +81,7 @@ function TableContractHistory() {
 								),
 							},
 							{
-								title: 'Ngày THHĐ',
+								title: 'Thời gian THHĐ (ngày)',
 								render: (data: IContractByActivity) => <>{data?.totalDayAdvantage}</>,
 							},
 							{
