@@ -28,7 +28,7 @@ import FormUpdateContract from '~/components/utils/FormUpdateContract';
 function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursement) {
 	const router = useRouter();
 
-	const {_uuid, _page, _pageSize, _action} = router.query;
+	const {_uuid, _page, _pageSize, _action, _uuidContract} = router.query;
 
 	const {data: detailContract} = useQuery<IDetailContract>([QUERY_KEY.detail_contract, _uuid], {
 		queryFn: () =>
@@ -67,6 +67,10 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 					{
 						path: PATH.ReportDisbursement,
 						title: 'Danh sách báo cáo giải ngân',
+					},
+					{
+						path: `${PATH.ReportDisbursement}/${_uuidContract}`,
+						title: 'Chi tiết báo cáo',
 					},
 					{
 						path: '',

@@ -350,7 +350,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										fixedLeft: true,
 										render: (data: IContractsForProject) => (
 											<Tippy content='Chi tiết hợp đồng'>
-												<Link href={`${PATH.ContractReportDisbursement}/${data?.uuid}`} className={styles.link}>
+												<Link href={`${PATH.ProjectContract}/${data?.uuid}`} className={styles.link}>
 													{data?.code}
 												</Link>
 											</Tippy>
