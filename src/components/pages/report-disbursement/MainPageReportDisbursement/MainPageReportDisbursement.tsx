@@ -10,7 +10,7 @@ import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_REPORT_DISBURSEMENT, TYPE_CONTRACT_FUND} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import StateActive from '~/components/common/StateActive';
@@ -294,7 +294,11 @@ function MainPageReportDisbursement({}: PropsMainPageReportDisbursement) {
 													type='edit'
 													icon={<Edit fontSize={20} fontWeight={600} />}
 													tooltip='Chỉnh sửa'
-													href={`${PATH.ReportDisbursementUpdate}?_uuid=${data?.uuid}`}
+													href={
+														data?.type == TYPE_CONTRACT_FUND.HISTORY
+															? `${PATH.ReportDisbursementUpdateHistory}?_uuid=${data?.uuid}`
+															: `${PATH.ReportDisbursementUpdate}?_uuid=${data?.uuid}`
+													}
 												/>
 											</>
 										) : null}

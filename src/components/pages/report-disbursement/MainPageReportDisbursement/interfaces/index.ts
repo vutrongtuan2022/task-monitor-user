@@ -27,4 +27,5 @@ export interface IReportDisbursement {
 	totalBudget: number;
 	projectAmount: number;
 	reverseAmount: number;
+	type: number;
 }

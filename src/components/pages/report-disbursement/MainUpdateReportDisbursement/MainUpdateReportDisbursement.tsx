@@ -59,7 +59,6 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 			}),
 		onSuccess(data) {
 			if (data) {
-				console.log(data);
 				setForm({
 					year: data?.year,
 					month: data?.month,

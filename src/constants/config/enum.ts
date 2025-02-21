@@ -62,6 +62,7 @@ export enum QUERY_KEY {
 	detail_contract_report_fund,
 	detail_contract_report_fund_history,
 	detail_contract_report_fund_for_update,
+	detail_contract_report_fund_history_for_update,
 	detail_progress_contract_fund_project,
 	detail_activity_contract,
 	detail_account,
@@ -195,4 +196,9 @@ export enum STATUS_ACCOUNT {
 export enum TYPE_SPECIAL {
 	NORMAL,
 	SENIOR,
+}
+
+export enum TYPE_CONTRACT_FUND {
+	HISTORY,
+	PRESENT,
 }
