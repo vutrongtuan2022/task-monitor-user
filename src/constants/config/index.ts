@@ -10,6 +10,7 @@ import {
 	Receipt21,
 	ReceiptItem,
 	TagUser,
+	TickCircle,
 	UserOctagon,
 } from 'iconsax-react';
 import {TYPE_DATE, TYPE_SPECIAL} from './enum';
@@ -66,6 +67,8 @@ export enum PATH {
 	ReportOverview = '/report-overview',
 	ReportOverviewCreate = '/report-overview/create',
 
+	ListContractor = '/list-contractor',
+
 	Task = '/task',
 	CreateTask = '/task/create',
 	UpdateTask = '/task/update',
@@ -79,6 +82,7 @@ export enum PATH {
 	User = '/user',
 
 	Account = '/account',
+	Approve = '/approve',
 }
 
 export const Menu: {
@@ -130,6 +134,13 @@ export const Menu: {
 		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
+		title: 'Danh sách nhà thầu',
+		path: PATH.ListContractor,
+		pathActive: PATH.ListContractor,
+		icon: Receipt21,
+		isSpecial: TYPE_SPECIAL.CONFIRM_CONTRACTOR,
+	},
+	{
 		title: 'Quản lý quy trình',
 		path: PATH.Task,
 		pathActive: PATH.Task,
@@ -169,6 +180,13 @@ export const Menu: {
 		path: PATH.Account,
 		pathActive: PATH.Account,
 		icon: TagUser,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'Duyệt yêu cầu',
+		path: PATH.Approve,
+		pathActive: PATH.Approve,
+		icon: TickCircle,
 		isSpecial: TYPE_SPECIAL.SENIOR,
 	},
 ];

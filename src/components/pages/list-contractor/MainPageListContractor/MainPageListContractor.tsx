@@ -1,42 +1,32 @@
 import React, {useState} from 'react';
 
-import {IContractor, PropsMainPageContractor} from './interfaces';
-import styles from './MainPageContractor.module.scss';
-import Search from '~/components/common/Search';
-import Button from '~/components/common/Button';
-import icons from '~/constants/images/icons';
-import Image from 'next/image';
+import {IContractor, PropsMainPageListContractor} from './interfaces';
+import styles from './MainPageListContractor.module.scss';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Trash} from 'iconsax-react';
+import {Edit} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
 import PositionContainer from '~/components/common/PositionContainer';
-import CreateContractor from '../CreateContractor';
-import Dialog from '~/components/common/Dialog';
-import {toastWarn} from '~/common/funcs/toast';
-import Loading from '~/components/common/Loading';
 import UpdateContractor from '../UpdateContractor';
 import Tippy from '@tippyjs/react';
+import Search from '~/components/common/Search';
 
-function MainPageContractor({}: PropsMainPageContractor) {
+function MainPageListContractor({}: PropsMainPageListContractor) {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _type, action, _uuidContractor} = router.query;
+	const {_page, _pageSize, _keyword, _type, _uuidContractor} = router.query;
 
-	const [uuidDelete, setUuidDelete] = useState<string>('');
-
-	const listContractor = useQuery([QUERY_KEY.table_contractor, _page, _pageSize, _keyword, _type], {
+	const listContractor = useQuery([QUERY_KEY.table_list_contractor, _page, _pageSize, _keyword, _type], {
 		queryFn: () =>
 			httpRequest({
 				http: contractorServices.listContractor({
@@ -66,37 +56,8 @@ function MainPageContractor({}: PropsMainPageContractor) {
 		},
 	});
 
-	const funcDeleteContractor = useMutation({
-		mutationFn: () => {
-			return httpRequest({
-				showMessageFailed: true,
-				showMessageSuccess: true,
-				msgSuccess: 'Xóa nhà thầu thành công!',
-				http: contractorServices.updateStatusContractor({
-					uuid: uuidDelete,
-				}),
-			});
-		},
-		onSuccess(data) {
-			if (data) {
-				setUuidDelete('');
-				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
-			}
-		},
-	});
-
-	const handleDeleteContractor = () => {
-		if (!uuidDelete) {
-			return toastWarn({msg: 'Không tìm thấy nhà thầu!'});
-		}
-
-		return funcDeleteContractor.mutate();
-	};
-
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcDeleteContractor.isLoading} />
-
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
@@ -114,55 +75,9 @@ function MainPageContractor({}: PropsMainPageContractor) {
 						/>
 					</div>
 				</div>
-
-				<div className={styles.btn}>
-					<Button
-						p_14_24
-						rounded_8
-						light-blue
-						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
-						onClick={() => {
-							router.replace({
-								pathname: router.pathname,
-								query: {
-									...router.query,
-									action: 'create',
-								},
-							});
-						}}
-					>
-						Thêm mới nhà thầu
-					</Button>
-				</div>
 			</div>
 			<WrapperScrollbar>
-				<DataWrapper
-					data={listContractor?.data?.items || []}
-					loading={listContractor.isLoading}
-					noti={
-						<Noti
-							button={
-								<Button
-									p_14_24
-									rounded_8
-									light-blue
-									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
-									onClick={() => {
-										router.replace({
-											pathname: router.pathname,
-											query: {
-												...router.query,
-												action: 'create',
-											},
-										});
-									}}
-								>
-									Thêm mới nhà thầu
-								</Button>
-							}
-						/>
-					}
-				>
+				<DataWrapper data={listContractor?.data?.items || []} loading={listContractor.isLoading} noti={<Noti />}>
 					<Table
 						fixedHeader={true}
 						data={listContractor?.data?.items || []}
@@ -194,6 +109,22 @@ function MainPageContractor({}: PropsMainPageContractor) {
 												<span className={styles.link}> và {data?.contractorCat?.length! - 1} nhóm khác</span>
 											</Tippy>
 										)}
+										{data?.contractorCatPending?.length! > 0 && (
+											<Tippy
+												content={
+													<ol style={{paddingLeft: '16px'}}>
+														{[...data?.contractorCatPending!]?.map((v, i) => (
+															<li key={i}>{v?.name}</li>
+														))}
+													</ol>
+												}
+											>
+												<span style={{color: '#EE464C'}} className={styles.link}>
+													{' '}
+													và {data?.contractorCatPending?.length!} nhóm chờ duyệt
+												</span>
+											</Tippy>
+										)}
 									</>
 								),
 							},
@@ -223,7 +154,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
-											tooltip='Chỉnh sửa'
+											tooltip='Bổ sung nhóm nhà thầu'
 											onClick={() => {
 												router.replace({
 													pathname: router.pathname,
@@ -233,13 +164,6 @@ function MainPageContractor({}: PropsMainPageContractor) {
 													},
 												});
 											}}
-										/>
-
-										<IconCustom
-											type='delete'
-											icon={<Trash fontSize={20} fontWeight={600} />}
-											tooltip='Xóa bỏ'
-											onClick={() => setUuidDelete(data?.uuid)}
 										/>
 									</div>
 								),
@@ -254,33 +178,6 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					dependencies={[_pageSize, _keyword, _type]}
 				/>
 			</WrapperScrollbar>
-
-			<PositionContainer
-				open={action == 'create'}
-				onClose={() => {
-					const {action, ...rest} = router.query;
-
-					router.replace({
-						pathname: router.pathname,
-						query: {
-							...rest,
-						},
-					});
-				}}
-			>
-				<CreateContractor
-					onClose={() => {
-						const {action, ...rest} = router.query;
-
-						router.replace({
-							pathname: router.pathname,
-							query: {
-								...rest,
-							},
-						});
-					}}
-				/>
-			</PositionContainer>
 
 			<PositionContainer
 				open={!!_uuidContractor}
@@ -308,17 +205,8 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					}}
 				/>
 			</PositionContainer>
-
-			<Dialog
-				type='error'
-				open={!!uuidDelete}
-				onClose={() => setUuidDelete('')}
-				title={'Xóa nhà thầu'}
-				note={'Bạn có chắc chắn muốn xóa nhà thầu này?'}
-				onSubmit={handleDeleteContractor}
-			/>
 		</div>
 	);
 }
 
-export default MainPageContractor;
+export default MainPageListContractor;

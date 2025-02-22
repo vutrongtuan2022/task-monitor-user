@@ -4,7 +4,6 @@ export interface PropsCreateContractor {
 
 export interface IFormCreateContractor {
 	name: string;
-	type: number | null;
 	note: string;
 	matp: string;
 	maqh: string;

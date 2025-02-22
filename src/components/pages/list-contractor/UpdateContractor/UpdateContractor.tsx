@@ -117,22 +117,15 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 		enabled: !!form?.maqh,
 	});
 
-	const funcUpdateContractor = useMutation({
+	const funcSendUpdateContractorCat = useMutation({
 		mutationFn: () => {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Cập nhật nhà thầu thành công!',
-				http: contractorServices.upsertContractor({
+				msgSuccess: 'Gửi yêu cầu thêm nhóm nhà thầu thành công!',
+				http: contractorServices.sendUpdateContractorCat({
 					uuid: _uuidContractor as string,
-					name: form.name,
-					lstType: contractorCat?.map((v: any) => v?.uuid),
-					note: form.note,
-					matp: form.matp,
-					maqh: form.maqh,
-					xaid: form.xaid,
-					address: form.address,
-					code: form.code,
+					contractorCatuuid: contractorCat?.map((v: any) => v?.uuid),
 				}),
 			});
 		},
@@ -158,14 +151,14 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 			return toastWarn({msg: 'Vui lòng chọn nhóm nhà thầu!'});
 		}
 
-		return funcUpdateContractor.mutate();
+		return funcSendUpdateContractorCat.mutate();
 	};
 
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-			<Loading loading={funcUpdateContractor.isLoading} />
+			<Loading loading={funcSendUpdateContractorCat.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Chỉnh sửa nhà thầu</h4>
+				<h4 className={styles.title}>Bổ sung nhóm nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập tên nhà thầu'
@@ -179,8 +172,8 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								Tên nhà thầu <span style={{color: 'red'}}>*</span>
 							</span>
 						}
+						readOnly={true}
 					/>
-
 					<Input
 						placeholder='Nhập mã số thuế'
 						name='code'
@@ -193,6 +186,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								Mã số thuế <span style={{color: 'red'}}>*</span>
 							</span>
 						}
+						readOnly={true}
 					/>
 					<div className={styles.mt}>
 						<SelectMany
@@ -218,7 +212,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 						/>
 					</div>
 					<div className={styles.mt}>
-						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>}>
+						<Select isSearch name='matp' value={form.matp} placeholder='Lựa chọn' label={<span>Tỉnh/ TP</span>} readOnly={true}>
 							{listProvince?.data?.map((v: any) => (
 								<Option
 									key={v?.matp}
@@ -235,7 +229,14 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								/>
 							))}
 						</Select>
-						<Select isSearch name='maqh' value={form.maqh} placeholder='Lựa chọn' label={<span>Quận/ Huyện</span>}>
+						<Select
+							isSearch
+							name='maqh'
+							value={form.maqh}
+							placeholder='Lựa chọn'
+							label={<span>Quận/ Huyện</span>}
+							readOnly={true}
+						>
 							{listDistrict?.data?.map((v: any) => (
 								<Option
 									key={v?.maqh}
@@ -251,7 +252,14 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								/>
 							))}
 						</Select>
-						<Select isSearch name='xaid' value={form.xaid} placeholder='Lựa chọn' label={<span>Thị trấn/ Xã </span>}>
+						<Select
+							isSearch
+							name='xaid'
+							value={form.xaid}
+							placeholder='Lựa chọn'
+							label={<span>Thị trấn/ Xã </span>}
+							readOnly={true}
+						>
 							{listTown?.data?.map((v: any) => (
 								<Option
 									key={v?.xaid}
@@ -275,10 +283,11 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 							value={form.address}
 							max={255}
 							label={<span>Địa chỉ chi tiết</span>}
+							readOnly={true}
 						/>
 					</div>
 					<div className={styles.mt}>
-						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} blur />
+						<TextArea name='note' placeholder='Nhập mô tả' label='Mô tả' max={5000} blur readOnly={true} />
 					</div>
 				</div>
 				<div className={styles.group_button}>
@@ -291,7 +300,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
-									Lưu lại
+									Gửi yêu cầu
 								</Button>
 							</div>
 						)}
