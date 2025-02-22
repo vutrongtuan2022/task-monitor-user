@@ -33,9 +33,9 @@ function MenuTab({}: PropsMenuTab) {
 
 	const menus = useMemo(() => {
 		if (infoUser?.special == TYPE_SPECIAL.SENIOR) {
-			return Menu;
+			return Menu?.filter((v) => v?.isSpecial != TYPE_SPECIAL.CONFIRM_CONTRACTOR);
 		} else {
-			return Menu?.filter((v) => v?.isSpecial == TYPE_SPECIAL.NORMAL);
+			return Menu?.filter((v) => v?.isSpecial == TYPE_SPECIAL.NORMAL || v?.isSpecial == TYPE_SPECIAL.CONFIRM_CONTRACTOR);
 		}
 	}, [infoUser]);
 

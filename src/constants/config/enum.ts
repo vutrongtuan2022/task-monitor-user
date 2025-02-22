@@ -23,9 +23,11 @@ export enum QUERY_KEY {
 	table_list_account,
 	table_branches,
 	table_contractor,
+	table_list_contractor,
 	table_group_contractor,
 	table_task_cat,
 	table_contract_by_appendices,
+	table_update_contractor_cat,
 
 	dropdown_branches,
 	dropdown_project,
@@ -196,6 +198,7 @@ export enum STATUS_ACCOUNT {
 export enum TYPE_SPECIAL {
 	NORMAL,
 	SENIOR,
+	CONFIRM_CONTRACTOR,
 }
 
 export enum TYPE_CONTRACT_FUND {

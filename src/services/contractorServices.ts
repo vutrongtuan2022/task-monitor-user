@@ -6,7 +6,7 @@ const contractorServices = {
 			pageSize: number;
 			page: number;
 			keyword: string;
-			type: number | null;
+			type: string;
 			status: number | null;
 		},
 		tokenAxios?: any
@@ -80,17 +80,54 @@ const contractorServices = {
 		data: {
 			uuid: string;
 			name: string;
-			type: number | null;
 			note: string;
 			matp: string;
 			maqh: string;
 			xaid: string;
 			address: string;
 			code: string;
+			lstType: string[];
 		},
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/Contractor/upsert-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getListUpdateContractorCat: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string;
+			contractorCat: string;
+			status: number;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-update-contractor-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	changeUpdateContractorCat: (
+		data: {
+			uuid: string;
+			state: number;
+			rejected?: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/change-state-update-contractor-cat`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	sendUpdateContractorCat: (
+		data: {
+			uuid: string;
+			contractorCatuuid: string[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/send-update-contractor-cat`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
