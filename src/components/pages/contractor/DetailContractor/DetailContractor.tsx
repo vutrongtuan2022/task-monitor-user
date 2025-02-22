@@ -8,9 +8,9 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import {QUERY_KEY} from '~/constants/config/enum';
-import {IDetailContractor, PropsDetailContractor} from './interface';
+import {IDetailContractorForAdmin, PropsDetailContractor} from './interface';
 import GridColumn from '~/components/layouts/GridColumn';
-import Tippy from '@tippyjs/react';
+
 import PositionContainer from '~/components/common/PositionContainer';
 import UpdateContractor from '../UpdateContractor';
 import clsx from 'clsx';
@@ -21,14 +21,13 @@ import TableContractorCatPending from './component/TableContractorCatPending';
 
 function DetailContractor({}: PropsDetailContractor) {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 
 	const {_uuid, _uuidContractor, _type} = router.query;
 
-	const {data: detailContractor} = useQuery<IDetailContractor>([QUERY_KEY.detail_contractor, _uuid], {
+	const {data: detailContractorForAdmin} = useQuery<IDetailContractorForAdmin>([QUERY_KEY.detail_contractor_for_admin, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: contractorServices.detailContractor({
+				http: contractorServices.detailContractorForAdmin({
 					uuid: _uuid as string,
 				}),
 			}),
@@ -62,7 +61,7 @@ function DetailContractor({}: PropsDetailContractor) {
 									pathname: router.pathname,
 									query: {
 										...router.query,
-										_uuidContractor: detailContractor?.uuid,
+										_uuidContractor: detailContractorForAdmin?.uuid,
 									},
 								});
 							}}
@@ -81,54 +80,20 @@ function DetailContractor({}: PropsDetailContractor) {
 						<GridColumn col_3>
 							<div className={styles.item}>
 								<p>Tên nhà thầu</p>
-								<p>{detailContractor?.name}</p>
+								<p>{detailContractorForAdmin?.name}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Số nhóm nhà thầu</p>
-								<p>
-									{detailContractor?.contractorCat?.length && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(detailContractor?.contractorCat?.map((v) => v.name))].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{[...new Set(detailContractor?.contractorCat?.map((v) => v.name))]?.length || '---'}
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p style={{color: '#2970ff'}}>{detailContractorForAdmin?.countContractorCat || '---'}</p>
 							</div>
 
 							<div className={styles.item}>
 								<p>Nhóm nhà thầu đợi duyệt</p>
-								<p>
-									{detailContractor?.contractorCat?.length && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(detailContractor?.contractorCatPending?.map((v) => v.name))].map(
-														(catName, i) => (
-															<li key={i}>{catName}</li>
-														)
-													)}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{[...new Set(detailContractor?.contractorCatPending?.map((v) => v.name))]?.length || '---'}
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p style={{color: '#EE464C'}}>{detailContractorForAdmin?.countContractorCatPending || '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ghi chú</p>
-								<p>{detailContractor?.note || '---'}</p>
+								<p>{detailContractorForAdmin?.note || '---'}</p>
 							</div>
 						</GridColumn>
 					</div>

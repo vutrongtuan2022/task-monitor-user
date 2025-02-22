@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {QUERY_KEY} from '~/constants/config/enum';
 import styles from './TableContractorCatPending.module.scss';
 import clsx from 'clsx';
-import {PropsTableContractorCatPending} from './interface';
+import {ITableContractorCatPending, PropsTableContractorCatPending} from './interface';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
@@ -27,11 +27,23 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _uuid} = router.query;
+	const {_uuid} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 	const [form, setForm] = useState<{feedback: string}>({
 		feedback: '',
+	});
+
+	const {data: listUpdateContractorCatByContractor} = useQuery([QUERY_KEY.table_update_contractor_cat_by_contractor, _uuid], {
+		queryFn: () =>
+			httpRequest({
+				http: contractorServices.listUpdateContractorCatByContractor({
+					uuid: _uuid as string,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
 	});
 	const funcConfirm = useMutation({
 		mutationFn: () => {
@@ -49,7 +61,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 		onSuccess(data) {
 			if (data) {
 				setUuidConfirm('');
-				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat_by_contractor]);
 			}
 		},
 	});
@@ -70,7 +82,7 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 		onSuccess(data) {
 			if (data) {
 				setUuidCancel('');
-				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat_by_contractor]);
 			}
 		},
 	});
@@ -81,11 +93,8 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper
-					data={
-						// listContractFund?.items ||
-						[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-					}
-					// loading={listContractFund?.isLoading}
+					data={listUpdateContractorCatByContractor || []}
+					loading={listUpdateContractorCatByContractor?.isLoading}
 					noti={
 						<Noti
 							title='Danh sách nhóm nhà thầu đợi duyệt trống!'
@@ -95,39 +104,38 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 				>
 					<Table
 						fixedHeader={true}
-						data={
-							// listContractFund?.items ||
-							[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-						}
+						data={listUpdateContractorCatByContractor || []}
 						column={[
 							{
 								title: 'STT',
-								render: (data: any, index: number) => <>{index + 1}</>,
+								render: (data: ITableContractorCatPending, index: number) => <>{index + 1}</>,
 							},
 
 							{
 								title: 'Tên nhà thầu',
-								render: (data: any) => <>{'Công ty cổ phần Sunny34'}</>,
+								render: (data: ITableContractorCatPending) => <>{data?.contractor?.name || '---'}</>,
 							},
 
 							{
 								title: 'Nhóm nhà thầu cần thêm',
-								render: (data: any) => <span style={{color: '#EE464C'}}>{'Nhóm ABC'}</span>,
+								render: (data: ITableContractorCatPending) => (
+									<span style={{color: '#EE464C'}}>{data?.contractorCat?.name || '---'}</span>
+								),
 							},
 							{
 								title: 'Người gửi yêu cầu',
-								render: (data: any) => <>{'Vũ Minh Tường'}</>,
+								render: (data: ITableContractorCatPending) => <>{data?.user?.fullname || '---'}</>,
 							},
 							{
 								title: 'Thời gian yêu cầu',
-								render: (data: any) => (
-									<p>{data?.releasedDate ? <Moment date={data?.releasedDate} format='DD/MM/YYYY' /> : '---'}</p>
+								render: (data: ITableContractorCatPending) => (
+									<p>{data?.timeCreated ? <Moment date={data?.timeCreated} format='DD/MM/YYYY' /> : '---'}</p>
 								),
 							},
 
 							{
 								title: 'hành động',
-								render: (data: any) => (
+								render: (data: ITableContractorCatPending) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<>
 											<IconCustom
@@ -149,12 +157,6 @@ function TableContractorCatPending({}: PropsTableContractorCatPending) {
 						]}
 					/>
 				</DataWrapper>
-				<Pagination
-					currentPage={Number(_page) || 1}
-					pageSize={Number(_pageSize) || 10}
-					total={100}
-					dependencies={[_pageSize, _uuid]}
-				/>
 			</WrapperScrollbar>
 			<Dialog
 				type='primary'
