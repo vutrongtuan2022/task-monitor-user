@@ -13,12 +13,17 @@ import GridColumn from '~/components/layouts/GridColumn';
 import Tippy from '@tippyjs/react';
 import PositionContainer from '~/components/common/PositionContainer';
 import UpdateContractor from '../UpdateContractor';
+import clsx from 'clsx';
+import TabNavLink from '~/components/common/TabNavLink';
+import TableParticipating from './component/TableParticipating';
+import TableContractorCat from './component/TableContractorCat/TableContractorCat';
+import TableContractorCatPending from './component/TableContractorCatPending';
 
 function DetailContractor({}: PropsDetailContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuid, _uuidContractor} = router.query;
+	const {_uuid, _uuidContractor, _type} = router.query;
 
 	const {data: detailContractor} = useQuery<IDetailContractor>([QUERY_KEY.detail_contractor, _uuid], {
 		queryFn: () =>
@@ -129,7 +134,7 @@ function DetailContractor({}: PropsDetailContractor) {
 					</div>
 				</div>
 
-				{/* <div className={clsx(styles.basic_info, styles.mt)}>
+				<div className={clsx(styles.basic_info, styles.mt)}>
 					<div className={styles.main_tab}>
 						<TabNavLink
 							query='_type'
@@ -137,26 +142,32 @@ function DetailContractor({}: PropsDetailContractor) {
 								{
 									pathname: PATH.ProjectCreate,
 									query: null,
-									title: 'Báo cáo tháng trước',
+									title: 'Tham gia dự án',
 								},
 								{
 									pathname: PATH.ProjectCreate,
-									query: 'report',
-									title: 'Báo cáo hiện tại',
+									query: 'contractorCat',
+									title: 'Thuộc nhóm nhà thầu',
+								},
+								{
+									pathname: PATH.ProjectCreate,
+									query: 'contractorCatPending',
+									title: 'Nhóm nhà thầu đợi duyệt',
 								},
 							]}
 							listKeyRemove={['_page', '_pageSize', '_keyword', '_state']}
 						/>
 					</div>
 					<div className={styles.line}></div>
-					<div className={styles.head}>
+					{/* <div className={styles.head}>
 						<h4>Danh sách công việc</h4>
-					</div>
+					</div> */}
 					<div className={styles.main_table}>
-						{!_type && <TableReportWorkLastMonth />}
-						{_type == 'report' && <TableReportWorkCurrent />}
+						{!_type && <TableParticipating />}
+						{_type == 'contractorCat' && <TableContractorCat />}
+						{_type == 'contractorCatPending' && <TableContractorCatPending />}
 					</div>
-				</div> */}
+				</div>
 			</div>
 			<PositionContainer
 				open={!!_uuidContractor}

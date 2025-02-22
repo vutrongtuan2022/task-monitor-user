@@ -12,7 +12,7 @@ import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Trash} from 'iconsax-react';
+import {Edit, Eye, Trash} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -27,6 +27,8 @@ import {toastWarn} from '~/common/funcs/toast';
 import Loading from '~/components/common/Loading';
 import UpdateContractor from '../UpdateContractor';
 import Tippy from '@tippyjs/react';
+import Link from 'next/link';
+import {PATH} from '~/constants/config';
 
 function MainPageContractor({}: PropsMainPageContractor) {
 	const router = useRouter();
@@ -174,7 +176,13 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: IContractor) => <span>{data?.name}</span>,
+								render: (data: IContractor) => (
+									<Tippy content='Chi tiết dự án'>
+										<Link href={`${PATH.Contractor}/${data?.uuid}`} className={styles.link_contractor}>
+											<span>{data?.name}</span>,
+										</Link>
+									</Tippy>
+								),
 							},
 							{
 								title: 'Nhóm nhà thầu',
@@ -220,6 +228,12 @@ function MainPageContractor({}: PropsMainPageContractor) {
 								fixedRight: true,
 								render: (data: IContractor) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											href={`${PATH.Contractor}/${data?.uuid}`}
+											type='edit'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+										/>
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
