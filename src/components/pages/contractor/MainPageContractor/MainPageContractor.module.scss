@@ -58,3 +58,13 @@
 		opacity: 0.8;
 	}
 }
+.link_contractor {
+	color: #005994;
+	font-size: 14px;
+	font-weight: 500;
+	transition: 0.3s;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
