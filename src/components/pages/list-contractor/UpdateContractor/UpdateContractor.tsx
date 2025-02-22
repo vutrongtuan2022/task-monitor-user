@@ -25,6 +25,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 
 	const {_uuidContractor} = router.query;
 	const [contractorCat, setContractorCat] = useState<any[]>([]);
+	const [contractorCatDisable, setContractorCatDisable] = useState<any[]>([]);
 	const [form, setForm] = useState<IFormUpdateContractor>({
 		name: '',
 		note: '',
@@ -53,6 +54,13 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				code: data?.code || '',
 			});
 			setContractorCat(
+				data?.contractorCat?.map((v) => ({
+					uuid: v?.uuid,
+					title: v?.name,
+					code: v?.code,
+				}))
+			);
+			setContractorCatDisable(
 				data?.contractorCat?.map((v) => ({
 					uuid: v?.uuid,
 					title: v?.name,
@@ -125,7 +133,9 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 				msgSuccess: 'Gửi yêu cầu thêm nhóm nhà thầu thành công!',
 				http: contractorServices.sendUpdateContractorCat({
 					uuid: _uuidContractor as string,
-					contractorCatuuid: contractorCat?.map((v: any) => v?.uuid),
+					contractorCatuuid: contractorCat
+						?.filter((v) => !contractorCatDisable?.some((x: any) => x?.uuid == v?.uuid))
+						?.map((v) => v?.uuid),
 				}),
 			});
 		},
@@ -141,7 +151,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					address: '',
 					code: '',
 				});
-				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_contractor]);
 			}
 		},
 	});
@@ -179,7 +189,6 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 						name='code'
 						type='text'
 						value={form.code}
-						isRequired
 						max={15}
 						label={
 							<span>
@@ -209,6 +218,7 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 								title: v?.name,
 								code: v?.code,
 							}))}
+							listDataDisable={contractorCatDisable}
 						/>
 					</div>
 					<div className={styles.mt}>

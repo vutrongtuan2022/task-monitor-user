@@ -38,7 +38,7 @@ $font-size-select: 16px;
 		gap: 6px;
 		border-radius: $border-radius;
 		border: 1px solid $border-select;
-		background-color: $bg-select;
+		background: $bg-select;
 		padding: $padding-select;
 		cursor: pointer;
 		user-select: none;
@@ -46,13 +46,13 @@ $font-size-select: 16px;
 
 		&.active {
 			border: 1px solid $color-focus !important;
-			background-color: $bg-focus-select !important;
+			background: $bg-focus-select !important;
 		}
 
 		&.readOnly {
 			cursor: default;
 			pointer-events: none;
-			background-color: $bg-disable-select;
+			background: $bg-disable-select;
 			border: 1px solid $border-disable-select;
 		}
 	}
@@ -105,6 +105,11 @@ $font-size-select: 16px;
 				transform: scale(0.9);
 			}
 		}
+
+		&.disable {
+			cursor: default;
+			background: $bg-disable-select;
+		}
 	}
 }
 
@@ -115,7 +120,7 @@ $font-size-select: 16px;
 	padding: 6px;
 	transition: 0.3s;
 	border: 1px solid $border-select;
-	background-color: $bg-select;
+	background: $bg-select;
 }
 
 .mainOption {
@@ -136,17 +141,33 @@ $font-size-select: 16px;
 	transition: 0.1s;
 
 	&.active {
-		background-color: var(--primary-btn);
+		background: var(--primary-btn);
 		color: var(--light);
 		transition: 0.1s;
 
 		&:hover {
 			opacity: 0.8;
 		}
+
+		&.disable {
+			cursor: default;
+			background: $bg-disable-select;
+			color: #202939;
+		}
+	}
+
+	&.disable {
+		cursor: default;
+		background: $bg-disable-select;
+		color: #202939;
+
+		&:hover {
+			opacity: 1;
+		}
 	}
 
 	&:hover {
-		background-color: var(--primary-btn);
+		background: var(--primary-btn);
 		color: var(--light);
 		transition: 0.1s;
 	}
@@ -164,13 +185,13 @@ $font-size-select: 16px;
 	user-select: none;
 	transition: 0.3s;
 	border-radius: $border-radius;
-	background-color: $bg-select;
+	background: $bg-select;
 	display: flex;
 	align-items: center;
 	cursor: text;
 	transition: 0.3s;
 	margin-bottom: 12px;
-	background-color: #f4f6fa;
+	background: #f4f6fa;
 
 	input {
 		height: 100%;
@@ -178,7 +199,7 @@ $font-size-select: 16px;
 		flex: 1;
 		outline: none;
 		border: none;
-		background-color: transparent;
+		background: transparent;
 		padding: 4px;
 
 		&::placeholder {

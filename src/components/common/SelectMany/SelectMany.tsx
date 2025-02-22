@@ -9,7 +9,16 @@ import {GrSearch} from 'react-icons/gr';
 import {removeVietnameseTones} from '~/common/funcs/optionConvert';
 import {IoClose} from 'react-icons/io5';
 
-function SelectMany({label, placeholder, readOnly, isSearch = true, listData = [], value = [], setValue}: PropsSelectMany) {
+function SelectMany({
+	label,
+	placeholder,
+	readOnly,
+	isSearch = true,
+	listData = [],
+	value = [],
+	setValue,
+	listDataDisable = [],
+}: PropsSelectMany) {
 	const ref = useRef<any>(null);
 
 	const [open, setOpen] = useState<boolean>(false);
@@ -61,8 +70,16 @@ function SelectMany({label, placeholder, readOnly, isSearch = true, listData = [
 							?.map((v) => (
 								<div
 									key={v?.uuid}
-									className={clsx(styles.option, {[styles.active]: !!value?.find((item) => v.uuid == item.uuid)})}
-									onClick={() => setValue(v)}
+									className={clsx(styles.option, {
+										[styles.active]: !!value?.find((item) => v.uuid == item.uuid),
+										[styles.disable]: listDataDisable.some((x) => x.uuid == v.uuid),
+									})}
+									onClick={() => {
+										if (listDataDisable.some((x) => x.uuid == v.uuid)) {
+											return null;
+										}
+										setValue(v);
+									}}
 								>
 									{v?.title}
 								</div>
@@ -91,20 +108,25 @@ function SelectMany({label, placeholder, readOnly, isSearch = true, listData = [
 							value.map((v) => (
 								<div
 									key={v.uuid}
-									className={styles.item}
+									className={clsx(styles.item, {[styles.disable]: listDataDisable.some((x) => x.uuid == v.uuid)})}
 									onClick={(e) => {
 										e.stopPropagation();
 									}}
 								>
 									<p>{v.title}</p>
-									<div
-										className={styles.close}
-										onClick={() => {
-											setValue(v);
-										}}
-									>
-										<IoClose />
-									</div>
+									{!listDataDisable.some((x) => x.uuid == v.uuid) && (
+										<div
+											className={styles.close}
+											onClick={() => {
+												if (listDataDisable.some((x) => x.uuid == v.uuid)) {
+													return null;
+												}
+												setValue(v);
+											}}
+										>
+											<IoClose />
+										</div>
+									)}
 								</div>
 							))
 						)}
