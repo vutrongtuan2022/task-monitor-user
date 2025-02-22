@@ -131,6 +131,48 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	detailContractorForAdmin: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`Contractor/detail-contractor-for-admin`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	listProjectForContractor: (
+		data: {
+			pageSize: number;
+			page: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-project-for-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	listContractorCatByContractor: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`Contractor/get-list-contractor-cat-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	listUpdateContractorCatByContractor: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`Contractor/get-list-update-contractor-cat-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default contractorServices;
