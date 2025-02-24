@@ -585,6 +585,19 @@ function MainPageWork({}: PropsMainPageWork) {
 										{data?.activityState == STATE_WORK.PROCESSING && (
 											<>
 												<IconCustom
+													color='#06D7A0'
+													icon={<TickCircle fontSize={20} />}
+													tooltip='Xác nhận hoàn thành'
+													onClick={() => {
+														setUuidFinish(data?.activity?.uuid);
+														setUuidReport(data?.report?.uuid);
+													}}
+												/>
+											</>
+										)}
+										{(data?.activityState == STATE_WORK.PROCESSING || data?.activityState == STATE_WORK.REJECTED) && (
+											<>
+												<IconCustom
 													color='#5B70B3'
 													icon={<DiscountShape fontSize={20} />}
 													tooltip='Nhập tiến độ'
@@ -597,18 +610,12 @@ function MainPageWork({}: PropsMainPageWork) {
 														});
 													}}
 												/>
-												<IconCustom
-													color='#06D7A0'
-													icon={<TickCircle fontSize={20} />}
-													tooltip='Xác nhận hoàn thành'
-													onClick={() => {
-														setUuidFinish(data?.activity?.uuid);
-														setUuidReport(data?.report?.uuid);
-													}}
-												/>
 											</>
 										)}
-										{(data?.activityState == STATE_WORK.COMPLETED || data?.activityState == STATE_WORK.PROCESSING) && (
+
+										{(data?.activityState == STATE_WORK.COMPLETED ||
+											data?.activityState == STATE_WORK.PROCESSING ||
+											data?.activityState == STATE_WORK.REJECTED) && (
 											<IconCustom
 												color='#2970FF'
 												icon={<PenAdd fontSize={20} />}
