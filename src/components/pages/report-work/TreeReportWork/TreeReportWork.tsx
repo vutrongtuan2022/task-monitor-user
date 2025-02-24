@@ -5,7 +5,7 @@ import styles from './TreeReportWork.module.scss';
 import {AddCircle, MinusCirlce} from 'iconsax-react';
 import {convertToRoman} from '~/common/funcs/optionConvert';
 import StateActive from '~/components/common/StateActive';
-import {STATE_WORK_PROJECT} from '~/constants/config/enum';
+import {STATE_WORK} from '~/constants/config/enum';
 import Tippy from '@tippyjs/react';
 import clsx from 'clsx';
 
@@ -92,20 +92,32 @@ function TreeReportWork({level, index, activity, isChecked, toggleNode}: PropsTr
 							stateActive={activity?.state}
 							listState={[
 								{
-									state: STATE_WORK_PROJECT.NOT_PROCESSED,
+									state: STATE_WORK.NOT_PROCESSED,
 									text: 'Chưa xử lý',
 									textColor: '#FFFFFF',
 									backgroundColor: '#FDAD73',
 								},
 								{
-									state: STATE_WORK_PROJECT.PROCESSING,
+									state: STATE_WORK.PROCESSING,
 									text: 'Đang xử lý',
+									textColor: '#FFFFFF',
+									backgroundColor: '#5B70B3',
+								},
+								{
+									state: STATE_WORK.COMPLETED,
+									text: 'Đã hoàn thành',
 									textColor: '#FFFFFF',
 									backgroundColor: '#16C1F3',
 								},
 								{
-									state: STATE_WORK_PROJECT.COMPLETED,
-									text: 'Đã hoàn thành',
+									state: STATE_WORK.REJECTED,
+									text: 'Bị từ chối',
+									textColor: '#FFFFFF',
+									backgroundColor: '#EE464C',
+								},
+								{
+									state: STATE_WORK.APPROVED,
+									text: 'Đã được duyệt',
 									textColor: '#FFFFFF',
 									backgroundColor: '#06D7A0',
 								},

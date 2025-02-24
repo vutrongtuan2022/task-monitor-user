@@ -8,7 +8,7 @@ import Select, {Option} from '~/components/common/Select';
 import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
-import {QUERY_KEY, STATE_WORK_PROJECT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {useQuery} from '@tanstack/react-query';
 import activityServices from '~/services/activityServices';
 import {httpRequest} from '~/services';
@@ -71,7 +71,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 				stage: form?.stage,
 				megaType: 'SubTask',
 				isInWorkFlow: false,
-				state: STATE_WORK_PROJECT.NOT_PROCESSED,
+				state: STATE_WORK.NOT_PROCESSED,
 				children: [],
 			},
 			...listActivity,

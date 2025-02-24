@@ -125,10 +125,12 @@ export enum TYPE_WORK {
 	SUB_SUB_TASK,
 }
 
-export enum STATE_WORK_PROJECT {
+export enum STATE_WORK {
 	NOT_PROCESSED,
 	PROCESSING,
 	COMPLETED,
+	REJECTED,
+	APPROVED,
 }
 
 export enum STATUS_WORK_PROJECT {
@@ -147,12 +149,6 @@ export enum STATE_REPORT_DISBURSEMENT {
 	REPORTED, // Đã báo cáo || Chưa duyệt
 	APPROVED, // Đã duyệt
 	REJECTED, // Đã từ chối
-}
-
-export enum STATE_REPORT_WORK {
-	NOT_PROCESSED,
-	PROCESSING,
-	COMPLETED,
 }
 
 export enum STATE_REPORT {

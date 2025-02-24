@@ -3,7 +3,7 @@ import React, {useContext, useState} from 'react';
 import {IPlanReportOverview, PropsPlanReportOverview} from './interfaces';
 import styles from './PlanReportOverview.module.scss';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_REPORT_WORK, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
@@ -115,20 +115,32 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 											stateActive={data?.state}
 											listState={[
 												{
-													state: STATE_REPORT_WORK.NOT_PROCESSED,
+													state: STATE_WORK.NOT_PROCESSED,
 													text: 'Chưa xử lý',
 													textColor: '#FFFFFF',
-													backgroundColor: '#F37277',
+													backgroundColor: '#FDAD73',
 												},
 												{
-													state: STATE_REPORT_WORK.PROCESSING,
+													state: STATE_WORK.PROCESSING,
 													text: 'Đang xử lý',
 													textColor: '#FFFFFF',
-													backgroundColor: '#4BC9F0',
+													backgroundColor: '#5B70B3',
 												},
 												{
-													state: STATE_REPORT_WORK.COMPLETED,
+													state: STATE_WORK.COMPLETED,
 													text: 'Đã hoàn thành',
+													textColor: '#FFFFFF',
+													backgroundColor: '#16C1F3',
+												},
+												{
+													state: STATE_WORK.REJECTED,
+													text: 'Bị từ chối',
+													textColor: '#FFFFFF',
+													backgroundColor: '#EE464C',
+												},
+												{
+													state: STATE_WORK.APPROVED,
+													text: 'Đã được duyệt',
 													textColor: '#FFFFFF',
 													backgroundColor: '#06D7A0',
 												},

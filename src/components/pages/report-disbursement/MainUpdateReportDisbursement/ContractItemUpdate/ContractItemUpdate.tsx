@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ContractItemUpdate.module.scss';
 import {PropsContractItemUpdate} from './interfaces';
 import StateActive from '~/components/common/StateActive';
-import {STATE_REPORT_WORK} from '~/constants/config/enum';
+import {STATE_WORK} from '~/constants/config/enum';
 import GridColumn from '~/components/layouts/GridColumn';
 import Progress from '~/components/common/Progress';
 import DatePicker from '~/components/common/DatePicker';
@@ -25,21 +25,33 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								stateActive={contract?.detailContractsDTO?.activityDTO?.state}
 								listState={[
 									{
-										state: STATE_REPORT_WORK.NOT_PROCESSED,
+										state: STATE_WORK.NOT_PROCESSED,
 										text: 'Chưa xử lý',
-										textColor: '#fff',
-										backgroundColor: '#F37277',
+										textColor: '#FFFFFF',
+										backgroundColor: '#FDAD73',
 									},
 									{
-										state: STATE_REPORT_WORK.PROCESSING,
+										state: STATE_WORK.PROCESSING,
 										text: 'Đang xử lý',
-										textColor: '#fff',
+										textColor: '#FFFFFF',
+										backgroundColor: '#5B70B3',
+									},
+									{
+										state: STATE_WORK.COMPLETED,
+										text: 'Đã hoàn thành',
+										textColor: '#FFFFFF',
 										backgroundColor: '#16C1F3',
 									},
 									{
-										state: STATE_REPORT_WORK.COMPLETED,
-										text: 'Đã hoàn thành',
-										textColor: '#fff',
+										state: STATE_WORK.REJECTED,
+										text: 'Bị từ chối',
+										textColor: '#FFFFFF',
+										backgroundColor: '#EE464C',
+									},
+									{
+										state: STATE_WORK.APPROVED,
+										text: 'Đã được duyệt',
+										textColor: '#FFFFFF',
 										backgroundColor: '#06D7A0',
 									},
 								]}
