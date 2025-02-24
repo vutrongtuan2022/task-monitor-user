@@ -5,13 +5,15 @@ import styles from './BoxNoti.module.scss';
 import Moment from 'react-moment';
 import clsx from 'clsx';
 import {useInfiniteQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_NOTIFY, TYPE_NOTIFY} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_NOTIFY, TYPE_NOTIFY, TYPE_SPECIAL} from '~/constants/config/enum';
 import notifyServices from '~/services/notifyServices';
 import {httpRequest} from '~/services';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import WrapperLoadMore from '~/components/common/WrapperLoadMore';
 import {useRouter} from 'next/router';
 import {PATH} from '~/constants/config';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/redux/store';
 
 function BoxNoti({countUnSeenNoti, onClose}: PropsBoxNoti) {
 	const queryClient = useQueryClient();
@@ -107,6 +109,8 @@ export default BoxNoti;
 function ItemNoti({noti, onClose}: {noti: INotify; onClose: () => void}) {
 	const router = useRouter();
 
+	const {infoUser} = useSelector((state: RootState) => state.user);
+
 	const queryClient = useQueryClient();
 
 	const readOneNoti = useMutation({
@@ -129,20 +133,31 @@ function ItemNoti({noti, onClose}: {noti: INotify; onClose: () => void}) {
 		onClose();
 
 		if (noti.type == TYPE_NOTIFY.PROJECT) {
-			router.push(`${PATH.ProjectInfo}?_uuid=${noti?.data?.projectUuid}`);
+			return router.push(`${PATH.ProjectInfo}?_uuid=${noti?.data?.projectUuid}`);
 		}
 		if (noti.type == TYPE_NOTIFY.REPORT) {
-			router.push(`${PATH.ReportWork}/${noti?.data?.reportUuid}`);
+			return router.push(`${PATH.ReportWork}/${noti?.data?.reportUuid}`);
 		}
 		if (noti.type == TYPE_NOTIFY.CONTRACT) {
-			router.push(`${PATH.ContractReportDisbursement}/${noti?.data?.contractUuid}`);
+			return router.push(`${PATH.ContractReportDisbursement}/${noti?.data?.contractUuid}`);
 		}
 		if (noti.type == TYPE_NOTIFY.OVERVIEW) {
-			router.push(`${PATH.ReportOverview}/${noti?.data?.overviewUuid}`);
+			return router.push(`${PATH.ReportOverview}/${noti?.data?.overviewUuid}`);
 		}
 		if (noti.type == TYPE_NOTIFY.CONTRACT_FUND) {
-			router.push(`${PATH.ReportDisbursement}/${noti?.data?.contractFundUuid}`);
+			return router.push(`${PATH.ReportDisbursement}/${noti?.data?.contractFundUuid}`);
 		}
+		if (noti.type == TYPE_NOTIFY.APPROVAL_CONTRACTOR) {
+			if (infoUser?.special == TYPE_SPECIAL.SENIOR) {
+				return router.push(PATH.Approve);
+			}
+			if (infoUser?.special == TYPE_SPECIAL.NORMAL || infoUser?.special == TYPE_SPECIAL.CONFIRM_CONTRACTOR) {
+				return router.push(PATH.ListContractor);
+			}
+			return null;
+		}
+
+		return null;
 	};
 
 	return (
