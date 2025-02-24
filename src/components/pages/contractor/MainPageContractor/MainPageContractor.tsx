@@ -177,7 +177,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 							{
 								title: 'Tên nhà thầu',
 								render: (data: IContractor) => (
-									<Tippy content='Chi tiết dự án'>
+									<Tippy content='Chi tiết nhà thầu'>
 										<Link href={`${PATH.Contractor}/${data?.uuid}`} className={styles.link_contractor}>
 											<span>{data?.name}</span>,
 										</Link>

@@ -92,8 +92,12 @@ function DetailContractor({}: PropsDetailContractor) {
 								<p style={{color: '#EE464C'}}>{detailContractorForAdmin?.countContractorCatPending || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Ghi chú</p>
+								<p>Mô tả</p>
 								<p>{detailContractorForAdmin?.note || '---'}</p>
+							</div>
+							<div className={styles.item}>
+								<p>Địa chỉ</p>
+								<p>{detailContractorForAdmin?.address || '---'}</p>
 							</div>
 						</GridColumn>
 					</div>
@@ -107,7 +111,7 @@ function DetailContractor({}: PropsDetailContractor) {
 								{
 									pathname: PATH.ProjectCreate,
 									query: null,
-									title: 'Tham gia dự án',
+									title: 'Dự án tham gia',
 								},
 								{
 									pathname: PATH.ProjectCreate,

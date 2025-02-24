@@ -179,19 +179,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 						</div>
 					</div>
 					<div className={styles.main}>
-						<p className={clsx(styles.label)}>Sử dụng vốn dự án</p>
-						<div className={styles.input_specification}>
-							<input
-								name='value'
-								type='text'
-								placeholder='Nhập Sử dụng vốn dự án'
-								className={styles.input}
-								value={contract?.amountDisbursement}
-								onChange={(e) => handleChangeValue(index, 'amountDisbursement', e.target.value, true)}
-							/>
-							<div className={styles.unit}>VNĐ</div>
-						</div>
-						<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự phòng</p>
+						<p className={clsx(styles.label)}>Sử dụng vốn dự phòng</p>
 						<div className={styles.input_specification}>
 							<input
 								name='value'
@@ -203,6 +191,19 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							/>
 							<div className={styles.unit}>VNĐ</div>
 						</div>
+						<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
+						<div className={styles.input_specification}>
+							<input
+								name='value'
+								type='text'
+								placeholder='Nhập Sử dụng vốn dự án'
+								className={styles.input}
+								value={contract?.amountDisbursement}
+								onChange={(e) => handleChangeValue(index, 'amountDisbursement', e.target.value, true)}
+							/>
+							<div className={styles.unit}>VNĐ</div>
+						</div>
+
 						<div className={styles.mt}>
 							<DatePicker
 								onClean={true}

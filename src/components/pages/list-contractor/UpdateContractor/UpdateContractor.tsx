@@ -130,7 +130,6 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Gửi yêu cầu thêm nhóm nhà thầu thành công!',
 				http: contractorServices.sendUpdateContractorCat({
 					uuid: _uuidContractor as string,
 					contractorCatuuid: contractorCat

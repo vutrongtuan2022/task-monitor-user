@@ -204,7 +204,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 								<p>{convertCoin(detailContract?.amount!) || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Thời gian THHĐ (ngày)</p>
+								<p>Thời gian gia hạn hợp đồng (ngày)</p>
 								<p>{detailContract?.totalDayss}</p>
 							</div>
 							<div className={styles.item}>
@@ -236,7 +236,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Người tạo hợp đồng</p>
+								<p>Người tạo phụ lục hợp đồng</p>
 								<p>{detailContract?.creator?.fullname || '---'}</p>
 							</div>
 							<div className={styles.item}>
