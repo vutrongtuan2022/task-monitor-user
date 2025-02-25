@@ -146,7 +146,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				http: activityServices.reportActivity({
 					activityUuid: uuidIssue,
 					reportUuid: uuidReport,
-					type: 0, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành
+					type: 4, // 0: Cập nhật thông tin, 1: Xác nhận xử lý, 2: Xác nhận hoàn thành,4: cập nhật khó khăn vướng mắc
 					progress: -1,
 					issue: form.issue,
 					stateNote: 0,
