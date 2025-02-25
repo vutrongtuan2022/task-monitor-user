@@ -52,13 +52,13 @@ interface IFromUpdateContractAddendum {
 		amountInContract: number | string;
 	}[];
 	startDate: string;
-	totalDayAdvantage: number | null;
 	amount: number | string;
 	contractExecutionAmount: number | string;
 	contractExecutionEndDate: string;
 	advanceGuaranteeAmount: number | string;
 	advanceGuaranteeEndDate: string;
 	contractParentUuid: string;
+	totalDayss: number | null;
 }
 
 function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFromUpdateContractAddendum) {
@@ -77,7 +77,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 			},
 		],
 		startDate: '',
-		totalDayAdvantage: 0,
+		totalDayss: 0,
 		amount: 0,
 		contractExecutionAmount: 0,
 		contractExecutionEndDate: '',
@@ -115,7 +115,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 									amountInContract: convertCoin(v?.amount) || 0,
 							  })),
 					startDate: data?.startDate || '',
-					totalDayAdvantage: data?.totalDayss || 0,
+					totalDayss: data?.totalDayss || 0,
 					amount: convertCoin(data?.amount),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
 					contractExecutionEndDate: data?.contractExecution?.endDate || '',
@@ -144,7 +144,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 						amountInContract: price(v?.amountInContract),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
-					totalDayAdvantage: form?.totalDayAdvantage!,
+					totalDayAdvantage: form?.totalDayss!,
 					amount: price(form?.amount),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
@@ -168,7 +168,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 					code: '',
 					contractorAndCat: [],
 					startDate: '',
-					totalDayAdvantage: 0,
+					totalDayss: 0,
 					amount: 0,
 					contractExecutionAmount: 0,
 					contractExecutionEndDate: '',
@@ -195,7 +195,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 		if (!form?.startDate) {
 			return toastWarn({msg: 'Vui lòng chọn ngày ký phụ lục hợp đồng!'});
 		}
-		if (form?.totalDayAdvantage! < 0) {
+		if (form?.totalDayss! < 0) {
 			return toastWarn({msg: 'Thời gian gia hạn hợp đồng (ngày) không hợp lệ!'});
 		}
 		if (form?.contractorAndCat?.length == 0) {
@@ -287,8 +287,8 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 								label={<span>Thời gian gia hạn hợp đồng (ngày)</span>}
 								placeholder='Nhập số ngày'
 								type='number'
-								name='totalDayAdvantage'
-								value={form?.totalDayAdvantage}
+								name='totalDayss'
+								value={form?.totalDayss}
 								// isRequired={true}
 							/>
 						</div>

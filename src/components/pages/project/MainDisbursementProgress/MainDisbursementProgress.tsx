@@ -494,7 +494,11 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 													type='edit'
 													icon={<AddCircle fontSize={20} fontWeight={600} />}
 													tooltip='Thêm phụ lục'
-													disnable={data?.parent != null}
+													disnable={
+														data?.parent != null ||
+														data?.state == STATE_CONTRACT_WORK.END ||
+														detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+													}
 													onClick={() => {
 														router.replace({
 															pathname: router.pathname,
@@ -511,7 +515,11 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 													type='delete'
 													icon={<PlayCircle fontSize={20} fontWeight={600} />}
 													tooltip='Kết thúc hợp đồng'
-													disnable={data?.parent != null}
+													disnable={
+														data?.parent != null ||
+														data?.state == STATE_CONTRACT_WORK.END ||
+														detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+													}
 													onClick={() => {
 														router.replace({
 															pathname: router.pathname,

@@ -95,20 +95,27 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 					column={[
 						{
 							title: 'STT',
-							render: (data: IReportWorkLastMonth, index: number) => <>{index + 1}</>,
+							render: (data: IReportWorkLastMonth, index: number) => (
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>{index + 1}</p>
+							),
 						},
 						{
 							title: 'Tên công việc',
 							render: (data: IReportWorkLastMonth, index: number) => (
 								<Tippy content={data?.name || '---'}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+									<p
+										className={styles.name}
+										style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}
+									>
+										{data?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
 						{
 							title: 'Giai đoạn thực hiện',
 							render: (data: IReportWorkLastMonth) => (
-								<span style={{color: '#2970FF'}}>
+								<span style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
 									{!data?.stage && '---'}
 									{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 									{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
@@ -118,15 +125,19 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 						},
 						{
 							title: 'Megatype',
-							render: (data: IReportWorkLastMonth) => <>{data?.megatype || '---'}</>,
+							render: (data: IReportWorkLastMonth) => (
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+									{data?.megatype || '---'}
+								</p>
+							),
 						},
 						{
 							title: 'Loại công việc',
 							render: (data: IReportWorkLastMonth) => (
-								<>
+								<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
 									{data?.isWorkFlow === 1 && 'Có kế hoạch'}
 									{data?.isWorkFlow === 0 && 'Phát sinh'}
-								</>
+								</p>
 							),
 						},
 						{
