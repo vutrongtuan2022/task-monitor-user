@@ -208,12 +208,6 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 													textColor: '#FFFFFF',
 													backgroundColor: '#EE464C',
 												},
-												{
-													state: STATE_WORK.APPROVED,
-													text: 'Đã được duyệt',
-													textColor: '#FFFFFF',
-													backgroundColor: '#06D7A0',
-												},
 											]}
 										/>
 									),

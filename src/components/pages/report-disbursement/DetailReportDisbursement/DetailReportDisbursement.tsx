@@ -5,7 +5,7 @@ import styles from './DetailReportDisbursement.module.scss';
 import GridColumn from '~/components/layouts/GridColumn';
 import Moment from 'react-moment';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG, TYPE_CONTRACT_FUND} from '~/constants/config/enum';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -114,7 +114,11 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									p_14_24
 									rounded_8
 									primaryLinear
-									href={`${PATH.ReportDisbursementUpdate}?_uuid=${detailContractFund?.uuid}`}
+									href={
+										detailContractFund?.type == TYPE_CONTRACT_FUND.HISTORY
+											? `${PATH.ReportDisbursementUpdateHistory}?_uuid=${detailContractFund?.uuid}`
+											: `${PATH.ReportDisbursementUpdate}?_uuid=${detailContractFund?.uuid}`
+									}
 								>
 									Chỉnh sửa
 								</Button>

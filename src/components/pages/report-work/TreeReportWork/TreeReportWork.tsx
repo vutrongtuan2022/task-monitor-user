@@ -115,12 +115,6 @@ function TreeReportWork({level, index, activity, isChecked, toggleNode}: PropsTr
 									textColor: '#FFFFFF',
 									backgroundColor: '#EE464C',
 								},
-								{
-									state: STATE_WORK.APPROVED,
-									text: 'Đã được duyệt',
-									textColor: '#FFFFFF',
-									backgroundColor: '#06D7A0',
-								},
 							]}
 						/>
 					)}

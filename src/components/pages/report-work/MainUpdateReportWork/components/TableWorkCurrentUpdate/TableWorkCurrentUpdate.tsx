@@ -129,10 +129,6 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 									id: STATE_WORK.REJECTED,
 									name: 'Bị từ chối',
 								},
-								{
-									id: STATE_WORK.APPROVED,
-									name: 'Đã được duyệt',
-								},
 							]}
 						/>
 					</div>
@@ -305,12 +301,6 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 												text: 'Bị từ chối',
 												textColor: '#FFFFFF',
 												backgroundColor: '#EE464C',
-											},
-											{
-												state: STATE_WORK.APPROVED,
-												text: 'Đã được duyệt',
-												textColor: '#FFFFFF',
-												backgroundColor: '#06D7A0',
 											},
 										]}
 									/>

@@ -26,6 +26,7 @@ export interface IDetailContractFund {
 	note: string;
 	rejectedReason: string | null;
 	uuid: string;
+	type: number;
 }
 export interface IContractFund {
 	activity: {
