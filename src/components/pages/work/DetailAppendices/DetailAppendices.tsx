@@ -205,7 +205,7 @@ function DetailAppendices({}: PropsDetailAppendices) {
 							</div>
 							<div className={styles.item}>
 								<p>Thời gian gia hạn hợp đồng (ngày)</p>
-								<p>{detailContract?.totalDayss}</p>
+								<p>{detailContract?.totalDayAdvantage}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Giá trị BLTHHĐ</p>
