@@ -224,7 +224,12 @@ function TableWorkCurrentCreate({}: PropsTableWorkCurrentCreate) {
 							title: 'Tên công việc',
 							render: (data: IActivityRegister) => (
 								<Tippy content={data?.name}>
-									<p className={styles.name}>{data?.name || '---'}</p>
+									<p
+										className={styles.name}
+										style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}
+									>
+										{data?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
@@ -232,33 +237,42 @@ function TableWorkCurrentCreate({}: PropsTableWorkCurrentCreate) {
 							title: 'Thuộc nhóm công việc',
 							render: (data: IActivityRegister) => (
 								<Tippy content={data?.parent?.name || '---'}>
-									<p className={styles.group_task}>{data?.parent?.name || '---'}</p>
+									<p
+										className={styles.group_task}
+										style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}
+									>
+										{data?.parent?.name || '---'}
+									</p>
 								</Tippy>
 							),
 						},
 						{
 							title: 'Giai đoạn thực hiện',
 							render: (data: IActivityRegister) => (
-								<>
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
 									{data?.stage == -1 && '---'}
 									{data?.stage == 1 && 'Giai đoạn chuẩn bị đầu tư'}
 									{data?.stage == 2 && 'Giai đoạn thực hiện đầu tư'}
 									{data?.stage == 3 && 'Giai đoạn kết thúc đầu tư'}
-								</>
+								</p>
 							),
 						},
 						{
 							title: 'Loại công việc',
 							render: (data: IActivityRegister) => (
-								<>
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
 									{(data?.isInWorkFlow == null || data?.isInWorkFlow == true) && 'Có kế hoạch'}
 									{data?.isInWorkFlow == false && 'Phát sinh'}
-								</>
+								</p>
 							),
 						},
 						{
 							title: 'Megatype',
-							render: (data: IActivityRegister) => <>{data?.megaType || '---'}</>,
+							render: (data: IActivityRegister) => (
+								<p style={{color: data?.megaType == 'Task' ? '#2970FF' : data?.megaType ? '' : ''}}>
+									{data?.megaType || '---'}
+								</p>
+							),
 						},
 						{
 							title: 'Trạng thái',

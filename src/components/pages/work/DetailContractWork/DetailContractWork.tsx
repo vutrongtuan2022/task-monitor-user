@@ -8,7 +8,7 @@ import Button from '~/components/common/Button';
 import GridColumn from '~/components/layouts/GridColumn';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_CONTRACT_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_CONTRACT_WORK, STATE_PROJECT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsServices from '~/services/contractsServices';
 import {convertCoin} from '~/common/funcs/convertCoin';
@@ -60,7 +60,8 @@ function DetailContractWork({}: PropsDetailContractWork) {
 				]}
 				action={
 					<div className={styles.group_button}>
-						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING && (
+						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING &&
+						detailContract?.projectDTO?.state != STATE_PROJECT.FINISH ? (
 							<Button
 								p_14_24
 								rounded_8
@@ -77,7 +78,7 @@ function DetailContractWork({}: PropsDetailContractWork) {
 							>
 								Chỉnh sửa
 							</Button>
-						)}
+						) : null}
 					</div>
 				}
 			/>
@@ -238,6 +239,10 @@ function DetailContractWork({}: PropsDetailContractWork) {
 								<p>Thời gian tạo</p>
 								<p>{detailContract?.created ? <Moment date={detailContract?.created} format='DD/MM/YYYY' /> : '---'}</p>
 							</div>
+							<div className={styles.item}>
+								<p>Ngày kết thúc hợp đồng chính</p>
+								<p>{detailContract?.created ? <Moment date={detailContract?.endDate} format='DD/MM/YYYY' /> : '---'}</p>
+							</div>
 						</GridColumn>
 					</div>
 				</div>
@@ -288,6 +293,8 @@ function DetailContractWork({}: PropsDetailContractWork) {
 						QUERY_KEY.detail_activity_contract,
 						QUERY_KEY.table_contract_by_appendices,
 						QUERY_KEY.table_contract_by_activity,
+						QUERY_KEY.table_contract_fund_detail,
+						QUERY_KEY.table_contractors_detail,
 					]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;

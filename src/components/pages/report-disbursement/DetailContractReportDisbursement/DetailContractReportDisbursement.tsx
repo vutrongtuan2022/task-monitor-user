@@ -8,7 +8,7 @@ import Button from '~/components/common/Button';
 import GridColumn from '~/components/layouts/GridColumn';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_CONTRACT_WORK, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_CONTRACT_WORK, STATE_PROJECT, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsServices from '~/services/contractsServices';
 import {convertCoin} from '~/common/funcs/convertCoin';
@@ -79,7 +79,8 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 				]}
 				action={
 					<div className={styles.group_button}>
-						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING && (
+						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING &&
+						detailContract?.projectDTO?.state != STATE_PROJECT.FINISH ? (
 							<Button
 								p_14_24
 								rounded_8
@@ -96,7 +97,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 							>
 								Chỉnh sửa
 							</Button>
-						)}
+						) : null}
 					</div>
 				}
 			/>
@@ -386,7 +387,7 @@ function DetailContractReportDisbursement({}: PropsDetailContractReportDisbursem
 			>
 				<FormUpdateContract
 					uuidContract={_uuid as string}
-					queryKeys={[QUERY_KEY.detail_contract]}
+					queryKeys={[QUERY_KEY.detail_contract, QUERY_KEY.table_contract_fund_detail]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 
