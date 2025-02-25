@@ -200,7 +200,7 @@ function DetailContractWork({}: PropsDetailContractWork) {
 							</div>
 							<div className={styles.item}>
 								<p>Thời gian THHĐ (ngày)</p>
-								<p>{detailContract?.totalDayss}</p>
+								<p>{detailContract?.totalDayAdvantage}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Giá trị BLTHHĐ</p>
