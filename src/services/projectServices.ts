@@ -154,6 +154,7 @@ const projectServices = {
 		data: {
 			keyword: string;
 			status: number;
+			excludeState: number | null;
 		},
 		tokenAxios?: any
 	) => {
