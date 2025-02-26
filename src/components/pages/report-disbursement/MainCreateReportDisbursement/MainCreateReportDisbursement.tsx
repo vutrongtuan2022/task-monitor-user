@@ -9,7 +9,7 @@ import Select, {Option} from '~/components/common/Select';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import Form from '~/components/common/Form';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_PROJECT, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import projectServices from '~/services/projectServices';
 import {useRouter} from 'next/router';
@@ -42,6 +42,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 				http: projectServices.categoryProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					excludeState: STATE_PROJECT.FINISH,
 				}),
 			}),
 		select(data) {

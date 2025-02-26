@@ -116,6 +116,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 				http: projectServices.categoryProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
+					excludeState: null,
 				}),
 			}),
 		select(data) {
