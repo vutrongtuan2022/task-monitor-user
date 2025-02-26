@@ -518,6 +518,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 													disnable={
 														data?.parent != null ||
 														data?.state == STATE_CONTRACT_WORK.END ||
+														data?.state == STATE_CONTRACT_WORK.EXPIRED ||
 														detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
 													}
 													onClick={() => {
