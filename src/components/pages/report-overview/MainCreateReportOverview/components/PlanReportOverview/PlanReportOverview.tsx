@@ -89,15 +89,15 @@ function PlanReportOverview({}: PropsPlanReportOverview) {
 									title: 'Megatype',
 									render: (data: IPlanReportOverview) => <>{data?.megatype || '---'}</>,
 								},
-								{
-									title: 'Số hóa',
-									render: (data: IPlanReportOverview) => (
-										<>
-											<p>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
-											<p>{data?.digitalization == 1 && 'Đã số hóa'}</p>
-										</>
-									),
-								},
+								// {
+								// 	title: 'Số hóa',
+								// 	render: (data: IPlanReportOverview) => (
+								// 		<>
+								// 			<p>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
+								// 			<p>{data?.digitalization == 1 && 'Đã số hóa'}</p>
+								// 		</>
+								// 	),
+								// },
 								{
 									title: 'Loại công việc',
 									render: (data: IPlanReportOverview) => (
