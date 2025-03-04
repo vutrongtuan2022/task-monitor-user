@@ -160,15 +160,15 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 										/>
 									),
 								},
-								{
-									title: 'Số hóa',
-									render: (data: IWorkReportOverview) => (
-										<>
-											<p>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
-											<p>{data?.digitalization == 1 && 'Đã số hóa'}</p>
-										</>
-									),
-								},
+								// {
+								// 	title: 'Số hóa',
+								// 	render: (data: IWorkReportOverview) => (
+								// 		<>
+								// 			<p>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
+								// 			<p>{data?.digitalization == 1 && 'Đã số hóa'}</p>
+								// 		</>
+								// 	),
+								// },
 							]}
 						/>
 					</DataWrapper>

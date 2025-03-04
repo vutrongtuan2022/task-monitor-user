@@ -200,15 +200,15 @@ function TableWorkLastMonthCreate({}: PropsTableWorkLastMonthCreate) {
 								/>
 							),
 						},
-						{
-							title: 'Số hóa',
-							render: (data: IReportWorkLastMonth) => (
-								<>
-									<p style={{color: '#EE464C'}}>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
-									<p style={{color: '#2970FF'}}>{data?.digitalization == 1 && 'Đã số hóa'}</p>
-								</>
-							),
-						},
+						// {
+						// 	title: 'Số hóa',
+						// 	render: (data: IReportWorkLastMonth) => (
+						// 		<>
+						// 			<p style={{color: '#EE464C'}}>{data?.digitalization == 0 && 'Chưa số hóa'}</p>
+						// 			<p style={{color: '#2970FF'}}>{data?.digitalization == 1 && 'Đã số hóa'}</p>
+						// 		</>
+						// 	),
+						// },
 					]}
 				/>
 			</DataWrapper>

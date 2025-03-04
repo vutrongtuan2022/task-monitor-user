@@ -241,11 +241,11 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 										/>
 									),
 								},
-								{
-									title: 'Đã số hóa',
-									checkBox: true,
-									render: (data: IWorkDigitize) => <></>,
-								},
+								// {
+								// 	title: 'Đã số hóa',
+								// 	checkBox: true,
+								// 	render: (data: IWorkDigitize) => <></>,
+								// },
 							]}
 						/>
 					</DataWrapper>
