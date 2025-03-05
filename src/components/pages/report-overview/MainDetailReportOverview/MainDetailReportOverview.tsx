@@ -67,6 +67,10 @@ function MainDetailReportOverview({}: PropsMainDetailReportOverview) {
 								<p>{`Tháng ${detailReportOverview?.month} - ${detailReportOverview?.year}`}</p>
 							</div>
 							<div className={styles.item}>
+								<p>Lãnh đạo phụ trách</p>
+								<p>{detailReportOverview?.project?.leader?.fullname || ''}</p>
+							</div>
+							<div className={styles.item}>
 								<p>Kế hoạch tiếp theo</p>
 								<p>{`Tháng ${detailReportOverview?.nextMonth} - ${detailReportOverview?.nextYear}`}</p>
 							</div>
