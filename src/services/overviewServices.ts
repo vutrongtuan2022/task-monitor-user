@@ -78,7 +78,7 @@ const overviewServices = {
 	upsertReportOverview: (
 		data: {
 			uuid: string;
-			projectUuid: string;
+			projectUuids: string[];
 			year: number;
 			month: number;
 		},

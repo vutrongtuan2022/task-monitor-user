@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 
 import {IDisbursementReportOverview, PropsDisbursementReportOverview} from './interfaces';
 import styles from './DisbursementReportOverview.module.scss';
@@ -7,12 +7,9 @@ import {QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import GridColumn from '~/components/layouts/GridColumn';
 import {convertCoin} from '~/common/funcs/convertCoin';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
 import contractsFundServices from '~/services/contractFundServices';
 
-function DisbursementReportOverview({}: PropsDisbursementReportOverview) {
-	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
-
+function DisbursementReportOverview({month, year, projectUuid}: PropsDisbursementReportOverview) {
 	const {data: disbursementReportOverview} = useQuery<IDisbursementReportOverview>(
 		[QUERY_KEY.detail_disbursement_report_overview, year, month, projectUuid],
 		{

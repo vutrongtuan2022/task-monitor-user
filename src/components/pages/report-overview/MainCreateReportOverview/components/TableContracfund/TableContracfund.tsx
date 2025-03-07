@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import styles from './TableContracfund.module.scss';
 import {IContractFund, PropsTableContracFund} from './interface';
 import clsx from 'clsx';
@@ -16,13 +16,10 @@ import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import {PATH} from '~/constants/config';
 import contractsFundServices from '~/services/contractFundServices';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
 
-function TableContracfund({}: PropsTableContracFund) {
+function TableContracfund({month, year, projectUuid}: PropsTableContracFund) {
 	const [page, setPage] = useState<number>(1);
 	const [pageSize, setPageSize] = useState<number>(10);
-
-	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
 
 	const {data: listContractFundForOverView, isLoading} = useQuery(
 		[QUERY_KEY.table_contract_fund_for_overview, projectUuid, month, year, page, pageSize],

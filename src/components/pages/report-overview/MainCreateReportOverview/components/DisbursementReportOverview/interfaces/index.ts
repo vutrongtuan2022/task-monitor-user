@@ -1,4 +1,8 @@
-export interface PropsDisbursementReportOverview {}
+export interface PropsDisbursementReportOverview {
+	projectUuid: string;
+	month: number;
+	year: number;
+}
 
 export interface IDisbursementReportOverview {
 	projectDTO: {

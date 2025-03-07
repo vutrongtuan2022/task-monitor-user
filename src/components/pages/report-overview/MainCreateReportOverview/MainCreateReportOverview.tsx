@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 
 import {PropsMainCreateReportOverview} from './interfaces';
 import styles from './MainCreateReportOverview.module.scss';
@@ -14,32 +14,23 @@ import projectServices from '~/services/projectServices';
 import {useRouter} from 'next/router';
 import Loading from '~/components/common/Loading';
 import overviewServices from '~/services/overviewServices';
-import clsx from 'clsx';
-import TabNavLink from '~/components/common/TabNavLink';
-import {CreateReportOverview} from './context';
-import ProjectReportOverview from './components/ProjectReportOverview';
-import WorkReportOverview from './components/WorkReportOverview';
-import DisbursementReportOverview from './components/DisbursementReportOverview';
-import PlanReportOverview from './components/PlanReportOverview';
-import TableContracfund from './components/TableContracfund/TableContracfund';
+import SelectMany from '~/components/common/SelectMany';
+import InfoReportOverview from '../InfoReportOverview';
 
 function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 	const router = useRouter();
 	const today = new Date();
 
-	const {_type} = router.query;
-
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+	const [projects, setProjects] = useState<any[]>([]);
 	const [form, setForm] = useState<{
 		year: number | null;
 		month: number | null;
-		projectUuid: string;
 	}>({
 		year: today.getFullYear(),
 		month: today.getMonth() + 1,
-		projectUuid: '',
 	});
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
@@ -66,7 +57,7 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 					uuid: '',
 					year: form.year!,
 					month: form.month!,
-					projectUuid: form.projectUuid,
+					projectUuids: projects?.map((v) => v?.uuid),
 				}),
 			});
 		},
@@ -109,13 +100,7 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 							Hủy bỏ
 						</Button>
 						<div className={styles.btn}>
-							<Button
-								p_14_24
-								rounded_8
-								blueLinear
-								disable={!form.year || !form.month || !form.projectUuid}
-								onClick={handleSubmit}
-							>
+							<Button p_14_24 rounded_8 blueLinear disable={!form.year || !form.month} onClick={handleSubmit}>
 								Gửi báo cáo
 							</Button>
 						</div>
@@ -183,86 +168,35 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 									</Select>
 								</div>
 							</div>
-							<Select
-								isSearch={true}
+							<SelectMany
+								placeholder='Chọn'
 								label={
 									<span>
-										Chọn dự án <span style={{color: 'red'}}>*</span>
+										Danh sách dự án <span style={{color: 'red'}}>*</span>
 									</span>
 								}
-								name='projectUuid'
-								value={form.projectUuid}
-								placeholder='Chọn'
-							>
-								{listProject?.map((v: any) => (
-									<Option
-										key={v?.uuid}
-										value={v?.uuid}
-										title={v?.name}
-										onClick={() => {
-											setForm((prev: any) => ({
-												...prev,
-												projectUuid: v?.uuid,
-											}));
-										}}
-									/>
-								))}
-							</Select>
+								value={projects}
+								setValue={(prj) =>
+									setProjects(
+										projects?.find((v: any) => v?.uuid == prj.uuid)
+											? projects?.filter((v: any) => v?.uuid != prj.uuid)
+											: [...projects, prj]
+									)
+								}
+								setValueAray={setProjects}
+								listData={listProject?.map((v: any) => ({
+									uuid: v?.uuid,
+									title: v?.name,
+									code: v?.code,
+								}))}
+							/>
 						</div>
 					</div>
 				</div>
 
-				{form.year && form.month && form.projectUuid ? (
-					<CreateReportOverview.Provider
-						value={{
-							year: form.year,
-							month: form.month,
-							projectUuid: form.projectUuid,
-						}}
-					>
-						<div className={clsx(styles.basic_info, styles.mt)}>
-							<div className={styles.main_tab}>
-								<TabNavLink
-									query='_type'
-									listHref={[
-										{
-											pathname: PATH.ReportOverview,
-											query: null,
-											title: 'Thông tin dự án',
-										},
-										{
-											pathname: PATH.ReportOverview,
-											query: 'work',
-											title: 'Công việc thực hiện',
-										},
-										{
-											pathname: PATH.ReportOverview,
-											query: 'disbursement',
-											title: 'Thông tin giải ngân',
-										},
-										{
-											pathname: PATH.ReportOverview,
-											query: 'plan',
-											title: 'Kế hoạch tiếp theo',
-										},
-									]}
-								/>
-							</div>
-							<div className={styles.line}></div>
-							<div className={styles.main_table}>
-								{!_type && <ProjectReportOverview />}
-								{_type == 'work' && <WorkReportOverview />}
-								{_type == 'disbursement' && (
-									<Fragment>
-										<DisbursementReportOverview />
-										<TableContracfund />
-									</Fragment>
-								)}
-								{_type == 'plan' && <PlanReportOverview />}
-							</div>
-						</div>
-					</CreateReportOverview.Provider>
-				) : null}
+				{projects?.map((v, i) => (
+					<InfoReportOverview key={v?.uuid} index={i} year={form?.year!} month={form?.month!} projectUuid={v?.uuid} />
+				))}
 			</div>
 		</div>
 	);

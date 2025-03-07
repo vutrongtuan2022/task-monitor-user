@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 
 import {IPlanReportOverview, PropsPlanReportOverview} from './interfaces';
 import styles from './PlanReportOverview.module.scss';
@@ -12,12 +12,9 @@ import Table from '~/components/common/Table';
 import Tippy from '@tippyjs/react';
 import StateActive from '~/components/common/StateActive';
 import Pagination from '~/components/common/Pagination';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
 import activityServices from '~/services/activityServices';
 
-function PlanReportOverview({}: PropsPlanReportOverview) {
-	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
-
+function PlanReportOverview({month, year, projectUuid}: PropsPlanReportOverview) {
 	const [page, setPage] = useState<number>(1);
 	const [pageSize, setPageSize] = useState<number>(10);
 

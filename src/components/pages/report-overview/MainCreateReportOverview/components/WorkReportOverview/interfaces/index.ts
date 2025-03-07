@@ -1,4 +1,8 @@
-export interface PropsWorkReportOverview {}
+export interface PropsWorkReportOverview {
+	projectUuid: string;
+	month: number;
+	year: number;
+}
 
 export interface IWorkReportOverview {
 	categoryTask: {

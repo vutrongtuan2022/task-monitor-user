@@ -1,11 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 
 import {IWorkReportOverview, PropsWorkReportOverview} from './interfaces';
 import styles from './WorkReportOverview.module.scss';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import {useQuery} from '@tanstack/react-query';
-import {useRouter} from 'next/router';
 import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import Noti from '~/components/common/DataWrapper/components/Noti';
@@ -13,12 +12,9 @@ import Table from '~/components/common/Table';
 import Tippy from '@tippyjs/react';
 import StateActive from '~/components/common/StateActive';
 import Pagination from '~/components/common/Pagination';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
 import activityServices from '~/services/activityServices';
 
-function WorkReportOverview({}: PropsWorkReportOverview) {
-	const {year, month, projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
-
+function WorkReportOverview({month, year, projectUuid}: PropsWorkReportOverview) {
 	const [page, setPage] = useState<number>(1);
 	const [pageSize, setPageSize] = useState<number>(10);
 
@@ -66,7 +62,7 @@ function WorkReportOverview({}: PropsWorkReportOverview) {
 								},
 								{
 									title: 'Tên công việc',
-									render: (data: IWorkReportOverview, index: number) => (
+									render: (data: IWorkReportOverview) => (
 										<Tippy content={data?.name || '---'}>
 											<p className={styles.name}>{data?.name || '---'}</p>
 										</Tippy>

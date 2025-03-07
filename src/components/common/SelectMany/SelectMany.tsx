@@ -17,6 +17,7 @@ function SelectMany({
 	listData = [],
 	value = [],
 	setValue,
+	setValueAray,
 	listDataDisable = [],
 }: PropsSelectMany) {
 	const ref = useRef<any>(null);
@@ -65,6 +66,23 @@ function SelectMany({
 						</div>
 					)}
 					<div className={styles.mainOption}>
+						{!!setValueAray && (
+							<div
+								className={clsx(styles.option, {
+									[styles.active]: value?.length == listData?.length,
+									// [styles.disable]: listDataDisable.some((x) => x.uuid == v.uuid),
+								})}
+								onClick={() => {
+									if (value?.length == listData?.length) {
+										setValueAray && setValueAray([]);
+									} else {
+										setValueAray && setValueAray(listData);
+									}
+								}}
+							>
+								Tất cả
+							</div>
+						)}
 						{listData
 							?.filter((v) => removeVietnameseTones(v.title)?.includes(keyword ? removeVietnameseTones(keyword) : ''))
 							?.map((v) => (

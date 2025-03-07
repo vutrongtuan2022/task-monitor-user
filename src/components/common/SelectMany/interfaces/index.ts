@@ -13,6 +13,7 @@ export interface PropsSelectMany {
 	listData: ISelectValue[];
 	value: ISelectValue[];
 	setValue: (any: ISelectValue) => void;
+	setValueAray?: (arr: ISelectValue[]) => void;
 
 	listDataDisable?: ISelectValue[];
 }

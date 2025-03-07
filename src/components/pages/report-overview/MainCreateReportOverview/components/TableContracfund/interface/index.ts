@@ -1,4 +1,8 @@
-export interface PropsTableContracFund {}
+export interface PropsTableContracFund {
+	projectUuid: string;
+	month: number;
+	year: number;
+}
 
 export interface IContractFund {
 	contractor: {

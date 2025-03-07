@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 
 import {IProjectReportOverview, PropsProjectReportOverview} from './interfaces';
 import styles from './ProjectReportOverview.module.scss';
@@ -9,12 +9,9 @@ import Progress from '~/components/common/Progress';
 import {useQuery} from '@tanstack/react-query';
 import {httpRequest} from '~/services';
 import Moment from 'react-moment';
-import {CreateReportOverview, ICreateReportOverview} from '../../context';
 import projectServices from '~/services/projectServices';
 
-function ProjectReportOverview({}: PropsProjectReportOverview) {
-	const {projectUuid} = useContext<ICreateReportOverview>(CreateReportOverview);
-
+function ProjectReportOverview({projectUuid}: PropsProjectReportOverview) {
 	const {data: projectReportOverview} = useQuery<IProjectReportOverview>([QUERY_KEY.detail_project_report_overview, projectUuid], {
 		queryFn: () =>
 			httpRequest({

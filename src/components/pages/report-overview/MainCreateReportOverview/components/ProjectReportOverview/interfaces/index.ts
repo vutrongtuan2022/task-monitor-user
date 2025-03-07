@@ -1,4 +1,6 @@
-export interface PropsProjectReportOverview {}
+export interface PropsProjectReportOverview {
+	projectUuid: string;
+}
 
 export interface IProjectReportOverview {
 	name: string;
