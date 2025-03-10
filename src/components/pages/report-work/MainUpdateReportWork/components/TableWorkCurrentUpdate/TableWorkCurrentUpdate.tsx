@@ -316,7 +316,7 @@ function TableWorkCurrentUpdate({}: PropsTableWorkCurrentUpdate) {
 										type='delete'
 										icon={<Trash fontSize={20} fontWeight={600} />}
 										tooltip='Xóa bỏ'
-										disnable={data.state == STATE_WORK.COMPLETED}
+										// disnable={data.state == STATE_WORK.COMPLETED}
 										onClick={() => {
 											deleteActivityFromList(data, index);
 										}}
