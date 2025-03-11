@@ -78,57 +78,12 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								<p>{contract?.detailContractsDTO?.activityDTO?.name || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Số nhóm nhà thầu</p>
-								<p>
-									{contract?.detailContractsDTO?.contractorInfos?.length && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[
-														...new Set(
-															contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorCatName)
-														),
-													].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{[
-													...new Set(
-														contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorCatName)
-													),
-												]?.length || '---'}
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p>Tên nhóm nhà thầu</p>
+								<p>{contract?.detailContractsDTO?.contractorInfos?.map((v) => v?.contractorCatName).join(', ')}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Số nhà thầu</p>
-								<p>
-									{contract?.detailContractsDTO?.contractorInfos?.length && (
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[
-														...new Set(
-															contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorName)
-														),
-													].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<span className={styles.link_contractor}>
-												{[...new Set(contract?.detailContractsDTO?.contractorInfos?.map((v) => v.contractorName))]
-													?.length || '---'}
-											</span>
-										</Tippy>
-									)}
-								</p>
+								<p>Tên nhà thầu</p>
+								<p>{contract?.detailContractsDTO?.contractorInfos?.map((v) => v?.contractorName).join(', ')}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Ngày ký hợp đồng</p>
