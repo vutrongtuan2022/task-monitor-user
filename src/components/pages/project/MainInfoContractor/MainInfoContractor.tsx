@@ -188,7 +188,7 @@ function MainInfoContractor({}: PropsMainInfoContractor) {
 				listUrls={[
 					{
 						path: PATH.Project,
-						title: 'Danh sách dự án',
+						title: 'Dự án của bạn',
 					},
 					{
 						path: '',
