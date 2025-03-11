@@ -78,7 +78,7 @@ function MainUpdateReportDisbursementHistory({}: PropsMainUpdateReportDisburseme
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm giải ngân quá khứ thành công!',
+				msgSuccess: 'Cập nhật giải ngân quá khứ thành công!',
 				http: contractsFundServices.updateContractFundReportFundHistory({
 					contractsFundUuid: _uuid as string,
 					disbursementInfo: form?.disbursementInfo?.map((v) => {
