@@ -60,7 +60,8 @@ function DetailContractWork({}: PropsDetailContractWork) {
 				]}
 				action={
 					<div className={styles.group_button}>
-						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING &&
+						{(detailContract?.state === STATE_CONTRACT_WORK.PROCESSING ||
+							detailContract?.state === STATE_CONTRACT_WORK.EXPIRED) &&
 						detailContract?.projectDTO?.state != STATE_PROJECT.FINISH ? (
 							<Button
 								p_14_24
@@ -290,6 +291,7 @@ function DetailContractWork({}: PropsDetailContractWork) {
 				<FormUpdateContract
 					uuidContract={_uuid as string}
 					queryKeys={[
+						QUERY_KEY.detail_contract,
 						QUERY_KEY.detail_activity_contract,
 						QUERY_KEY.table_contract_by_appendices,
 						QUERY_KEY.table_contract_by_activity,
