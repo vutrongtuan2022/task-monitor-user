@@ -64,7 +64,7 @@ function DetailContractProject({}: PropsDetailContractProject) {
 			<Breadcrumb
 				listUrls={[
 					{
-						title: 'Danh sách dự án',
+						title: 'Dự án của bạn',
 						path: `${PATH.Project}`,
 					},
 					{
@@ -78,7 +78,8 @@ function DetailContractProject({}: PropsDetailContractProject) {
 				]}
 				action={
 					<div className={styles.group_button}>
-						{detailContract?.state === STATE_CONTRACT_WORK.PROCESSING &&
+						{(detailContract?.state === STATE_CONTRACT_WORK.PROCESSING ||
+							detailContract?.state === STATE_CONTRACT_WORK.EXPIRED) &&
 						detailContract?.projectDTO?.state != STATE_PROJECT.FINISH ? (
 							<Button
 								p_14_24
