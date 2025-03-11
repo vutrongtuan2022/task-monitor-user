@@ -454,6 +454,10 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										),
 									},
 									{
+										title: 'Lũy kế giải ngân HĐ (VND)',
+										render: (data: IContractsForProject) => <>{convertCoin(data?.accumAmount)}</>,
+									},
+									{
 										title: 'Trạng thái',
 										render: (data: IContractsForProject) => (
 											<StateActive

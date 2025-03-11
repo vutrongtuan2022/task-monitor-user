@@ -144,7 +144,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 						amountInContract: price(v?.amountInContract),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
-					totalDayAdvantage: form?.totalDayss!,
+					totalDayAdvantage: price(form?.totalDayss!),
 					amount: price(form?.amount),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
@@ -286,9 +286,10 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 							<Input
 								label={<span>Thời gian gia hạn hợp đồng (ngày)</span>}
 								placeholder='Nhập số ngày'
-								type='number'
+								type='text'
 								name='totalDayss'
 								value={form?.totalDayss}
+								isMoney
 								// isRequired={true}
 							/>
 						</div>

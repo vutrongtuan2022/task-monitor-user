@@ -141,7 +141,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 						amountInContract: price(v?.amountInContract),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
-					totalDayAdvantage: form?.totalDayAdvantage!,
+					totalDayAdvantage: price(form?.totalDayAdvantage!),
 					amount: price(form?.amount),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
@@ -164,7 +164,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 					code: '',
 					contractorAndCat: [],
 					startDate: '',
-					totalDayAdvantage: null,
+					totalDayAdvantage: 0,
 					amount: 0,
 					contractExecutionAmount: 0,
 					contractExecutionEndDate: '',
@@ -282,9 +282,10 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 							<Input
 								label={<span>Thời gian gia hạn hợp đồng (ngày)</span>}
 								placeholder='Nhập số ngày'
-								type='number'
+								type='text'
 								name='totalDayAdvantage'
 								value={form?.totalDayAdvantage}
+								isMoney
 								// isRequired={true}
 							/>
 						</div>
