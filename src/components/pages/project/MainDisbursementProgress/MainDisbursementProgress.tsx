@@ -31,10 +31,14 @@ import contractorServices from '~/services/contractorServices';
 import Link from 'next/link';
 import StateActive from '~/components/common/StateActive';
 import IconCustom from '~/components/common/IconCustom';
-import {AddCircle, PlayCircle} from 'iconsax-react';
+import {AddCircle, ArrangeHorizontalCircle, Edit, PlayCircle} from 'iconsax-react';
 import PositionContainer from '~/components/common/PositionContainer';
 import FromCreateContractAddendum from '~/components/utils/FromCreateContractAddendum';
 import FormCancelContract from '~/components/utils/FormCancelContract';
+import FormUpdateContract from '~/components/utils/FormUpdateContract';
+import FromUpdateContractAddendum from '~/components/utils/FromUpdateContractAddendum';
+import FormChangeContract from '~/components/utils/FormChangeContract';
+import Image from 'next/image';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
@@ -336,6 +340,25 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 									/>
 								</div>
 							</div>
+							<div className={styles.btn}>
+								<Button
+									p_10_24
+									rounded_8
+									light-blue
+									icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+									onClick={() => {
+										router.replace({
+											pathname: router.pathname,
+											query: {
+												...router.query,
+												_action: 'open-contract',
+											},
+										});
+									}}
+								>
+									Thêm mới hợp đồng
+								</Button>
+							</div>
 						</div>
 						<DataWrapper loading={isLoading} data={listContractForProject?.items || []}>
 							<Table
@@ -534,6 +557,71 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 														});
 													}}
 												/>
+												{data?.parent == null && (
+													<IconCustom
+														icon={<ArrangeHorizontalCircle fontSize={20} fontWeight={600} color='#16C1F3' />}
+														tooltip='Thay thế hợp đồng'
+														disnable={
+															data?.state == STATE_CONTRACT_WORK.END ||
+															data?.state == STATE_CONTRACT_WORK.PROCESSING ||
+															detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+														}
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_action: 'change-contract',
+																	_contractUuid: data?.uuid,
+																	_activityUuid: data?.activityDTO?.uuid,
+																	_activityName: data?.activityName,
+																},
+															});
+														}}
+													/>
+												)}
+
+												{data?.parent ? (
+													<IconCustom
+														type='edit'
+														icon={<Edit fontSize={20} fontWeight={600} />}
+														tooltip='Chỉnh sửa phụ lục hợp đồng'
+														disnable={
+															data?.state == STATE_CONTRACT_WORK.END ||
+															detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+														}
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_action: 'updateAddendum',
+																	_contractUuid: data?.uuid,
+																},
+															});
+														}}
+													/>
+												) : (
+													<IconCustom
+														type='edit'
+														icon={<Edit fontSize={20} fontWeight={600} />}
+														tooltip='Chỉnh sửa hợp đồng'
+														disnable={
+															data?.state == STATE_CONTRACT_WORK.END ||
+															detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+														}
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_action: 'update',
+																	_contractUuid: data?.uuid,
+																},
+															});
+														}}
+													/>
+												)}
 											</div>
 										),
 									},
@@ -615,7 +703,6 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					});
 				}}
 			/>
-
 			{/* Thêm phụ lục hợp đồng */}
 			<PositionContainer
 				open={_action == 'create-contract-addendum' && !!_contractUuid && !!_contractUuid && !!_activityUuid}
@@ -646,7 +733,6 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					}}
 				/>
 			</PositionContainer>
-
 			{/* Kết thúc hợp đồng */}
 			<PositionContainer
 				open={_action == 'open-form-cancel-contract' && !!_contractUuid && !!_contractUuid && !!_activityUuid && !!_activityName}
@@ -668,6 +754,116 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					queryKeys={[QUERY_KEY.table_contract_for_project]}
 					onClose={() => {
 						const {_action, _contractUuid, _activityUuid, _activityName, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			{/* Thay thế hợp đồng */}
+			<PositionContainer
+				open={_action == 'change-contract' && !!_contractUuid && !!_contractUuid && !!_activityUuid && !!_activityName}
+				onClose={() => {
+					const {_action, _contractUuid, _activityUuid, _activityName, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormChangeContract
+					uuidActivity={_activityUuid as string}
+					uuidContract={_contractUuid as string}
+					nameActivity={_activityName as string}
+					queryKeys={[
+						QUERY_KEY.table_contract_for_project,
+						QUERY_KEY.detail_activity_contract,
+						QUERY_KEY.table_contract_by_appendices,
+						QUERY_KEY.table_contract_by_activity,
+					]}
+					onClose={() => {
+						const {_action, _contractUuid, _activityUuid, _activityName, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			{/* chỉnh sửa hợp đồng */}
+			<PositionContainer
+				open={_action == 'update'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormUpdateContract
+					uuidContract={_contractUuid as string}
+					queryKeys={[
+						QUERY_KEY.table_contract_for_project,
+						QUERY_KEY.detail_contract,
+						QUERY_KEY.detail_activity_contract,
+						QUERY_KEY.table_contract_by_appendices,
+						QUERY_KEY.table_contract_by_activity,
+						QUERY_KEY.table_contract_fund_detail,
+						QUERY_KEY.table_contractors_detail,
+					]}
+					onClose={() => {
+						const {_action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+			{/* chỉnh sửa phụ lục hợp đồng */}
+			<PositionContainer
+				open={_action == 'updateAddendum'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FromUpdateContractAddendum
+					uuidContract={_contractUuid as string}
+					queryKeys={[
+						QUERY_KEY.table_contract_for_project,
+						QUERY_KEY.detail_contract_addendum,
+						QUERY_KEY.detail_activity_contract,
+						QUERY_KEY.table_contract_by_appendices,
+						QUERY_KEY.table_contract_by_activity,
+					]}
+					onClose={() => {
+						const {_action, ...rest} = router.query;
 
 						router.replace({
 							pathname: router.pathname,

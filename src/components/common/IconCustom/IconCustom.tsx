@@ -1,18 +1,18 @@
 import React from 'react';
 
-import { PropsIconCustom } from './interfaces';
+import {PropsIconCustom} from './interfaces';
 import styles from './IconCustom.module.scss';
 import Tippy from '@tippyjs/react';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-function IconCustom({ icon, tooltip, onClick, color, href, type, disnable = false }: PropsIconCustom) {
+function IconCustom({icon, tooltip, onClick, color, href, type, disnable = false}: PropsIconCustom) {
 	return (
 		<Tippy content={tooltip}>
 			{href ? (
 				<Link
 					href={href}
-					style={{ color: color }}
+					style={{color: color}}
 					className={clsx(
 						{
 							[styles.edit]: type == 'edit',
@@ -29,7 +29,7 @@ function IconCustom({ icon, tooltip, onClick, color, href, type, disnable = fals
 				</Link>
 			) : (
 				<div
-					style={{ color: color }}
+					style={{color: color}}
 					className={clsx(
 						{
 							[styles.edit]: type == 'edit',
