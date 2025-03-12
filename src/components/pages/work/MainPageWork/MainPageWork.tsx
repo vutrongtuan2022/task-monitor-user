@@ -18,7 +18,7 @@ import Progress from '~/components/common/Progress';
 import StateActive from '~/components/common/StateActive';
 import {generateYearsArray} from '~/common/funcs/selectDate';
 import IconCustom from '~/components/common/IconCustom';
-import {AddSquare, DiscountShape, Edit, Eye, FolderOpen, PenAdd, TickCircle} from 'iconsax-react';
+import {AddSquare, DiscountShape, Edit, Eye, FolderOpen, PenAdd, ReceiptEdit, TickCircle} from 'iconsax-react';
 import Tippy from '@tippyjs/react';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
@@ -41,17 +41,19 @@ function MainPageWork({}: PropsMainPageWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project, _activityUuid, _contractUuid} = router.query;
+	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project, _activityUuid, _contractUuid, _uuid} = router.query;
 
-	const [form, setForm] = useState<{issue: string; progress: number | null}>({
+	const [form, setForm] = useState<{issue: string; progress: number | null; reason: string}>({
 		issue: '',
 		progress: null,
+		reason: '',
 	});
 
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidFinish, setUuidFinish] = useState<string>('');
 	const [uuidIssue, setUuidIssue] = useState<string>('');
 	const [uuidProgress, setUuidProgress] = useState<string>('');
+	const [uuidReason, setUuidReason] = useState<string>('');
 	const [uuidReport, setUuidReport] = useState<string>('');
 	const [nameActivity, setNameActivity] = useState<string>('');
 
@@ -186,6 +188,26 @@ function MainPageWork({}: PropsMainPageWork) {
 		},
 	});
 
+	const funcReasonActiviti = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xác nhận tình trạng công việc thành công!',
+				http: activityServices.updateActivitiesUnfinish({
+					uuid: uuidReason,
+					reason: '',
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setUuidProgress('');
+				queryClient.invalidateQueries([QUERY_KEY.table_list_work]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
 			<Loading
@@ -193,7 +215,8 @@ function MainPageWork({}: PropsMainPageWork) {
 					funcConfirmActiviti.isLoading ||
 					funcFinishActiviti.isLoading ||
 					funcIssueActiviti.isLoading ||
-					funcProgressActiviti.isLoading
+					funcProgressActiviti.isLoading ||
+					funcReasonActiviti.isLoading
 				}
 			/>
 			<div className={styles.head}>
@@ -633,6 +656,7 @@ function MainPageWork({}: PropsMainPageWork) {
 														setForm({
 															issue: data?.issue || '',
 															progress: data?.progress || null,
+															reason: form?.reason,
 														});
 													}}
 												/>
@@ -652,10 +676,29 @@ function MainPageWork({}: PropsMainPageWork) {
 													setForm({
 														issue: data?.issue || '',
 														progress: data?.progress || null,
+														reason: form?.reason,
 													});
 												}}
 											/>
 										)}
+										{data?.progress !== 100 && (
+											<IconCustom
+												color='#536884'
+												icon={<ReceiptEdit fontSize={20} />}
+												tooltip='Nhập tình trạng xử lý'
+												onClick={() => {
+													setUuidReason(data?.activity?.uuid);
+													// setUuidIssue(data?.activity?.uuid);
+													// setUuidReport(data?.report?.uuid);
+													setForm({
+														issue: data?.issue || '',
+														progress: data?.progress || null,
+														reason: form?.reason,
+													});
+												}}
+											/>
+										)}
+
 										{data?.type == TYPE_WORK.TASK && (
 											<IconCustom
 												color='#005994'
@@ -719,6 +762,36 @@ function MainPageWork({}: PropsMainPageWork) {
 										rounded_6
 										icon={<FolderOpen size={18} color='#fff' />}
 										onClick={funcIssueActiviti.mutate}
+									>
+										Lưu lại
+									</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Popup>
+
+				<Popup open={!!uuidReason} onClose={() => setUuidReason('')}>
+					<div className={styles.main_popup}>
+						<div className={styles.head_popup}>
+							<h4>Nhập tình trạng xử lý</h4>
+						</div>
+						<div className={styles.form}>
+							<TextArea name='reason' placeholder='Nhập tình trạng' label='Mô tả tình trạng xử lý' />
+							<div className={styles.group_button}>
+								<div>
+									<Button p_12_20 grey rounded_6 onClick={() => setUuidReason('')}>
+										Hủy bỏ
+									</Button>
+								</div>
+								<div className={styles.btn}>
+									<Button
+										disable={!form.reason}
+										p_12_20
+										primary
+										rounded_6
+										icon={<FolderOpen size={18} color='#fff' />}
+										onClick={funcReasonActiviti.mutate}
 									>
 										Lưu lại
 									</Button>

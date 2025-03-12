@@ -93,7 +93,7 @@ function MainPageReportOverview({}: PropsMainPageReportOverview) {
 				<div className={styles.btn}>
 					<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExport}>
 						<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
-						Xuất excel
+						Xuất báo cáo tổng hợp
 					</Button>
 					<Button
 						p_10_24
