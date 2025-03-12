@@ -46,6 +46,7 @@ export enum QUERY_KEY {
 	dropdown_task_report,
 	dropdown_contractor_in_project,
 	dropdown_role,
+	dropdown_activity_in_project,
 
 	detail_project,
 	detail_budget_project,

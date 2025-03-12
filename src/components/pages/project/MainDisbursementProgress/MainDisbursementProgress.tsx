@@ -39,6 +39,7 @@ import FormUpdateContract from '~/components/utils/FormUpdateContract';
 import FromUpdateContractAddendum from '~/components/utils/FromUpdateContractAddendum';
 import FormChangeContract from '~/components/utils/FormChangeContract';
 import Image from 'next/image';
+import FormCreateContractProject from '~/components/utils/FormCreateContractProject';
 
 function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 	const router = useRouter();
@@ -351,7 +352,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 											pathname: router.pathname,
 											query: {
 												...router.query,
-												_action: 'open-contract',
+												_action: 'create-contract-project',
 											},
 										});
 									}}
@@ -839,6 +840,7 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 					}}
 				/>
 			</PositionContainer>
+
 			{/* chỉnh sửa phụ lục hợp đồng */}
 			<PositionContainer
 				open={_action == 'updateAddendum'}
@@ -862,6 +864,36 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 						QUERY_KEY.table_contract_by_appendices,
 						QUERY_KEY.table_contract_by_activity,
 					]}
+					onClose={() => {
+						const {_action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
+
+			{/* Thêm hợp đồng dự án (Nhiều công việc) */}
+			<PositionContainer
+				open={_action == 'create-contract-project'}
+				onClose={() => {
+					const {_action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<FormCreateContractProject
+					uuidProject={_uuid as string}
+					queryKeys={[QUERY_KEY.table_contract_for_project, QUERY_KEY.detail_progress_contract_fund_project]}
 					onClose={() => {
 						const {_action, ...rest} = router.query;
 
