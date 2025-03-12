@@ -82,6 +82,7 @@ function MainCreateReportWork({}: PropsMainCreateReportWork) {
 							parent: v?.parent,
 							stage: v?.stage,
 							state: v?.state,
+							inheritContractFromParent: v?.inheritContractFromParent,
 						})),
 				}),
 			});

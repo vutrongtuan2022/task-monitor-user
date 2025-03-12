@@ -15,6 +15,7 @@ export interface IActivityUpdate {
 		subTask: number;
 		subSubTask: number;
 	};
+	inheritContractFromParent: number;
 	megaType: string;
 	stage: number;
 	isInWorkFlow: boolean;

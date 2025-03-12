@@ -514,50 +514,55 @@ function MainDisbursementProgress({}: PropsMainDisbursementProgress) {
 										fixedRight: true,
 										render: (data: IContractsForProject) => (
 											<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-												<IconCustom
-													type='edit'
-													icon={<AddCircle fontSize={20} fontWeight={600} />}
-													tooltip='Thêm phụ lục'
-													disnable={
-														data?.parent != null ||
-														data?.state == STATE_CONTRACT_WORK.END ||
-														detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
-													}
-													onClick={() => {
-														router.replace({
-															pathname: router.pathname,
-															query: {
-																...router.query,
-																_action: 'create-contract-addendum',
-																_contractUuid: data?.uuid,
-																_activityUuid: data?.activityDTO?.uuid,
-															},
-														});
-													}}
-												/>
-												<IconCustom
-													type='delete'
-													icon={<PlayCircle fontSize={20} fontWeight={600} />}
-													tooltip='Kết thúc hợp đồng'
-													disnable={
-														data?.parent != null ||
-														data?.state == STATE_CONTRACT_WORK.END ||
-														data?.state == STATE_CONTRACT_WORK.EXPIRED ||
-														detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
-													}
-													onClick={() => {
-														router.replace({
-															pathname: router.pathname,
-															query: {
-																...router.query,
-																_action: 'open-cancel-contract',
-																_contractUuid: data?.uuid,
-																_activityUuid: data?.activityDTO?.uuid,
-																_activityName: data?.activityName,
-															},
-														});
-													}}
-												/>
+												{data?.parent == null && (
+													<IconCustom
+														type='edit'
+														icon={<AddCircle fontSize={20} fontWeight={600} />}
+														tooltip='Thêm phụ lục'
+														disnable={
+															data?.parent != null ||
+															data?.state == STATE_CONTRACT_WORK.END ||
+															detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+														}
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_action: 'create-contract-addendum',
+																	_contractUuid: data?.uuid,
+																	_activityUuid: data?.activityDTO?.uuid,
+																},
+															});
+														}}
+													/>
+												)}
+
+												{data?.parent == null && (
+													<IconCustom
+														type='delete'
+														icon={<PlayCircle fontSize={20} fontWeight={600} />}
+														tooltip='Kết thúc hợp đồng'
+														disnable={
+															data?.parent != null ||
+															data?.state == STATE_CONTRACT_WORK.END ||
+															data?.state == STATE_CONTRACT_WORK.EXPIRED ||
+															detailProgressContractFund?.categoryProjectDTO?.state == STATE_PROJECT.FINISH
+														}
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_action: 'open-cancel-contract',
+																	_contractUuid: data?.uuid,
+																	_activityUuid: data?.activityDTO?.uuid,
+																	_activityName: data?.activityName,
+																},
+															});
+														}}
+													/>
+												)}
 												{data?.parent == null && (
 													<IconCustom
 														icon={<ArrangeHorizontalCircle fontSize={20} fontWeight={600} color='#16C1F3' />}

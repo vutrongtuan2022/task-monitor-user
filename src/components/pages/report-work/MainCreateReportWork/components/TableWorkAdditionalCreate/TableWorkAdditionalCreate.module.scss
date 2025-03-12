@@ -50,6 +50,30 @@
 	}
 }
 
+.item_radio {
+	cursor: pointer;
+	user-select: none;
+	margin-top: 16px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.input_radio {
+	width: 20px;
+	height: 20px;
+}
+
+.input_label {
+	display: block;
+	color: var(--dark-2);
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 0;
+	cursor: pointer;
+	user-select: none;
+}
+
 @media (max-width: $widthTablet) {
 	.title {
 		padding: 20px;

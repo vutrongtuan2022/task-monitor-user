@@ -101,6 +101,7 @@ const activityServices = {
 					name: string;
 				} | null;
 				stage: number;
+				inheritContractFromParent: number;
 				megaType: string;
 				isInWorkFlow: boolean;
 				state: number;
@@ -129,6 +130,7 @@ const activityServices = {
 					name: string;
 				} | null;
 				stage: number;
+				inheritContractFromParent: number;
 				megaType: string;
 				isInWorkFlow: boolean;
 				state: number;
