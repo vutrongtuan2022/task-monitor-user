@@ -148,6 +148,7 @@ function MainUpdateReportWork({}: PropsMainUpdateReportWork) {
 							parent: v?.parent,
 							stage: v?.stage,
 							state: v?.state,
+							inheritContractFromParent: v?.inheritContractFromParent,
 						})),
 				}),
 			});

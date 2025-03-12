@@ -561,6 +561,41 @@ function MainPageWork({}: PropsMainPageWork) {
 											</>
 										)}
 
+										{!data?.isInWorkflow && !data?.activity?.contracts?.code && (
+											<IconCustom
+												color='#06D7A0'
+												icon={<AddSquare fontSize={20} />}
+												tooltip='Thêm hợp đồng'
+												onClick={() => {
+													setNameActivity(data?.activity?.name);
+													router.replace({
+														pathname: router.pathname,
+														query: {
+															...router.query,
+															_activityUuid: data?.activity?.uuid,
+														},
+													});
+												}}
+											/>
+										)}
+
+										{!data?.isInWorkflow && data?.activity?.contracts?.code && (
+											<IconCustom
+												color='#2970FF'
+												icon={<Edit fontSize={20} />}
+												tooltip='Chỉnh sửa hợp đồng'
+												onClick={() => {
+													router.replace({
+														pathname: router.pathname,
+														query: {
+															...router.query,
+															_contractUuid: data?.activity?.contracts?.uuid,
+														},
+													});
+												}}
+											/>
+										)}
+
 										{data?.activityState == STATE_WORK.NOT_PROCESSED && (
 											<IconCustom
 												color='#4BC9F0'

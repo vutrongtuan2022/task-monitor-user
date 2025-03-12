@@ -9,7 +9,7 @@ import Button from '~/components/common/Button';
 import {FolderOpen} from 'iconsax-react';
 import {IoClose} from 'react-icons/io5';
 import {CreateReportWork, ICreateReportWork} from '../../context';
-import {QUERY_KEY, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_WORK, STATUS_CONFIG, TYPE_INHERIT} from '~/constants/config/enum';
 import {useQuery} from '@tanstack/react-query';
 import activityServices from '~/services/activityServices';
 import {httpRequest} from '~/services';
@@ -37,11 +37,13 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 		name: string;
 		parentTaskUuid: string;
 		parentTaskName: string;
+		inheritContractFromParent: number;
 	}>({
 		stage: null,
 		name: '',
 		parentTaskUuid: '',
 		parentTaskName: '',
+		inheritContractFromParent: 1,
 	});
 
 	const {data: listTasks} = useQuery([QUERY_KEY.dropdown_task_report, form.stage, projectUuid], {
@@ -72,6 +74,7 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 				megaType: 'SubTask',
 				isInWorkFlow: false,
 				state: STATE_WORK.NOT_PROCESSED,
+				inheritContractFromParent: form?.inheritContractFromParent,
 				children: [],
 			},
 			...listActivity,
@@ -151,6 +154,24 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 							isRequired={true}
 							blur={true}
 						/>
+					</div>
+					<div className={styles.item_radio}>
+						<input
+							id='inherit'
+							className={styles.input_radio}
+							type='checkbox'
+							name='inheritContractFromParent'
+							checked={form.inheritContractFromParent === TYPE_INHERIT.YES}
+							onChange={(e) =>
+								setForm((prev) => ({
+									...prev,
+									inheritContractFromParent: e.target.checked ? TYPE_INHERIT.YES : TYPE_INHERIT.NO,
+								}))
+							}
+						/>
+						<label className={styles.input_label} htmlFor='inherit'>
+							Kế thừa hợp đồng từ task cha
+						</label>
 					</div>
 				</div>
 				<div className={styles.group_button}>

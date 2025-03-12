@@ -206,3 +206,7 @@ export enum TYPE_CONTRACT_FUND {
 	HISTORY,
 	PRESENT,
 }
+export enum TYPE_INHERIT {
+	NO, //0
+	YES, //1
+}

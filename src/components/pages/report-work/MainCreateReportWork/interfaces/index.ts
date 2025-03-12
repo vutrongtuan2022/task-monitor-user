@@ -16,6 +16,7 @@ export interface IActivityRegister {
 		subSubTask: number;
 	};
 	megaType: string;
+	inheritContractFromParent: number;
 	stage: number;
 	isInWorkFlow: boolean;
 	children: IActivityRegister[];
