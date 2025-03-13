@@ -173,6 +173,24 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	sendRequestContractor: (
+		data: {
+			uuid: string;
+			code: string;
+			name: string;
+			lstType: string[];
+			note: string;
+			matp: string;
+			maqh: string;
+			xaid: string;
+			address: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/send-request-add-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default contractorServices;

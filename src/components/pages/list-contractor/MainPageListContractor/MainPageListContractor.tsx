@@ -79,7 +79,7 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 						/>
 					</div>
 				</div>
-				<div className={styles.btn}>
+				{/* <div className={styles.btn}>
 					<Button
 						p_14_24
 						rounded_8
@@ -97,7 +97,7 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 					>
 						Thêm mới nhà thầu
 					</Button>
-				</div>
+				</div> */}
 			</div>
 			<WrapperScrollbar>
 				<DataWrapper data={listContractor?.data?.items || []} loading={listContractor.isLoading} noti={<Noti />}>
@@ -132,6 +132,25 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 												<span className={styles.link}> và {data?.contractorCat?.length! - 1} nhóm khác</span>
 											</Tippy>
 										)}
+
+										{/* {data?.contractorCatPending?.[0]?.name}
+										{data?.contractorCatPending?.length! > 1 && (
+											<Tippy
+												content={
+													<ol style={{paddingLeft: '16px'}}>
+														{[...data?.contractorCatPending!]?.slice(1)?.map((v, i) => (
+															<li key={i}>{v?.name}</li>
+														))}
+													</ol>
+												}
+											>
+												<span style={{color: '#EE464C'}} className={styles.link}>
+													{' '}
+													và {data?.contractorCatPending?.length! - 1} nhóm chờ duyệt khác
+												</span>
+											</Tippy>
+										)} */}
+
 										{data?.contractorCatPending?.length! > 0 && (
 											<Tippy
 												content={
@@ -202,7 +221,7 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 				/>
 			</WrapperScrollbar>
 
-			<PositionContainer
+			{/* <PositionContainer
 				open={action == 'create'}
 				onClose={() => {
 					const {action, ...rest} = router.query;
@@ -227,7 +246,7 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 						});
 					}}
 				/>
-			</PositionContainer>
+			</PositionContainer> */}
 
 			<PositionContainer
 				open={!!_uuidContractor}

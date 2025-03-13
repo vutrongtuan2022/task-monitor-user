@@ -92,7 +92,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Thêm nhà thầu thành công!',
-				http: contractorServices.upsertContractor({
+				http: contractorServices.sendRequestContractor({
 					uuid: '',
 					lstType: contractorCat?.map((v: any) => v?.uuid),
 					name: form.name,
@@ -117,7 +117,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 					address: '',
 					code: '',
 				});
-				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_contractor]);
 			}
 		},
 	});
@@ -134,7 +134,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<Loading loading={funcCreateContractor.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới nhà thầu</h4>
+				<h4 className={styles.title}>Gửi yêu cầu thêm mới nhà thầu</h4>
 				<div className={styles.form}>
 					<Input
 						placeholder='Nhập tên nhà thầu'
@@ -264,7 +264,7 @@ function CreateContractor({onClose}: PropsCreateContractor) {
 						{({isDone}) => (
 							<div className={styles.btn}>
 								<Button disable={!isDone} p_12_20 primary rounded_6 icon={<FolderOpen size={18} color='#fff' />}>
-									Lưu lại
+									Gửi yêu cầu
 								</Button>
 							</div>
 						)}
