@@ -279,6 +279,17 @@ const activityServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	updateActivitiesUnfinish: (
+		data: {
+			uuid: string;
+			reason: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Activity/update-activities-report-unfinish-reason`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default activityServices;
