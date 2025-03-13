@@ -196,7 +196,7 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận tình trạng công việc thành công!',
 				http: activityServices.updateActivitiesUnfinish({
 					uuid: uuidReason,
-					reason: form.reason,
+					reason: form?.reason,
 				}),
 			});
 		},
@@ -454,6 +454,18 @@ function MainPageWork({}: PropsMainPageWork) {
 								render: (data: IWork) => <Progress percent={data?.progress} width={80} />,
 							},
 							{
+								title: 'Tình trạng xử lý',
+								render: (data: IWork) => (
+									<p
+										style={{
+											color: data?.type == TYPE_WORK.TASK ? '#2970FF' : data?.type == TYPE_WORK.SUB_TASK ? '' : '',
+										}}
+									>
+										{data?.unfinishReason == null ? '---' : data?.unfinishReason}
+									</p>
+								),
+							},
+							{
 								title: 'Trạng thái',
 								render: (data: IWork) => (
 									<div
@@ -656,7 +668,7 @@ function MainPageWork({}: PropsMainPageWork) {
 														setForm({
 															issue: data?.issue || '',
 															progress: data?.progress || null,
-															reason: form?.reason,
+															reason: data?.unfinishReason || '',
 														});
 													}}
 												/>
@@ -676,27 +688,23 @@ function MainPageWork({}: PropsMainPageWork) {
 													setForm({
 														issue: data?.issue || '',
 														progress: data?.progress || null,
-														reason: form?.reason,
+														reason: data?.unfinishReason || '',
 													});
 												}}
 											/>
 										)}
-										{data?.progress < 100 && (
+
+										{data?.progress < 100 && data?.type == TYPE_WORK.TASK ? (
 											<IconCustom
 												color='#536884'
 												icon={<ReceiptEdit fontSize={20} />}
 												tooltip='Nhập tình trạng xử lý'
 												onClick={() => {
-													setUuidReason(data?.activity?.uuid);
-													// setUuidIssue(data?.activity?.uuid);
-													// setUuidReport(data?.report?.uuid);
-													setForm((prev) => ({
-														...prev,
-														reason: form?.reason || '',
-													}));
+													setUuidReason(data?.uuid);
+													setForm((prev) => ({...prev, reason: data?.unfinishReason || ''}));
 												}}
 											/>
-										)}
+										) : null}
 
 										{data?.type == TYPE_WORK.TASK && (
 											<IconCustom
@@ -706,6 +714,14 @@ function MainPageWork({}: PropsMainPageWork) {
 												href={`${PATH.Work}/${data?.activity?.uuid}`}
 											/>
 										)}
+										{!data?.isInWorkflow && 'Phát sinh' ? (
+											<IconCustom
+												color='#005994'
+												icon={<Eye fontSize={20} fontWeight={600} />}
+												tooltip='Xem chi tiết'
+												href={`${PATH.Work}/${data?.activity?.uuid}`}
+											/>
+										) : null}
 									</div>
 								),
 							},
