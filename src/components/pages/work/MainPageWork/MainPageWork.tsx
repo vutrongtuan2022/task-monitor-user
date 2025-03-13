@@ -196,13 +196,13 @@ function MainPageWork({}: PropsMainPageWork) {
 				msgSuccess: 'Xác nhận tình trạng công việc thành công!',
 				http: activityServices.updateActivitiesUnfinish({
 					uuid: uuidReason,
-					reason: '',
+					reason: form.reason,
 				}),
 			});
 		},
 		onSuccess(data) {
 			if (data) {
-				setUuidProgress('');
+				setUuidReason('');
 				queryClient.invalidateQueries([QUERY_KEY.table_list_work]);
 			}
 		},
@@ -681,7 +681,7 @@ function MainPageWork({}: PropsMainPageWork) {
 												}}
 											/>
 										)}
-										{data?.progress !== 100 && (
+										{data?.progress < 100 && (
 											<IconCustom
 												color='#536884'
 												icon={<ReceiptEdit fontSize={20} />}
@@ -690,11 +690,10 @@ function MainPageWork({}: PropsMainPageWork) {
 													setUuidReason(data?.activity?.uuid);
 													// setUuidIssue(data?.activity?.uuid);
 													// setUuidReport(data?.report?.uuid);
-													setForm({
-														issue: data?.issue || '',
-														progress: data?.progress || null,
-														reason: form?.reason,
-													});
+													setForm((prev) => ({
+														...prev,
+														reason: form?.reason || '',
+													}));
 												}}
 											/>
 										)}
