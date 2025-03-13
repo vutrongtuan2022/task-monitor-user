@@ -45,5 +45,7 @@ export interface IWork {
 	activityState: number;
 	digitalizedState: number;
 	activityStatus: number;
+	unfinishReason: string;
 	stage: number;
+	uuid: string;
 }

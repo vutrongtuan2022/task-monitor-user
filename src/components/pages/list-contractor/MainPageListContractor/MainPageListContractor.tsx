@@ -20,11 +20,15 @@ import PositionContainer from '~/components/common/PositionContainer';
 import UpdateContractor from '../UpdateContractor';
 import Tippy from '@tippyjs/react';
 import Search from '~/components/common/Search';
+import Button from '~/components/common/Button';
+import Image from 'next/image';
+import icons from '~/constants/images/icons';
+import CreateContractor from '../CreateContractor';
 
 function MainPageListContractor({}: PropsMainPageListContractor) {
 	const router = useRouter();
 
-	const {_page, _pageSize, _keyword, _type, _uuidContractor} = router.query;
+	const {_page, _pageSize, _keyword, action, _type, _uuidContractor} = router.query;
 
 	const listContractor = useQuery([QUERY_KEY.table_list_contractor, _page, _pageSize, _keyword, _type], {
 		queryFn: () =>
@@ -74,6 +78,25 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 							}))}
 						/>
 					</div>
+				</div>
+				<div className={styles.btn}>
+					<Button
+						p_14_24
+						rounded_8
+						light-blue
+						icon={<Image alt='icon add' src={icons.iconAdd} width={20} height={20} />}
+						onClick={() => {
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...router.query,
+									action: 'create',
+								},
+							});
+						}}
+					>
+						Thêm mới nhà thầu
+					</Button>
 				</div>
 			</div>
 			<WrapperScrollbar>
@@ -178,6 +201,33 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 					dependencies={[_pageSize, _keyword, _type]}
 				/>
 			</WrapperScrollbar>
+
+			<PositionContainer
+				open={action == 'create'}
+				onClose={() => {
+					const {action, ...rest} = router.query;
+
+					router.replace({
+						pathname: router.pathname,
+						query: {
+							...rest,
+						},
+					});
+				}}
+			>
+				<CreateContractor
+					onClose={() => {
+						const {action, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				/>
+			</PositionContainer>
 
 			<PositionContainer
 				open={!!_uuidContractor}

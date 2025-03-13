@@ -164,7 +164,7 @@ function FormChangeContract({onClose, nameActivity, uuidActivity, uuidContract, 
 		<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
 			<Loading loading={funcChangeContract.isLoading} />
 			<div className={styles.container}>
-				<h4 className={styles.title}>Thêm mới hợp đồng</h4>
+				<h4 className={styles.title}>Thay thế hợp đồng</h4>
 				<div className={styles.form}>
 					<div className={styles.head}>
 						<h4>Thông tin hợp đồng</h4>
