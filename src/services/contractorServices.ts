@@ -191,6 +191,21 @@ const contractorServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getListRequesterContractor: (
+		data: {
+			type: string;
+			pageSize: number;
+			page: number;
+			keyword: string;
+			status: number;
+			state: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contractor/get-page-list-requester-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default contractorServices;

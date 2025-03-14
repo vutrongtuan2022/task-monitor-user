@@ -45,6 +45,7 @@ export enum PATH {
 	ProjectPlanningCapital = '/project/planning-capital',
 	UpdateInfoProject = '/project/update/infor-project',
 	UpdateInfoCapital = '/project/update/info-capital',
+	UpdateDisbursementProgress = '/project/update/update-disbursement-progress',
 	UpdateInfoContractor = '/project/update/infor-contractor',
 	ProjectContract = '/project/contract',
 
@@ -82,7 +83,10 @@ export enum PATH {
 	User = '/user',
 
 	Account = '/account',
+
 	Approve = '/approve',
+	ContractorApproval = '/approve/contractor-approval',
+	ApprovalContractor = '/approve/approval-contractor',
 }
 
 export const Menu: {
@@ -185,7 +189,7 @@ export const Menu: {
 	},
 	{
 		title: 'Duyệt yêu cầu',
-		path: PATH.Approve,
+		path: PATH.ContractorApproval,
 		pathActive: PATH.Approve,
 		icon: TickCircle,
 		isSpecial: TYPE_SPECIAL.SENIOR,
