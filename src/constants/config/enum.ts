@@ -211,3 +211,8 @@ export enum TYPE_INHERIT {
 	NO, //0
 	YES, //1
 }
+export enum STATE_APPROVED {
+	NOT_REPORTED, // 0: chưa duyệt
+	APPROVED, //1: đã duyệt
+	REJECTED, //2: đã từ chối
+}
