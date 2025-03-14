@@ -6,7 +6,7 @@ import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_APPROVED, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
@@ -45,7 +45,8 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
 						type: (_type as string) || '',
-						state: !!_state ? Number(_state) : null,
+						state: STATE_APPROVED.NOT_REPORTED,
+						// state: !!_state ? Number(_state) : null,
 					}),
 				}),
 			select(data) {
@@ -72,11 +73,9 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Duyệt nhóm nhà thầu thành công!',
-				http: contractorServices.changeUpdateContractorCat({
+				msgSuccess: 'Duyệt nhà thầu mới thành công!',
+				http: contractorServices.approveRequesterAddContractor({
 					uuid: uuidConfirm,
-					state: 1,
-					rejected: '',
 				}),
 			});
 		},
@@ -93,12 +92,11 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Từ chối nhóm nhà thầu thành công!',
-				http: contractorServices.changeUpdateContractorCat({
+				msgSuccess: 'Từ chối nhà thầu mới thành công!',
+				http: contractorServices.rejectRequesterAddContractor({
 					uuid: uuidCancel,
-					state: 2,
 					// rejected: form?.feedback,
-					rejected: '',
+					reason: '',
 				}),
 			});
 		},
@@ -166,7 +164,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 									title: 'Nhóm nhà thầu',
 									render: (data: ITablePageApproveRequester) => (
 										<>
-											<span style={{color: '#EE464C'}}>{data?.contractorCatPending?.[0]?.name}</span>
+											{data?.contractorCatPending?.[0]?.name}
 											{data?.contractorCatPending?.length > 1 && (
 												<Tippy
 													content={
