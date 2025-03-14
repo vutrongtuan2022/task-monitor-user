@@ -188,19 +188,25 @@ function MainPageContractor({}: PropsMainPageContractor) {
 								title: 'Nhóm nhà thầu',
 								render: (data: IContractor) => (
 									<>
-										{data?.contractorCat?.[0]?.name}
-										{data?.contractorCat?.length! > 1 && (
-											<Tippy
-												content={
-													<ol style={{paddingLeft: '16px'}}>
-														{[...data?.contractorCat!]?.slice(1)?.map((v, i) => (
-															<li key={i}>{v?.name}</li>
-														))}
-													</ol>
-												}
-											>
-												<span className={styles.link}> và {data?.contractorCat?.length! - 1} nhóm khác</span>
-											</Tippy>
+										{data?.contractorCat?.length === 0 ? (
+											'---'
+										) : (
+											<>
+												{data?.contractorCat?.[0]?.name}
+												{data?.contractorCat?.length > 1 && (
+													<Tippy
+														content={
+															<ol style={{paddingLeft: '16px'}}>
+																{data.contractorCat.slice(1).map((v, i) => (
+																	<li key={i}>{v?.name}</li>
+																))}
+															</ol>
+														}
+													>
+														<span className={styles.link}> và {data.contractorCat.length - 1} nhóm khác</span>
+													</Tippy>
+												)}
+											</>
 										)}
 									</>
 								),

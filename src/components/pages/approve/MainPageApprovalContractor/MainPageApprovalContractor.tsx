@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import styles from './MainPageApprove.module.scss';
-import {ITablePageApprove, PropsMainPageApprove} from './interface';
+import styles from './MainPageApprovalContractor.module.scss';
+import {ITablePageApproveRequester, PropsMainPageApprovalContractor} from './interface';
+import Breadcrumb from '~/components/common/Breadcrumb';
 import LayoutPages from '~/components/layouts/LayoutPages';
 import {PATH} from '~/constants/config';
 import {useRouter} from 'next/router';
@@ -21,29 +22,30 @@ import {CloseCircle, TickCircle} from 'iconsax-react';
 import Pagination from '~/components/common/Pagination';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
-
-function MainPageApprove({}: PropsMainPageApprove) {
+import Tippy from '@tippyjs/react';
+function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _contractorCat, _type} = router.query;
+	const {_page, _pageSize, _keyword, _contractorCat, _type, _state} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 	const [form, setForm] = useState<{feedback: string}>({
 		feedback: '',
 	});
 
-	const {data: listUpdateContractorCat, isLoading} = useQuery(
-		[QUERY_KEY.table_update_contractor_cat, _page, _pageSize, _keyword, _contractorCat],
+	const {data: getListRequesterContractor, isLoading} = useQuery(
+		[QUERY_KEY.table_requester_contractor, _page, _pageSize, _keyword, _contractorCat],
 		{
 			queryFn: () =>
 				httpRequest({
-					http: contractorServices.getListUpdateContractorCat({
+					http: contractorServices.getListRequesterContractor({
 						page: Number(_page) || 1,
 						pageSize: Number(_pageSize) || 10,
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
-						contractorCat: (_contractorCat as string) || '',
+						type: (_type as string) || '',
+						state: !!_state ? Number(_state) : null,
 					}),
 				}),
 			select(data) {
@@ -81,7 +83,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 		onSuccess(data) {
 			if (data) {
 				setUuidConfirm('');
-				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+				queryClient.invalidateQueries([QUERY_KEY.table_requester_contractor]);
 			}
 		},
 	});
@@ -103,7 +105,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 		onSuccess(data) {
 			if (data) {
 				setUuidCancel('');
-				queryClient.invalidateQueries([QUERY_KEY.table_update_contractor_cat]);
+				queryClient.invalidateQueries([QUERY_KEY.table_requester_contractor]);
 			}
 		},
 	});
@@ -142,51 +144,68 @@ function MainPageApprove({}: PropsMainPageApprove) {
 					</div>
 				</div>
 				<WrapperScrollbar>
-					<DataWrapper data={listUpdateContractorCat?.items || []} loading={isLoading}>
+					<DataWrapper data={getListRequesterContractor?.items || []} loading={isLoading}>
 						<Table
 							fixedHeader={true}
-							data={listUpdateContractorCat?.items || []}
+							data={getListRequesterContractor?.items || []}
 							column={[
 								{
 									title: 'STT',
 									fixedLeft: true,
-									render: (data: ITablePageApprove, index: number) => <>{index + 1}</>,
+									render: (data: ITablePageApproveRequester, index: number) => <>{index + 1}</>,
 								},
 								{
 									title: 'Tên nhà thầu',
-									render: (data: ITablePageApprove) => <>{data?.contractor?.name || '---'}</>,
+									render: (data: ITablePageApproveRequester) => <>{data?.name || '---'}</>,
 								},
 								{
-									title: 'Nhóm nhà thầu cần thêm',
-									render: (data: ITablePageApprove) => <>{data?.contractorCat?.name || '---'}</>,
+									title: 'Mã số thuế',
+									render: (data: ITablePageApproveRequester) => <>{data?.code || '---'}</>,
+								},
+								{
+									title: 'Nhóm nhà thầu',
+									render: (data: ITablePageApproveRequester) => (
+										<>
+											<span style={{color: '#EE464C'}}>{data?.contractorCatPending?.[0]?.name}</span>
+											{data?.contractorCatPending?.length > 1 && (
+												<Tippy
+													content={
+														<ol style={{paddingLeft: '16px'}}>
+															{data.contractorCatPending.slice(1).map((v, i) => (
+																<li key={i}>{v?.name}</li>
+															))}
+														</ol>
+													}
+												>
+													<span className={styles.link}>
+														{' '}
+														và {data.contractorCatPending.length - 1} nhóm khác
+													</span>
+												</Tippy>
+											)}
+										</>
+									),
 								},
 								{
 									title: 'Người gửi yêu cầu',
-									render: (data: ITablePageApprove) => <>{data?.user?.fullname || '---'}</>,
+									render: (data: ITablePageApproveRequester) => <>{data?.requester?.fullname || '---'}</>,
 								},
-								{
-									title: 'Thời gian yêu cầu',
-									render: (data: ITablePageApprove) => (
-										<>{data?.timeCreated ? <Moment date={data?.timeCreated} format='DD/MM/YYYY' /> : '---'}</>
-									),
-								},
-
 								{
 									title: 'Hành động',
 									fixedRight: true,
-									render: (data: ITablePageApprove) => (
+									render: (data: ITablePageApproveRequester) => (
 										<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 											<>
 												<IconCustom
 													color='#06D7A0'
 													icon={<TickCircle fontSize={20} fontWeight={600} />}
-													tooltip='Duyệt nhóm nhà thầu'
+													tooltip='Duyệt nhà thầu mới'
 													onClick={() => setUuidConfirm(data?.uuid)}
 												/>
 												<IconCustom
 													color='#EE464C'
 													icon={<CloseCircle fontSize={20} fontWeight={600} />}
-													tooltip='Từ chối nhóm nhà thầu'
+													tooltip='Từ chối nhà thầu'
 													onClick={() => setUuidCancel(data?.uuid)}
 												/>
 											</>
@@ -199,7 +218,7 @@ function MainPageApprove({}: PropsMainPageApprove) {
 					<Pagination
 						currentPage={Number(_page) || 1}
 						pageSize={Number(_pageSize) || 10}
-						total={listUpdateContractorCat?.pagination?.totalCount}
+						total={getListRequesterContractor?.pagination?.totalCount}
 						dependencies={[_pageSize, _keyword, _contractorCat]}
 					/>
 				</WrapperScrollbar>
@@ -208,8 +227,8 @@ function MainPageApprove({}: PropsMainPageApprove) {
 					open={!!uuidConfirm}
 					icon={icons.success}
 					onClose={() => setUuidConfirm('')}
-					title={'Duyệt nhóm nhà thầu'}
-					note={'Bạn có chắc chắn muốn duyệt nhóm nhà thầu này không?'}
+					title={'Duyệt nhà thầu mới'}
+					note={'Bạn có chắc chắn muốn duyệt nhà thầu mới này không?'}
 					onSubmit={funcConfirm.mutate}
 				/>
 
@@ -218,8 +237,8 @@ function MainPageApprove({}: PropsMainPageApprove) {
 					open={!!uuidCancel}
 					icon={icons.question}
 					onClose={() => setUuidCancel('')}
-					title={'Từ chối nhóm nhà thầu '}
-					note={'Bạn có chắc chắn muốn từ chối nhóm nhà thầu này không?'}
+					title={'Từ chối nhà thầu mới'}
+					note={'Bạn có chắc chắn muốn từ chối nhà thầu này không?'}
 					onSubmit={funcCancel.mutate}
 				/>
 			</LayoutPages>
@@ -227,4 +246,4 @@ function MainPageApprove({}: PropsMainPageApprove) {
 	);
 }
 
-export default MainPageApprove;
+export default MainPageApprovalContractor;

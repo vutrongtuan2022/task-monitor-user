@@ -31,6 +31,7 @@ export enum QUERY_KEY {
 	table_project_for_contractor,
 	table_contractor_cat_by_contractor,
 	table_update_contractor_cat_by_contractor,
+	table_requester_contractor,
 	detail_contractor_for_admin,
 
 	dropdown_branches,
