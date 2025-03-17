@@ -8,6 +8,7 @@ const contractorServices = {
 			keyword: string;
 			type: string;
 			status: number | null;
+			state?: number[];
 		},
 		tokenAxios?: any
 	) => {
@@ -198,7 +199,7 @@ const contractorServices = {
 			page: number;
 			keyword: string;
 			status: number;
-			state: number | null;
+			state?: number[];
 		},
 		tokenAxios?: any
 	) => {

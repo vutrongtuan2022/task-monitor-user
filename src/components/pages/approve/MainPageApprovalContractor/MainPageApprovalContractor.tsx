@@ -45,7 +45,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
 						type: (_type as string) || '',
-						state: STATE_APPROVED.NOT_REPORTED,
+						state: [STATE_APPROVED.NOT_REPORTED],
 						// state: !!_state ? Number(_state) : null,
 					}),
 				}),
