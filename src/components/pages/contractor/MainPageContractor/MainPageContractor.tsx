@@ -16,7 +16,7 @@ import {Edit, Eye, Trash} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_APPROVED, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
@@ -47,6 +47,7 @@ function MainPageContractor({}: PropsMainPageContractor) {
 					keyword: (_keyword as string) || '',
 					type: (_type as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					state: [STATE_APPROVED.APPROVED],
 				}),
 			}),
 		select(data) {

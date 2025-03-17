@@ -19,7 +19,7 @@ export interface IContractor {
 	code: string;
 	name: string;
 	uuid: string;
-
+	state: number;
 	qh: any;
 	tp: any;
 	xa: any;

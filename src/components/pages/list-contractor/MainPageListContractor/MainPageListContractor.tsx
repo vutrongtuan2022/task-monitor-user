@@ -12,7 +12,7 @@ import {Edit} from 'iconsax-react';
 import FilterCustom from '~/components/common/FilterCustom';
 import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_APPROVED, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
@@ -39,6 +39,7 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 					keyword: (_keyword as string) || '',
 					type: (_type as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
+					state: [STATE_APPROVED.NOT_REPORTED, STATE_APPROVED.APPROVED],
 				}),
 			}),
 		select(data) {
@@ -239,6 +240,9 @@ function MainPageListContractor({}: PropsMainPageListContractor) {
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Bổ sung nhóm nhà thầu'
+											disnable={
+												data?.state === STATE_APPROVED.REJECTED || data?.state === STATE_APPROVED.NOT_REPORTED
+											}
 											onClick={() => {
 												router.replace({
 													pathname: router.pathname,
