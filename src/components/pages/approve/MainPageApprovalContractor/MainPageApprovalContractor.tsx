@@ -27,7 +27,7 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _contractorCat, _type, _state} = router.query;
+	const {_page, _pageSize, _keyword, _contractorCat, _type} = router.query;
 	const [uuidConfirm, setUuidConfirm] = useState<string>('');
 	const [uuidCancel, setUuidCancel] = useState<string>('');
 	const [form, setForm] = useState<{feedback: string}>({
@@ -44,9 +44,8 @@ function MainPageApprovalContractor({}: PropsMainPageApprovalContractor) {
 						pageSize: Number(_pageSize) || 10,
 						status: STATUS_CONFIG.ACTIVE,
 						keyword: _keyword as string,
-						type: (_type as string) || '',
+						type: (_contractorCat as string) || '',
 						state: [STATE_APPROVED.NOT_REPORTED],
-						// state: !!_state ? Number(_state) : null,
 					}),
 				}),
 			select(data) {
