@@ -25,6 +25,8 @@ export interface IWorkReportOverview {
 		code: string;
 		uuid: string;
 	};
+	issue: string;
+	unfinishReason: string;
 	activityType: number;
 	deadline: string;
 	deadlineStage: number;
