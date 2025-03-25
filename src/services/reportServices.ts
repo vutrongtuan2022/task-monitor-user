@@ -54,6 +54,23 @@ const reportServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	userSendReportTwo: (
+		data: {
+			projectUuid: string;
+			year: number;
+			month: number;
+			activityDigitalState: {
+				activityUuid: string;
+				stateNote: number;
+			}[];
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Report/user-send-report-ver-2`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+
 	detailReport: (
 		data: {
 			uuid: string;

@@ -1,10 +1,10 @@
 import Button from '~/components/common/Button';
-import {IWorkDigitize, PropsTableListWorkDigitize} from './interfaces';
-import styles from './TableListWorkDigitize.module.scss';
+import {IWorkDigitize, PropsTableListActivityProjectReport} from './interfaces';
+import styles from './TableListActivityProjectReport.module.scss';
 import {FolderOpen} from 'iconsax-react';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_WORK} from '~/constants/config/enum';
+import {QUERY_KEY, STATE_COMPLETE_REPORT, STATE_WORK, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import activityServices from '~/services/activityServices';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
@@ -17,32 +17,39 @@ import {useCallback, useMemo, useState} from 'react';
 import reportServices from '~/services/reportServices';
 import Loading from '~/components/common/Loading';
 
-function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
+function TableListActivityProjectReport({onClose}: PropsTableListActivityProjectReport) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_uuidDigitize} = router.query;
+	const {_projectReport, _yearReport, _monthReport} = router.query;
 
 	const [listWorkChecked, setListWorkChecked] = useState<IWorkDigitize[]>([]);
 
 	// Data reponsive api
-	const {data: listWorkReport, isLoading} = useQuery([QUERY_KEY.table_list_work_report], {
-		queryFn: () =>
-			httpRequest({
-				http: activityServices.getAllActivityReport({
-					uuid: _uuidDigitize as string,
+	const {data: listWorkReport, isLoading} = useQuery(
+		[QUERY_KEY.table_list_work_project_report, _projectReport, _yearReport, _monthReport],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: activityServices.getAllActivityReport({
+						uuid: '',
+						projectUuid: _projectReport as string,
+						status: STATUS_CONFIG.ACTIVE,
+						year: Number(_yearReport),
+						month: Number(_monthReport),
+					}),
 				}),
-			}),
-		onSuccess(data) {
-			if (data) {
-				setListWorkChecked(data?.filter((v: any) => v?.digitalizedState == 1));
-			}
-		},
-		select(data) {
-			return data;
-		},
-		enabled: !!_uuidDigitize,
-	});
+			onSuccess(data) {
+				if (data) {
+					setListWorkChecked(data?.filter((v: any) => v?.digitalizedState == 1));
+				}
+			},
+			select(data) {
+				return data;
+			},
+			enabled: !!_projectReport && !!_yearReport && !!_monthReport,
+		}
+	);
 
 	// Xử lý check all ==> Thêm tất cả dữ liệu api trả về vào mảng state
 	const handleCheckedAll = useCallback(
@@ -91,8 +98,10 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 				showMessageFailed: true,
 				showMessageSuccess: true,
 				msgSuccess: 'Xác nhận báo cáo thành công!',
-				http: reportServices.userSendReport({
-					reportUuid: _uuidDigitize as string,
+				http: reportServices.userSendReportTwo({
+					projectUuid: _projectReport as string,
+					year: Number(_yearReport),
+					month: Number(_monthReport),
 					activityDigitalState: listWorkReport?.map((v: any) => ({
 						activityUuid: v?.activityUuid,
 						stateNote: listWorkChecked.some((x) => x.activityUuid == v.activityUuid) ? 1 : 0,
@@ -103,7 +112,7 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 		onSuccess(data) {
 			if (data) {
 				onClose();
-				queryClient.invalidateQueries([QUERY_KEY.table_list_report_work]);
+				queryClient.invalidateQueries([QUERY_KEY.table_list_work]);
 			}
 		},
 	});
@@ -262,4 +271,4 @@ function TableListWorkDigitize({onClose}: PropsTableListWorkDigitize) {
 	);
 }
 
-export default TableListWorkDigitize;
+export default TableListActivityProjectReport;
