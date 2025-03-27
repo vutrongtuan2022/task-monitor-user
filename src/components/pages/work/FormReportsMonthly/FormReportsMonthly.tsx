@@ -109,7 +109,11 @@ function FormReportsMonthly({onClose}: PropsFormReportsMonthly) {
 					<div className={styles.mt}>
 						<Select
 							isSearch={true}
-							label={<span>Chọn công trình</span>}
+							label={
+								<span>
+									Chọn công trình <span style={{color: 'red'}}>*</span>
+								</span>
+							}
 							name='projectUuid'
 							value={form.projectUuid}
 							placeholder='Chọn công trình'
