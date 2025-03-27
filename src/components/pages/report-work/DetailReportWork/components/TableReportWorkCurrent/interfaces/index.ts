@@ -16,6 +16,7 @@ export interface IReportWorkCurrent {
 	month: number;
 	year: number;
 	issue: string;
+	unfinishReason: string;
 	progress: number;
 	reporter: {
 		fullname: string;

@@ -144,7 +144,11 @@ const activityServices = {
 	},
 	getAllActivityReport: (
 		data: {
-			uuid: string;
+			uuid?: string;
+			status?: number;
+			projectUuid?: string;
+			month?: number;
+			year?: number;
 		},
 		tokenAxios?: any
 	) => {

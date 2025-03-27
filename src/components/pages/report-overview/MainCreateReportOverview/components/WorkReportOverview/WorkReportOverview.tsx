@@ -128,6 +128,22 @@ function WorkReportOverview({month, year, projectUuid}: PropsWorkReportOverview)
 									),
 								},
 								{
+									title: 'Khó khăn vướng mắc',
+									render: (data: IWorkReportOverview) => (
+										<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+											{data?.issue || '---'}
+										</p>
+									),
+								},
+								{
+									title: 'Tình trạng xử lý',
+									render: (data: IWorkReportOverview) => (
+										<p style={{color: data?.megatype == 'Task' ? '#2970FF' : data?.megatype ? '' : ''}}>
+											{data?.unfinishReason == null ? '---' : data?.unfinishReason}
+										</p>
+									),
+								},
+								{
 									title: 'Tình trạng',
 									render: (data: IWorkReportOverview) => (
 										<StateActive

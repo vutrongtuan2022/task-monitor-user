@@ -160,7 +160,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 							className={styles.input_radio}
 							type='checkbox'
 							name='inheritContractFromParent'
-							checked={form.inheritContractFromParent === TYPE_INHERIT.YES}
+							checked={form.inheritContractFromParent === TYPE_INHERIT.NO}
 							onChange={(e) =>
 								setForm((prev) => ({
 									...prev,

@@ -33,6 +33,9 @@ import PositionContainer from '~/components/common/PositionContainer';
 import {PATH} from '~/constants/config';
 import FormCreateContract from '~/components/utils/FormCreateContract';
 import FormUpdateContract from '~/components/utils/FormUpdateContract';
+import Image from 'next/image';
+import FormReportsMonthly from '../FormReportsMonthly';
+import TableListActivityProjectReport from '../TableListActivityProjectReport';
 
 function MainPageWork({}: PropsMainPageWork) {
 	const router = useRouter();
@@ -41,7 +44,21 @@ function MainPageWork({}: PropsMainPageWork) {
 	const years = generateYearsArray();
 	const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-	const {_page, _pageSize, _keyword, _state, _year, _month, _type, _project, _activityUuid, _contractUuid, _uuid} = router.query;
+	const {
+		_page,
+		_pageSize,
+		_keyword,
+		_state,
+		_year,
+		_month,
+		_type,
+		_project,
+		_activityUuid,
+		_contractUuid,
+		_projectReport,
+		_yearReport,
+		_monthReport,
+	} = router.query;
 
 	const [form, setForm] = useState<{issue: string; progress: number | null; reason: string}>({
 		issue: '',
@@ -56,6 +73,7 @@ function MainPageWork({}: PropsMainPageWork) {
 	const [uuidReason, setUuidReason] = useState<string>('');
 	const [uuidReport, setUuidReport] = useState<string>('');
 	const [nameActivity, setNameActivity] = useState<string>('');
+	const [isExportPopupOpen, setExportPopupOpen] = useState(false);
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -299,6 +317,12 @@ function MainPageWork({}: PropsMainPageWork) {
 								},
 							]}
 						/>
+					</div>
+					<div className={styles.btn}>
+						<Button rounded_8 w_fit p_8_16 green bold onClick={() => setExportPopupOpen(true)}>
+							<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
+							Gửi báo cáo tháng
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -755,6 +779,10 @@ function MainPageWork({}: PropsMainPageWork) {
 				onSubmit={funcFinishActiviti.mutate}
 			/>
 
+			<Popup open={isExportPopupOpen} onClose={() => setExportPopupOpen(false)}>
+				<FormReportsMonthly onClose={() => setExportPopupOpen(false)} />
+			</Popup>
+
 			<Form form={form} setForm={setForm}>
 				<Popup open={!!uuidIssue} onClose={() => setUuidIssue('')}>
 					<div className={styles.main_popup}>
@@ -851,6 +879,33 @@ function MainPageWork({}: PropsMainPageWork) {
 						</div>
 					</div>
 				</Popup>
+
+				<PositionContainer
+					open={!!_projectReport && !!_yearReport && !!_monthReport}
+					onClose={() => {
+						const {_projectReport, _yearReport, _monthReport, ...rest} = router.query;
+
+						router.replace({
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						});
+					}}
+				>
+					<TableListActivityProjectReport
+						onClose={() => {
+							const {_projectReport, _yearReport, _monthReport, ...rest} = router.query;
+
+							router.replace({
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							});
+						}}
+					/>
+				</PositionContainer>
 
 				<PositionContainer
 					open={!!_activityUuid}
