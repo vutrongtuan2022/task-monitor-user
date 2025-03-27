@@ -107,8 +107,8 @@ const contractsServices = {
 	listContractsByActivity: (
 		data: {
 			uuid: string;
-			pageSize: number;
-			page: number;
+			pageSize?: number;
+			page?: number;
 			keyword: string;
 			status: number;
 		},

@@ -12,6 +12,7 @@ import {
 	TagUser,
 	TickCircle,
 	UserOctagon,
+	CardTick,
 } from 'iconsax-react';
 import {TYPE_DATE, TYPE_SPECIAL} from './enum';
 
@@ -87,6 +88,8 @@ export enum PATH {
 	Approve = '/approve',
 	ContractorApproval = '/approve/contractor-approval',
 	ApprovalContractor = '/approve/approval-contractor',
+
+	PaymentApproval = '/payment-approval',
 }
 
 export const Menu: {
@@ -145,6 +148,13 @@ export const Menu: {
 		icon: Receipt21,
 		isSpecial: TYPE_SPECIAL.CONFIRM_CONTRACTOR,
 	},
+	// {
+	// 	title: 'CSCN thanh toán',
+	// 	path: PATH.PaymentApproval,
+	// 	pathActive: PATH.PaymentApproval,
+	// 	icon: CardTick,
+	// 	isSpecial: TYPE_SPECIAL.NORMAL,
+	// },
 	{
 		title: 'Quản lý quy trình',
 		path: PATH.Task,

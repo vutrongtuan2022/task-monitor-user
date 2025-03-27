@@ -7,6 +7,7 @@ export enum QUERY_KEY {
 	table_list_work_project,
 	table_tree_work_project,
 	table_list_work_report,
+	table_list_work_project_report,
 	table_list_modify_work_report,
 	table_list_report_work,
 	table_list_report_work_last_month,
@@ -48,6 +49,8 @@ export enum QUERY_KEY {
 	dropdown_contractor_in_project,
 	dropdown_role,
 	dropdown_activity_in_project,
+	dropdown_contract_by_activity,
+	dropdown_project_by_month,
 
 	detail_project,
 	detail_budget_project,

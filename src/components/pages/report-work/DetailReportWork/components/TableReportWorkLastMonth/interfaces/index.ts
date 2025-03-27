@@ -22,6 +22,7 @@ export interface IReportWorkLastMonth {
 		code: string;
 		uuid: string;
 	};
+	unfinishReason: string;
 	megatype: string;
 	deadlineState: number;
 	dayDelayed: number;

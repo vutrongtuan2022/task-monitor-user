@@ -162,6 +162,20 @@ const projectServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	categoryProjectHaveReport: (
+		data: {
+			keyword: string;
+			status: number;
+			excludeState: number | null;
+			year?: number | null;
+			month?: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/category-project-have-report`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 	progressContractFund: (
 		data: {
 			uuid: string;
