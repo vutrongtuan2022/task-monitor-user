@@ -26,7 +26,7 @@ function hasDuplicateContractor(
 	data: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number;
+		amountInContract: number | string;
 	}[]
 ) {
 	const seen = new Set();
@@ -50,7 +50,7 @@ interface IFromUpdateContractAddendum {
 	contractorAndCat: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number;
+		amountInContract: number | string;
 	}[];
 	startDate: string;
 	amount: number | string;
@@ -74,7 +74,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 			{
 				contractorUuid: '',
 				contractorCatUuid: '',
-				amountInContract: 0,
+				amountInContract: '',
 			},
 		],
 		startDate: '',
@@ -107,13 +107,13 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 									{
 										contractorUuid: '',
 										contractorCatUuid: '',
-										amountInContract: 0,
+										amountInContract: '',
 									},
 							  ]
 							: data?.contractor?.map((v: any) => ({
 									contractorUuid: v?.contractorDTO?.uuid || '',
 									contractorCatUuid: v?.contractorDTO?.contractorCat?.[0]?.uuid || '',
-									amountInContract: formatNumberInput(String(v?.amount)) || 0,
+									amountInContract: formatNumberInput(String(v?.amount)) || '',
 							  })),
 					startDate: data?.startDate || '',
 					totalDayss: convertCoin(data?.totalDayss) || 0,
@@ -142,7 +142,7 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 					contractorAndCat: form?.contractorAndCat?.map((v) => ({
 						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
-						amountInContract: isNaN(v?.amountInContract) ? 0 : convertToNumberInput(String(v?.amountInContract)),
+						amountInContract: isNaN(Number(v?.amountInContract)) ? 0 : convertToNumberInput(String(v?.amountInContract)),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: price(form?.totalDayss!),
@@ -177,23 +177,20 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 					advanceGuaranteeEndDate: '',
 					contractParentUuid: '',
 				});
-				queryKeys?.map((key) => queryClient.invalidateQueries([key]));
+				queryKeys?.forEach((key) => queryClient.invalidateQueries([key]));
 			}
 		},
 	});
 
 	// Tính tổng tiển giá trị phụ lục hợp đồng qua tiền phụ lục hợp đồng theo từng nhà thầu
 	useEffect(() => {
-		const total = form?.contractorAndCat?.reduce(
-			(accumulator, currentValue) => accumulator + convertToNumberInput(String(currentValue.amountInContract)),
-			0
-		);
+		const total = form.contractorAndCat.reduce((sum, curr) => sum + convertToNumberInput(String(curr.amountInContract)), 0);
 
 		setForm((prev) => ({
 			...prev,
-			amount: isNaN(total) ? 0 : formatNumberInput(String(total)) || 0,
+			amount: isNaN(total) ? 0 : formatNumberInput(String(total)),
 		}));
-	}, [form?.contractorAndCat]);
+	}, [form.contractorAndCat]);
 
 	const handleSubmit = () => {
 		if (!form?.startDate) {
@@ -207,6 +204,13 @@ function FromUpdateContractAddendum({onClose, uuidContract, queryKeys}: PropsFro
 		}
 		if (hasDuplicateContractor(form.contractorAndCat)) {
 			return toastWarn({msg: 'Tên nhà thầu, nhóm nhà thầu trùng nhau!'});
+		}
+		for (let i = 0; i < form.contractorAndCat.length; i++) {
+			const item = form.contractorAndCat[i];
+			const amount = convertToNumberInput(String(item.amountInContract));
+			if (isNaN(amount)) {
+				return toastWarn({msg: 'Giá trị hợp đồng không hợp lệ!'});
+			}
 		}
 
 		return funcUpdateContractAdditional.mutate();
@@ -432,7 +436,7 @@ function ItemContractorProject({
 }: {
 	index: number;
 	uuidActivity: string;
-	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number};
+	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number | string};
 	form: IFromUpdateContractAddendum;
 	setForm: (any: any) => void;
 }) {

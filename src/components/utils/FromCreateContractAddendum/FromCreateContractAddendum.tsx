@@ -26,7 +26,7 @@ function hasDuplicateContractor(
 	data: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number;
+		amountInContract: number | string;
 	}[]
 ) {
 	const seen = new Set();
@@ -49,7 +49,7 @@ interface IFromCreateContractAddendum {
 	contractorAndCat: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number;
+		amountInContract: number | string;
 	}[];
 	startDate: string;
 	totalDayAdvantage: number | string;
@@ -72,7 +72,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 			{
 				contractorUuid: '',
 				contractorCatUuid: '',
-				amountInContract: 0,
+				amountInContract: '',
 			},
 		],
 		startDate: '',
@@ -104,13 +104,13 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 									{
 										contractorUuid: '',
 										contractorCatUuid: '',
-										amountInContract: 0,
+										amountInContract: '',
 									},
 							  ]
 							: data?.contractor?.map((v: any) => ({
 									contractorUuid: v?.contractorDTO?.uuid || '',
 									contractorCatUuid: v?.contractorDTO?.contractorCat?.[0]?.uuid || '',
-									amountInContract: 0,
+									amountInContract: '',
 							  })),
 					startDate: '',
 					totalDayAdvantage: 0,
@@ -139,7 +139,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 					contractorAndCat: form?.contractorAndCat?.map((v) => ({
 						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
-						amountInContract: isNaN(v?.amountInContract) ? 0 : convertToNumberInput(String(v?.amountInContract)),
+						amountInContract: isNaN(Number(v?.amountInContract)) ? 0 : convertToNumberInput(String(v?.amountInContract)),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: price(form?.totalDayAdvantage!),
@@ -173,23 +173,20 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 					advanceGuaranteeEndDate: '',
 					contractParentUuid: '',
 				});
-				queryKeys?.map((key) => queryClient.invalidateQueries([key]));
+				queryKeys?.forEach((key) => queryClient.invalidateQueries([key]));
 			}
 		},
 	});
 
 	// Tính tổng tiển giá trị phụ lục hợp đồng qua tiền phụ lục hợp đồng theo từng nhà thầu
 	useEffect(() => {
-		const total = form?.contractorAndCat?.reduce(
-			(accumulator, currentValue) => accumulator + convertToNumberInput(String(currentValue.amountInContract)),
-			0
-		);
+		const total = form.contractorAndCat.reduce((sum, curr) => sum + convertToNumberInput(String(curr.amountInContract)), 0);
 
 		setForm((prev) => ({
 			...prev,
-			amount: isNaN(total) ? 0 : formatNumberInput(String(total)) || 0,
+			amount: isNaN(total) ? 0 : formatNumberInput(String(total)),
 		}));
-	}, [form?.contractorAndCat]);
+	}, [form.contractorAndCat]);
 
 	const handleSubmit = () => {
 		if (!form?.startDate) {
@@ -203,6 +200,13 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 		}
 		if (hasDuplicateContractor(form.contractorAndCat)) {
 			return toastWarn({msg: 'Tên nhà thầu, nhóm nhà thầu trùng nhau!'});
+		}
+		for (let i = 0; i < form.contractorAndCat.length; i++) {
+			const item = form.contractorAndCat[i];
+			const amount = convertToNumberInput(String(item.amountInContract));
+			if (isNaN(amount)) {
+				return toastWarn({msg: 'Giá trị hợp đồng không hợp lệ!'});
+			}
 		}
 
 		return funcCreateContractAdditional.mutate();
@@ -421,7 +425,7 @@ function ItemContractorProject({
 }: {
 	index: number;
 	uuidActivity: string;
-	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number};
+	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number | string};
 	form: IFromCreateContractAddendum;
 	setForm: (any: any) => void;
 }) {

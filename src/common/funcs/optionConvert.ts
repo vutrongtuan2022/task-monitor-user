@@ -104,11 +104,20 @@ export function convertFileSize(fileSizeInKB: number) {
 }
 
 export function formatNumberInput(value: string): string {
+	if (value === '0-') return '-';
+
 	const cleanValue = value.replace(/\./g, '');
 
-	if (!/^-?\d+$/.test(cleanValue)) return value;
+	if (cleanValue === '') return '';
 
-	return new Intl.NumberFormat('de-DE').format(Number(cleanValue));
+	if (cleanValue === '-') return '-';
+
+	if (!/^-?\d*$/.test(cleanValue)) return '';
+
+	const number = Number(cleanValue);
+	if (isNaN(number)) return cleanValue;
+
+	return new Intl.NumberFormat('de-DE').format(number);
 }
 
 export function convertToNumberInput(amount: string): number {
