@@ -139,7 +139,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 					contractorAndCat: form?.contractorAndCat?.map((v) => ({
 						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
-						amountInContract: isNaN(Number(v?.amountInContract)) ? 0 : convertToNumberInput(String(v?.amountInContract)),
+						amountInContract: convertToNumberInput(String(v?.amountInContract)),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: price(form?.totalDayAdvantage!),
