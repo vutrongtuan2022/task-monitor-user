@@ -20,12 +20,13 @@ import moment from 'moment';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import Loading from '~/components/common/Loading';
 import GridColumn from '~/components/layouts/GridColumn';
+import {convertToNumberInput, formatNumberInput} from '~/common/funcs/optionConvert';
 
 function hasDuplicateContractor(
 	data: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number | string;
+		amountInContract: number;
 	}[]
 ) {
 	const seen = new Set();
@@ -48,7 +49,7 @@ interface IFromCreateContractAddendum {
 	contractorAndCat: {
 		contractorUuid: string;
 		contractorCatUuid: string;
-		amountInContract: number | string;
+		amountInContract: number;
 	}[];
 	startDate: string;
 	totalDayAdvantage: number | string;
@@ -113,7 +114,7 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 							  })),
 					startDate: '',
 					totalDayAdvantage: 0,
-					amount: convertCoin(data?.amount),
+					amount: formatNumberInput(String(data?.amount)),
 					contractExecutionAmount: convertCoin(data?.contractExecution?.amount),
 					contractExecutionEndDate: '',
 					advanceGuaranteeAmount: convertCoin(data?.advanceGuarantee?.amount),
@@ -138,11 +139,11 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 					contractorAndCat: form?.contractorAndCat?.map((v) => ({
 						contractorUuid: v?.contractorUuid,
 						contractorCatUuid: v?.contractorCatUuid,
-						amountInContract: price(v?.amountInContract),
+						amountInContract: isNaN(v?.amountInContract) ? 0 : convertToNumberInput(String(v?.amountInContract)),
 					})),
 					startDate: moment(form?.startDate).format('YYYY-MM-DD'),
 					totalDayAdvantage: price(form?.totalDayAdvantage!),
-					amount: price(form?.amount),
+					amount: convertToNumberInput(String(form?.amount)),
 					contractExecutionAmount: price(form?.contractExecutionAmount),
 					contractExecutionEndDate: form?.contractExecutionEndDate
 						? moment(form?.contractExecutionEndDate).format('YYYY-MM-DD')
@@ -179,11 +180,14 @@ function FromCreateContractAddendum({onClose, uuidActivity, uuidContract, queryK
 
 	// Tính tổng tiển giá trị phụ lục hợp đồng qua tiền phụ lục hợp đồng theo từng nhà thầu
 	useEffect(() => {
-		const total = form?.contractorAndCat?.reduce((accumulator, currentValue) => accumulator + price(currentValue.amountInContract), 0);
+		const total = form?.contractorAndCat?.reduce(
+			(accumulator, currentValue) => accumulator + convertToNumberInput(String(currentValue.amountInContract)),
+			0
+		);
 
 		setForm((prev) => ({
 			...prev,
-			amount: convertCoin(total),
+			amount: isNaN(total) ? 0 : formatNumberInput(String(total)) || 0,
 		}));
 	}, [form?.contractorAndCat]);
 
@@ -417,7 +421,7 @@ function ItemContractorProject({
 }: {
 	index: number;
 	uuidActivity: string;
-	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number | string};
+	data: {contractorUuid: string; contractorCatUuid: string; amountInContract: number};
 	form: IFromCreateContractAddendum;
 	setForm: (any: any) => void;
 }) {
@@ -456,17 +460,9 @@ function ItemContractorProject({
 		const newData = [...form.contractorAndCat];
 
 		if (isConvert) {
-			if (!Number(price(value))) {
-				newData[index] = {
-					...newData[index],
-					[name]: 0,
-					...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
-				};
-			}
-
 			newData[index] = {
 				...newData[index],
-				[name]: convertCoin(Number(price(value))),
+				[name]: formatNumberInput(value),
 				...(name === 'contractorUuid' ? {contractorCatUuid: ''} : {}),
 			};
 		} else {
@@ -500,8 +496,8 @@ function ItemContractorProject({
 			<div className={styles.grid}>
 				<div className={styles.input_specification}>
 					<input
-						name='value'
-						type='number'
+						name='amountInContract'
+						type='text'
 						placeholder='Nhập tiền phụ lục hợp đồng'
 						className={styles.input}
 						value={data?.amountInContract}

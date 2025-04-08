@@ -102,3 +102,21 @@ export function convertFileSize(fileSizeInKB: number) {
 		return (fileSizeInKB / 1073741824).toFixed(2) + ' tb';
 	}
 }
+
+export function formatNumberInput(value: string): string {
+	const cleanValue = value.replace(/\./g, '');
+
+	if (!/^-?\d+$/.test(cleanValue)) return value;
+
+	return new Intl.NumberFormat('de-DE').format(Number(cleanValue));
+}
+
+export function convertToNumberInput(amount: string): number {
+	if (amount) {
+		const cleanedAmount = amount?.replace(/\./g, '');
+
+		return parseFloat(cleanedAmount);
+	} else {
+		return 0;
+	}
+}

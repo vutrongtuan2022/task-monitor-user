@@ -124,7 +124,7 @@ function FilterCustom({listFilter, name, query = '_query', isSearch, disabled = 
 					<p className={styles.text}>{getNameMethod(listFilter, data != null ? data : (queryStr as string))}</p>
 				</div>
 				<div className={styles.icon_arrow}>
-					<IoIosArrowDown size={16} />
+					<IoIosArrowDown size={16} color='#B1B5C3' />
 				</div>
 			</div>
 		</TippyHeadless>
