@@ -83,6 +83,7 @@ function MainUpdateReportDisbursementHistory({}: PropsMainUpdateReportDisburseme
 					contractsFundUuid: _uuid as string,
 					disbursementInfo: form?.disbursementInfo?.map((v) => {
 						return {
+							contractsUuid: v?.detailContractsDTO?.activityDTO?.contracts?.uuid,
 							contractsContractUuid: v?.contractsContractUuid,
 							amount: price(v?.guaranteeAmount),
 							reverseAmount: price(v?.guaranteeReverseAmount),
