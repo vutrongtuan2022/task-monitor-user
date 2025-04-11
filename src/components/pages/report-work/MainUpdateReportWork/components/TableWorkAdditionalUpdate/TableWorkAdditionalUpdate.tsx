@@ -164,7 +164,7 @@ function TableWorkAdditionalUpdate({onClose}: PropsTableWorkAdditionalUpdate) {
 							onChange={(e) =>
 								setForm((prev) => ({
 									...prev,
-									inheritContractFromParent: e.target.checked ?TYPE_INHERIT.NO :  TYPE_INHERIT.YES,
+									inheritContractFromParent: e.target.checked ? TYPE_INHERIT.YES : TYPE_INHERIT.NO,
 								}))
 							}
 						/>
