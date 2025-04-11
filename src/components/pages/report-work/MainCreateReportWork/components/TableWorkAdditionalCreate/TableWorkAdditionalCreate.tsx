@@ -43,7 +43,7 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 		name: '',
 		parentTaskUuid: '',
 		parentTaskName: '',
-		inheritContractFromParent: 1,
+		inheritContractFromParent: TYPE_INHERIT.NO,
 	});
 
 	const {data: listTasks} = useQuery([QUERY_KEY.dropdown_task_report, form.stage, projectUuid], {
@@ -161,7 +161,7 @@ function TableWorkAdditionalCreate({onClose}: PropsTableWorkAdditionalCreate) {
 							className={styles.input_radio}
 							type='checkbox'
 							name='inheritContractFromParent'
-							checked={form.inheritContractFromParent === TYPE_INHERIT.NO}
+							checked={form.inheritContractFromParent === TYPE_INHERIT.YES}
 							onChange={(e) =>
 								setForm((prev) => ({
 									...prev,
