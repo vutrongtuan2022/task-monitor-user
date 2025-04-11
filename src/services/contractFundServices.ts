@@ -58,6 +58,7 @@ const contractsFundServices = {
 		data: {
 			contractsFundUuid: string;
 			disbursementInfo: {
+				contractsUuid: string;
 				contractsContractUuid: string;
 				amount: number;
 				reverseAmount: number;
@@ -110,6 +111,7 @@ const contractsFundServices = {
 			contractsFundUuid: string;
 			note: string;
 			disbursementInfo: {
+				contractsUuid: string;
 				contractsContractUuid: string;
 				amount: number;
 				reverseAmount: number;
