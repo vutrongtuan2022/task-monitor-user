@@ -32,6 +32,7 @@ function TableParticipating({}: PropsTableParticipating) {
 		select(data) {
 			return data;
 		},
+		enabled: !!_uuid,
 	});
 
 	return (
