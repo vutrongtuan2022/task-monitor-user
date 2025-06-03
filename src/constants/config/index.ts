@@ -13,6 +13,7 @@ import {
 	TickCircle,
 	UserOctagon,
 	CardTick,
+	EmptyWalletTick,
 } from 'iconsax-react';
 import {TYPE_DATE, TYPE_SPECIAL} from './enum';
 
@@ -90,6 +91,10 @@ export enum PATH {
 	ApprovalContractor = '/approve/approval-contractor',
 
 	PaymentApproval = '/payment-approval',
+
+	CSCT = '/csct',
+	CSCTCreate = '/csct/create',
+	CSCTUpdate = '/csct/update',
 }
 
 export const Menu: {
@@ -148,19 +153,19 @@ export const Menu: {
 		icon: Receipt21,
 		isSpecial: TYPE_SPECIAL.CONFIRM_CONTRACTOR,
 	},
-	// {
-	// 	title: 'CSCN thanh toán',
-	// 	path: PATH.PaymentApproval,
-	// 	pathActive: PATH.PaymentApproval,
-	// 	icon: CardTick,
-	// 	isSpecial: TYPE_SPECIAL.NORMAL,
-	// },
 	{
 		title: 'Quản lý quy trình',
 		path: PATH.Task,
 		pathActive: PATH.Task,
 		icon: ReceiptItem,
 		isSpecial: TYPE_SPECIAL.SENIOR,
+	},
+	{
+		title: 'CSCT Thanh toán',
+		path: PATH.CSCT,
+		pathActive: PATH.CSCT,
+		icon: EmptyWalletTick,
+		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
 	{
 		title: 'Quản lý chi nhánh',

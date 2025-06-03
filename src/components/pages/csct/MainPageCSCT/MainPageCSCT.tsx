@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-import {IPayment, PropsMainPagePaymentApproval} from './interfaces';
-import styles from './MainPagePaymentApproval.module.scss';
+import {ICSCT, PropsMainPageCSCT} from './interfaces';
+import styles from './MainPageCSCT.module.scss';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
@@ -17,50 +17,13 @@ import {httpRequest} from '~/services';
 import contractorServices from '~/services/contractorServices';
 import contractorcatServices from '~/services/contractorcatServices';
 import PositionContainer from '~/components/common/PositionContainer';
-// import UpdateContractor from '../UpdateContractor';
 import Tippy from '@tippyjs/react';
 import Search from '~/components/common/Search';
 import Button from '~/components/common/Button';
 import Image from 'next/image';
 import icons from '~/constants/images/icons';
-import CreatePayment from '../CreatePayment';
 
-function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
-	const router = useRouter();
-
-	const {_page, _pageSize, _keyword, action, _type, _uuidContractor} = router.query;
-
-	const listContractor = useQuery([QUERY_KEY.table_list_contractor, _page, _pageSize, _keyword, _type], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorServices.listContractor({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: (_keyword as string) || '',
-					type: (_type as string) || '',
-					status: STATUS_CONFIG.ACTIVE,
-					state: [STATE_APPROVED.NOT_REPORTED, STATE_APPROVED.APPROVED],
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
-
-	const listGroupContractor = useQuery([QUERY_KEY.dropdown_group_contractor], {
-		queryFn: () =>
-			httpRequest({
-				http: contractorcatServices.categoryContractorCat({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					uuid: '',
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
-
+function MainPageCSCT({}: PropsMainPageCSCT) {
 	return (
 		<div className={styles.container}>
 			<div className={styles.head}>
@@ -69,7 +32,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 						<Search keyName='_keyword' placeholder='Tìm kiếm theo nhà thầu' />
 					</div>
 					<div className={styles.filter}>
-						<FilterCustom
+						{/* <FilterCustom
 							isSearch
 							name='Nhóm nhà thầu'
 							query='_type'
@@ -77,11 +40,11 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 								id: v?.uuid,
 								name: v?.name,
 							}))}
-						/>
+						/> */}
 					</div>
 				</div>
 				<div className={styles.btn}>
-					<Button
+					{/* <Button
 						p_14_24
 						rounded_8
 						light-blue
@@ -97,10 +60,10 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 						}}
 					>
 						Thêm mới cấp số
-					</Button>
+					</Button> */}
 				</div>
 			</div>
-			<WrapperScrollbar>
+			{/* <WrapperScrollbar>
 				<DataWrapper data={listContractor?.data?.items || []} loading={listContractor.isLoading} noti={<Noti />}>
 					<Table
 						fixedHeader={true}
@@ -109,7 +72,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							{
 								title: 'STT',
 								fixedLeft: true,
-								render: (data: IPayment, index: number) => (
+								render: (data: ICSCT, index: number) => (
 									<p
 										style={{
 											color:
@@ -122,7 +85,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: IPayment) => (
+								render: (data: ICSCT) => (
 									<p
 										style={{
 											color:
@@ -135,7 +98,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							},
 							{
 								title: 'Nhóm nhà thầu',
-								render: (data: IPayment) => (
+								render: (data: ICSCT) => (
 									<p
 										style={{
 											color:
@@ -201,7 +164,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							},
 							{
 								title: 'Địa chỉ',
-								render: (data: IPayment) => (
+								render: (data: ICSCT) => (
 									<p
 										style={{
 											color:
@@ -214,7 +177,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							},
 							{
 								title: 'Mô tả',
-								render: (data: IPayment) => (
+								render: (data: ICSCT) => (
 									<p
 										style={{
 											color:
@@ -234,7 +197,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 							{
 								title: 'Hành động',
 								fixedRight: true,
-								render: (data: IPayment) => (
+								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										<IconCustom
 											type='edit'
@@ -265,9 +228,9 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 					total={listContractor?.data?.pagination?.totalCount}
 					dependencies={[_pageSize, _keyword, _type]}
 				/>
-			</WrapperScrollbar>
+			</WrapperScrollbar> */}
 
-			<PositionContainer
+			{/* <PositionContainer
 				open={action == 'create'}
 				onClose={() => {
 					const {action, ...rest} = router.query;
@@ -292,7 +255,7 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 						});
 					}}
 				/>
-			</PositionContainer>
+			</PositionContainer> */}
 
 			{/* <PositionContainer
 				open={!!_uuidContractor}
@@ -324,4 +287,4 @@ function MainPagePaymentApproval({}: PropsMainPagePaymentApproval) {
 	);
 }
 
-export default MainPagePaymentApproval;
+export default MainPageCSCT;

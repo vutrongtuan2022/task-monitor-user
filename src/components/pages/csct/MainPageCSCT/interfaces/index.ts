@@ -1,6 +1,6 @@
-export interface PropsMainPagePaymentApproval {}
+export interface PropsMainPageCSCT {}
 
-export interface IPayment {
+export interface ICSCT {
 	contractorCat: {
 		id: number;
 		code: string;
