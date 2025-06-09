@@ -1,6 +1,6 @@
 import Breadcrumb from '~/components/common/Breadcrumb';
 import styles from './MainUpdateCSCT.module.scss';
-import {IContractByProject, IDetailCSCT, IFormUpdateCSCT, IListContractCSCT, PropsMainUpdateCSCT} from './interfaces';
+import {IDetailCSCT, IFormUpdateCSCT, IListContractCSCT, PropsMainUpdateCSCT} from './interfaces';
 import {memo, useEffect, useState} from 'react';
 import {PATH} from '~/constants/config';
 import Button from '~/components/common/Button';
@@ -23,6 +23,7 @@ import {toastWarn} from '~/common/funcs/toast';
 import moment from 'moment';
 import {useRouter} from 'next/router';
 import Loading from '~/components/common/Loading';
+import {IContractByProject} from '../MainCreateCSCT/interfaces';
 
 function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 	const router = useRouter();
@@ -60,11 +61,11 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				numberingDate: data?.numberingDate ? new Date(data?.numberingDate) : new Date(),
 				projectLeader: data?.project?.leader?.fullname || '',
 				projectMember: data?.user?.fullname || '',
-				// totalAmount: convertCoin(data?.totalAmount),
 			}));
 		},
 		enabled: !!_uuidCSCT,
 	});
+
 	useQuery<IListContractCSCT>([QUERY_KEY.detail_list_contract_csct, _uuidCSCT], {
 		queryFn: () =>
 			httpRequest({
@@ -77,14 +78,14 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				...prev,
 				listContract: Array.isArray(data)
 					? data.map((v) => ({
-							uuid: v?.uuid,
+							...v,
+							uuidContractProject: v?.uuid,
 							amount: convertCoin(v?.amount),
 							type: v?.type || TYPE_CONTRACT_PN.PAY,
 							note: v?.note || '',
-							contractorLinks: {
-								uuid: v?.contractorLinkUuid,
-							},
-							...v?.contract,
+							contractorLinks: v?.contractor,
+							startDate: v?.contract?.startDate,
+							uuid: v?.contract?.uuid,
 					  }))
 					: [],
 			}));
@@ -119,6 +120,8 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		enabled: !!form?.projectUuid,
 	});
 
+	console.log('listContract', form?.listContract);
+
 	useEffect(() => {
 		const totalAmount = form?.listContract?.reduce((acc, curr) => acc + price(curr.amount), 0);
 
@@ -135,13 +138,13 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				showMessageSuccess: true,
 				msgSuccess: 'Chỉnh sửa CSCT thanh toán thành công!',
 				http: pnServices.upsertPN({
-					uuid: '',
+					uuid: _uuidCSCT as string,
 					projectUuid: form.projectUuid,
 					code: form.code,
 					numberingDate: moment(form?.numberingDate).format('YYYY-MM-DD'),
 					totalAmount: price(form.totalAmount),
 					contracts: form?.listContract?.map((v) => ({
-						uuid: '',
+						uuid: v?.uuidContractProject || '',
 						contractUuid: v?.uuid,
 						contractorLinkUuid: v?.contractorLinks?.uuid,
 						amount: price(v.amount),
@@ -376,12 +379,24 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 
 										const selectedContracts = (listContract || [])
 											.filter((contract) => uuids.includes(contract.uuid))
-											?.map((m) => ({
-												...m,
-												amount: '0',
-												type: TYPE_CONTRACT_PN.PAY,
-												note: '',
-											}));
+											.map((m) => {
+												const existing = form?.listContract?.find((c) => c.uuid === m.uuid);
+
+												return {
+													...m,
+													uuidContractProject: existing?.uuidContractProject || '',
+													amount: existing?.amount || '0',
+													type: existing?.type || TYPE_CONTRACT_PN.PAY,
+													note: existing?.note || '',
+												};
+											});
+
+										// ?.map((m) => ({
+										// 	...m,
+										// 	amount: '0',
+										// 	type: TYPE_CONTRACT_PN.PAY,
+										// 	note: '',
+										// }));
 
 										setForm((prev) => ({
 											...prev,
