@@ -106,6 +106,16 @@ const pnServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getListPNContractByPN: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/PN/get-list-pn-contract-by-pn`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default pnServices;
