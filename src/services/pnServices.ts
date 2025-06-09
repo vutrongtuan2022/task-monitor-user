@@ -7,6 +7,7 @@ const pnServices = {
 			page: number;
 			keyword: string;
 			status: number | null;
+			state: number | null;
 		},
 		tokenAxios?: any
 	) => {
