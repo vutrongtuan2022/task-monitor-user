@@ -46,15 +46,12 @@
 }
 
 .link {
-	cursor: pointer;
-	color: #2970ff;
-	font-size: 15px;
-	font-weight: 400;
-	text-decoration: underline;
-	margin-left: 6px;
+	font-weight: 600;
+	color: var(--primary-btn);
 	transition: 0.3s;
 
 	&:hover {
 		opacity: 0.8;
+		text-decoration: underline;
 	}
 }

@@ -7,6 +7,7 @@ const pnServices = {
 			page: number;
 			keyword: string;
 			status: number | null;
+			state: number | null;
 		},
 		tokenAxios?: any
 	) => {
@@ -103,6 +104,16 @@ const pnServices = {
 	},
 	getCodePN: (data: {}, tokenAxios?: any) => {
 		return axiosClient.post(`/PN/get-pn-code`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getListPNContract: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/PN/get-list-pn-contract-by-pn`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
