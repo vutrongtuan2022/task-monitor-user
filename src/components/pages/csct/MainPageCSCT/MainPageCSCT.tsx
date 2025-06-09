@@ -29,12 +29,15 @@ import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import projectServices from '~/services/projectServices';
+import Popup from '~/components/common/Popup';
+import FormCreateIssue from '../FormCreateIssue';
+import FormUpdateIssue from '../FormUpdateIssue';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _status, _state, _project} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
@@ -260,40 +263,39 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								fixedRight: true,
 								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{/* {data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
-											<>
-												<IconCustom
-													type='edit'
-													icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
-													tooltip='Chỉnh sửa ngày cấp số'
-													// disnable={data?.state == STATUS_CSCT.REJECTED}
-													onClick={() => {
-														router.replace({
-															pathname: router.pathname,
-															query: {
-																...router.query,
-																_action: 'edit-issue',
-															},
-														});
-													}}
-												/>
-												<IconCustom
-													type='edit'
-													icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
-													tooltip='Thêm ngày cấp số'
-													// disnable={data?.state == STATUS_CSCT.REJECTED}
-													onClick={() => {
-														router.replace({
-															pathname: router.pathname,
-															query: {
-																...router.query,
-																_action: 'update-issue',
-															},
-														});
-													}}
-												/>
-											</>
-										) : null} */}
+										{data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
+											<IconCustom
+												type='edit'
+												icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
+												tooltip='Thêm ngày cấp số'
+												onClick={() => {
+													router.replace({
+														pathname: router.pathname,
+														query: {
+															...router.query,
+															_uuidCreateNoticeDate: data?.uuid,
+														},
+													});
+												}}
+											/>
+										) : null}
+
+										{data?.state === STATUS_CSCT.REJECTED ? (
+											<IconCustom
+												type='edit'
+												icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
+												tooltip='Chỉnh sửa ngày cấp số'
+												onClick={() => {
+													router.replace({
+														pathname: router.pathname,
+														query: {
+															...router.query,
+															_uuidUpdateNoticeDate: data?.uuid,
+														},
+													});
+												}}
+											/>
+										) : null}
 
 										<IconCustom
 											type='edit'
@@ -330,6 +332,76 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					onSubmit={funcDelete.mutate}
 				/>
 			</WrapperScrollbar>
+
+			<Popup
+				open={!!_uuidCreateNoticeDate}
+				onClose={() => {
+					const {_uuidCreateNoticeDate, ...rest} = router.query;
+
+					router.replace(
+						{
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						},
+						undefined,
+						{shallow: true, scroll: false}
+					);
+				}}
+			>
+				<FormCreateIssue
+					onClose={() => {
+						const {_uuidCreateNoticeDate, ...rest} = router.query;
+
+						router.replace(
+							{
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							},
+							undefined,
+							{shallow: true, scroll: false}
+						);
+					}}
+				/>
+			</Popup>
+
+			<Popup
+				open={!!_uuidUpdateNoticeDate}
+				onClose={() => {
+					const {_uuidUpdateNoticeDate, ...rest} = router.query;
+
+					router.replace(
+						{
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						},
+						undefined,
+						{shallow: true, scroll: false}
+					);
+				}}
+			>
+				<FormUpdateIssue
+					onClose={() => {
+						const {_uuidUpdateNoticeDate, ...rest} = router.query;
+
+						router.replace(
+							{
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							},
+							undefined,
+							{shallow: true, scroll: false}
+						);
+					}}
+				/>
+			</Popup>
 		</div>
 	);
 }
