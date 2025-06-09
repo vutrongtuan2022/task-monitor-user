@@ -127,7 +127,7 @@ function DatePicker({
 					readOnly={readonly}
 					className={clsx(styles.input)}
 					maxLength={10}
-					onFocus={() => setIsFocus(true)} // Thêm onFocus
+					onFocus={() => setIsFocus(true)}
 					onClick={() => {
 						if (!readonly) {
 							setIsFocus(true);

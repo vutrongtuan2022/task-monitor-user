@@ -10,6 +10,8 @@ import pnServices from '~/services/pnServices';
 import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
 import {useRouter} from 'next/router';
+import DatePicker from '~/components/common/DatePicker';
+import {toastWarn} from '~/common/funcs/toast';
 
 function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 	const router = useRouter();
@@ -42,6 +44,10 @@ function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 	});
 
 	const handleSubmit = () => {
+		if (!form.dateIssue) {
+			return toastWarn({msg: 'Vui lòng chọn ngày thông báo cấp vốn!'});
+		}
+
 		funcCreateNoticeDate.mutate();
 	};
 

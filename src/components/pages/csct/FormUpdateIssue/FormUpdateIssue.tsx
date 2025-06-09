@@ -10,7 +10,9 @@ import {httpRequest} from '~/services';
 import pnServices from '~/services/pnServices';
 import {QUERY_KEY} from '~/constants/config/enum';
 import Loading from '~/components/common/Loading';
-import {IDetailCSCT} from '../MainPageDetailCSCT/interfaces';
+import {toastWarn} from '~/common/funcs/toast';
+import moment from 'moment';
+import {timeSubmit} from '~/common/funcs/optionConvert';
 
 function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 	const router = useRouter();
@@ -19,7 +21,7 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 
 	const [form, setForm] = useState<IUpdateIssue>({dateIssue: ''});
 
-	const {data: detailCSCT} = useQuery<IDetailCSCT>([QUERY_KEY.detail_csct, _uuidUpdateNoticeDate], {
+	useQuery([QUERY_KEY.detail_csct, _uuidUpdateNoticeDate], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.detailPN({
@@ -29,9 +31,12 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 		onSuccess(data) {
 			if (data) {
 				setForm({
-					dateIssue: data?.noticeDate || '',
+					dateIssue: moment(data?.noticeDate).format('YYYY-MM-DD') || '',
 				});
 			}
+		},
+		select(data) {
+			return data;
 		},
 		enabled: !!_uuidUpdateNoticeDate,
 	});
@@ -60,8 +65,18 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 	});
 
 	const handleSubmit = () => {
+		const today = new Date(timeSubmit(new Date())!);
+		const dateIssue = form.dateIssue ? new Date(form.dateIssue) : null;
+		if (!dateIssue) {
+			return toastWarn({msg: 'Vui lòng chọn ngày thông báo cấp vốn!'});
+		}
+		if (!dateIssue || today > dateIssue) {
+			return toastWarn({msg: 'Ngày thông báo cấp vốn không được nhỏ hơn ngày hiện tại!'});
+		}
+
 		funcUpdateNoticeDate.mutate();
 	};
+	console.log('date', form?.dateIssue);
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcUpdateNoticeDate.isLoading} />
