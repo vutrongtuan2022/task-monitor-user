@@ -24,20 +24,35 @@ import Link from 'next/link';
 import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Trash} from 'iconsax-react';
+import {CalendarAdd, CalendarEdit, Edit, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
+import projectServices from '~/services/projectServices';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _status, _state} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _project} = router.query;
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
-	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state], {
+	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.categoryProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					excludeState: null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state, _project], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.listPN({
@@ -46,6 +61,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
+					projectUuid: (_project as string) || '',
 				}),
 			}),
 		select(data) {
@@ -103,6 +119,17 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 									name: 'CSCTTT bị từ chối',
 								},
 							]}
+						/>
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Dự án'
+							query='_project'
+							listFilter={listProject?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.name,
+							}))}
 						/>
 					</div>
 				</div>
@@ -233,12 +260,47 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								fixedRight: true,
 								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										{/* {data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
+											<>
+												<IconCustom
+													type='edit'
+													icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
+													tooltip='Chỉnh sửa ngày cấp số'
+													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													onClick={() => {
+														router.replace({
+															pathname: router.pathname,
+															query: {
+																...router.query,
+																_action: 'edit-issue',
+															},
+														});
+													}}
+												/>
+												<IconCustom
+													type='edit'
+													icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
+													tooltip='Thêm ngày cấp số'
+													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													onClick={() => {
+														router.replace({
+															pathname: router.pathname,
+															query: {
+																...router.query,
+																_action: 'update-issue',
+															},
+														});
+													}}
+												/>
+											</>
+										) : null} */}
+
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
 											// disnable={data?.state == STATUS_CSCT.REJECTED}
-											// href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
+											href={`${PATH.CSCTUpdate}?_uuid=${data?.uuid}`}
 										/>
 										<IconCustom
 											type='delete'
@@ -257,7 +319,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listCSCT?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _state]}
+					dependencies={[_pageSize, _keyword, _status, _state, _project]}
 				/>
 				<Dialog
 					type='error'
