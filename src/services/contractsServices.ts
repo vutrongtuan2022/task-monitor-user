@@ -205,5 +205,15 @@ const contractsServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	getContractsByProject: (
+		data: {
+			projectUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Contracts/get-category-contract-by-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsServices;

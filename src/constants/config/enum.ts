@@ -23,6 +23,7 @@ export enum QUERY_KEY {
 	table_contract_by_activity,
 	table_list_account,
 	table_branches,
+	table_CSCT,
 	table_contractor,
 	table_list_contractor,
 	table_group_contractor,
@@ -37,6 +38,7 @@ export enum QUERY_KEY {
 
 	dropdown_branches,
 	dropdown_project,
+	dropdown_contract,
 	dropdown_task_cat,
 	dropdown_user,
 	dropdown_manager,
@@ -86,6 +88,7 @@ export enum QUERY_KEY {
 	tree_task,
 	count_unseen_noti,
 	list_notify,
+	get_code_pn,
 }
 
 export enum TYPE_DATE {
@@ -218,4 +221,16 @@ export enum STATE_APPROVED {
 	NOT_REPORTED, // 0: chưa duyệt
 	APPROVED, //1: đã duyệt
 	REJECTED, //2: đã từ chối
+}
+
+export enum STATUS_CSCT {
+	NUMBER_ISSUED = 1, // Đã cấp số
+	PENDING_APPROVAL, // Chờ phê duyệt
+	APPROVED, // Đã phê duyệt
+	REJECTED, // Bị từ chối
+}
+
+export enum TYPE_CONTRACT_PN {
+	PAY = 1,
+	ADVANCE,
 }

@@ -55,6 +55,7 @@ const pnServices = {
 			numberingDate: string;
 			totalAmount: number;
 			contracts: {
+				contractorLinkUuid: string;
 				contractUuid: string;
 				amount: number;
 				type: number;
@@ -63,7 +64,7 @@ const pnServices = {
 		},
 		tokenAxios?: any
 	) => {
-		return axiosClient.post(`/PN/upsert-status`, data, {
+		return axiosClient.post(`/PN/upsert-pn`, data, {
 			cancelToken: tokenAxios,
 		});
 	},
@@ -97,6 +98,11 @@ const pnServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/PN/approve-pn`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	getCodePN: (data: {}, tokenAxios?: any) => {
+		return axiosClient.post(`/PN/get-pn-code`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

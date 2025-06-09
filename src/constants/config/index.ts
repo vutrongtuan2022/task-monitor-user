@@ -161,7 +161,7 @@ export const Menu: {
 		isSpecial: TYPE_SPECIAL.SENIOR,
 	},
 	{
-		title: 'CSCT Thanh toán',
+		title: 'CSCT thanh toán',
 		path: PATH.CSCT,
 		pathActive: PATH.CSCT,
 		icon: EmptyWalletTick,
