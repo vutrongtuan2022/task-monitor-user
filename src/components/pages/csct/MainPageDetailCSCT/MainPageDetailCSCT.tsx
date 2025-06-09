@@ -24,12 +24,15 @@ import contractorServices from '~/services/contractorServices';
 import Dialog from '~/components/common/Dialog';
 import icons from '~/constants/images/icons';
 import Loading from '~/components/common/Loading';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/redux/store';
 
 function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const {infoUser} = useSelector((state: RootState) => state.user);
 
-	const {_uuid, _page, _pageSize, _keyword, _contractorUuid, _contractorCat} = router.query;
+	const {_uuid} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
 
@@ -93,17 +96,19 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 					},
 				]}
 				action={
-					<div className={styles.group_btn}>
-						{detailCSCT?.state == STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state == STATUS_CSCT.REJECTED ? (
-							<Button p_14_24 rounded_8 light-red onClick={() => setUuidDelete(detailCSCT?.uuid!)}>
-								Xóa
-							</Button>
-						) : null}
+					infoUser?.userUuid === detailCSCT?.user?.uuid ? (
+						<div className={styles.group_btn}>
+							{detailCSCT?.state == STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state == STATUS_CSCT.REJECTED ? (
+								<Button p_14_24 rounded_8 light-red onClick={() => setUuidDelete(detailCSCT?.uuid!)}>
+									Xóa
+								</Button>
+							) : null}
 
-						<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
-							Chỉnh sửa
-						</Button>
-					</div>
+							<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
+								Chỉnh sửa
+							</Button>
+						</div>
+					) : null
 				}
 			/>
 			<div className={styles.main}>
