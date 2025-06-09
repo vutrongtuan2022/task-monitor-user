@@ -28,16 +28,17 @@ import {Edit, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
+import projectServices from '~/services/projectServices';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _status, _state} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _project} = router.query;
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
-	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state], {
+	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state, _project], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.listPN({
@@ -46,6 +47,20 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
+	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.categoryProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					excludeState: null,
 				}),
 			}),
 		select(data) {
@@ -103,6 +118,17 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 									name: 'CSCTTT bị từ chối',
 								},
 							]}
+						/>
+					</div>
+					<div className={styles.filter}>
+						<FilterCustom
+							isSearch
+							name='Dự án'
+							query='_project'
+							listFilter={listProject?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.name,
+							}))}
 						/>
 					</div>
 				</div>
@@ -257,7 +283,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listCSCT?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _state]}
+					dependencies={[_pageSize, _keyword, _status, _state, _project]}
 				/>
 				<Dialog
 					type='error'
