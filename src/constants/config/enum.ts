@@ -86,6 +86,7 @@ export enum QUERY_KEY {
 	detail_user,
 	detail_contract_addium,
 	detail_csct,
+	detail_list_contract_csct,
 
 	tree_task,
 	count_unseen_noti,

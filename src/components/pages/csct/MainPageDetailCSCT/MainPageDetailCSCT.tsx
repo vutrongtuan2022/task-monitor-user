@@ -49,7 +49,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const {data: ListPNContract, isLoading} = useQuery([QUERY_KEY.table_pn_contract, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: pnServices.getListPNContract({
+				http: pnServices.getListPNContractByPN({
 					uuid: (_uuid as string) || '',
 				}),
 			}),

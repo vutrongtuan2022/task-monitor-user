@@ -107,7 +107,7 @@ const pnServices = {
 			cancelToken: tokenAxios,
 		});
 	},
-	getListPNContract: (
+	getListPNContractByPN: (
 		data: {
 			uuid: string;
 		},
