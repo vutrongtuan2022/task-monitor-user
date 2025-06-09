@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {ICSCT, PropsMainPageCSCT} from './interfaces';
 import styles from './MainPageCSCT.module.scss';
 import Search from '~/components/common/Search';
-import {useQuery} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CSCT} from '~/constants/config/enum';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {QUERY_KEY, STATUS_CONFIG, STATUS_CSCT} from '~/constants/config/enum';
 import {useRouter} from 'next/router';
 import {httpRequest} from '~/services';
 import pnServices from '~/services/pnServices';
@@ -23,20 +23,29 @@ import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
+import IconCustom from '~/components/common/IconCustom';
+import {Edit, Trash} from 'iconsax-react';
+import {convertCoin} from '~/common/funcs/convertCoin';
+import Dialog from '~/components/common/Dialog';
+import Loading from '~/components/common/Loading';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	const {_page, _pageSize, _keyword, _status} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state} = router.query;
 
-	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status], {
+	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
+
+	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.listPN({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 10,
 					keyword: (_keyword as string) || '',
-					status: !!_status ? Number(_status) : null,
+					status: STATUS_CONFIG.ACTIVE,
+					state: !!_state ? Number(_state) : null,
 				}),
 			}),
 		select(data) {
@@ -44,8 +53,28 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 		},
 	});
 
+	const funcDelete = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				showMessageFailed: true,
+				showMessageSuccess: true,
+				msgSuccess: 'Xóa thanh toán thành công!',
+				http: pnServices.updateStatusPN({
+					uuid: deleteCSCT,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				setDeleteCSCT('');
+				queryClient.invalidateQueries([QUERY_KEY.table_CSCT]);
+			}
+		},
+	});
+
 	return (
 		<div className={styles.container}>
+			<Loading loading={funcDelete.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
@@ -55,7 +84,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 						<FilterCustom
 							isSearch
 							name='Trạng thái'
-							query='_status'
+							query='_state'
 							listFilter={[
 								{
 									id: STATUS_CSCT.NUMBER_ISSUED,
@@ -117,46 +146,53 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 						column={[
 							{
 								title: 'STT',
-								render: (data: ICSCT, index: number) => <>{index + 1}</>,
+								render: (data: ICSCT, index: number) => <p>{index + 1}</p>,
 							},
 							{
 								title: 'Mã cấp số',
 								fixedLeft: true,
-								render: (data: ICSCT) => (
+								render: (data: ICSCT, index: number) => (
 									<Tippy content='Xem chi tiết'>
-										<Link href={`${PATH.CSCT}?_uuid=${data?.uuid}`} className={styles.link}>
-											{data?.code}
+										<Link href={`${PATH.CSCT}/${data?.uuid}`} className={styles.link}>
+											{data?.code || '---'}
 										</Link>
 									</Tippy>
 								),
 							},
 							{
 								title: 'Ngày lấy số',
-								render: (data: ICSCT) => <>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</>,
+								render: (data: ICSCT) => (
+									<p>{data?.numberingDate ? <Moment date={data?.numberingDate} format='DD/MM/YYYY' /> : '---'}</p>
+								),
 							},
 							{
 								title: 'Tên dự án',
-								render: (data: ICSCT) => <p className={styles.name}>{data?.name}</p>,
+								render: (data: ICSCT) => <>{data?.project?.name || '---'}</>,
 							},
 							{
 								title: 'SL hợp đồng',
-								render: (data: ICSCT) => <p className={styles.name}>{data?.name}</p>,
+								render: (data: ICSCT) => <p>{data?.totalContracts}</p>,
 							},
 							{
-								title: 'Tống giá trị thanh toán (VND)',
-								render: (data: ICSCT) => <>100</>,
+								title: 'Tổng giá trị thanh toán',
+								render: (data: ICSCT) => (
+									<p>
+										<span>{convertCoin(data?.accumAmount)}</span>/
+										<span style={{color: '#005994'}}>{convertCoin(data?.totalAmount)}</span>
+									</p>
+								),
 							},
 							{
 								title: 'Lãnh đạo phụ trách',
-								render: (data: ICSCT) => <>----</>,
+								render: (data: ICSCT) => <>{data?.project?.leader?.fullname || '---'}</>,
 							},
 							{
 								title: 'Cán bộ chuyên quản',
-								render: (data: ICSCT) => <>----</>,
+								render: (data: ICSCT) => <>{data?.user?.fullname || '---'}</>,
 							},
 							{
 								title: 'Tiến độ giải ngân',
-								render: (data: ICSCT) => <Progress percent={100} width={80} />,
+								render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
 							},
 							{
 								title: 'Trạng thái',
@@ -192,30 +228,28 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 									/>
 								),
 							},
-							// {
-							// 	title: 'Hành động',
-							// 	fixedRight: true,
-							// 	render: (data: ICSCT) => (
-							// 		<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-							// 			<IconCustom
-							// 				type='edit'
-							// 				icon={<Edit fontSize={20} fontWeight={600} />}
-							// 				tooltip='Chỉnh sửa'
-							// 				disnable={data?.state == STATE_PROJECT.FINISH}
-							// 				href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
-							// 			/>
-							// 			<IconCustom
-							// 				type='delete'
-							// 				icon={<Trash fontSize={20} fontWeight={600} />}
-							// 				tooltip='Xóa bỏ'
-							// 				disnable={data?.state == STATE_PROJECT.DO || data?.state == STATE_PROJECT.FINISH}
-							// 				onClick={() => {
-							// 					setDeleteProject(data);
-							// 				}}
-							// 			/>
-							// 		</div>
-							// 	),
-							// },
+							{
+								title: 'Hành động',
+								fixedRight: true,
+								render: (data: ICSCT) => (
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											type='edit'
+											icon={<Edit fontSize={20} fontWeight={600} />}
+											tooltip='Chỉnh sửa'
+											// disnable={data?.state == STATUS_CSCT.REJECTED}
+											// href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
+										/>
+										<IconCustom
+											type='delete'
+											icon={<Trash fontSize={20} fontWeight={600} />}
+											tooltip='Xóa bỏ'
+											disnable={data?.state == STATUS_CSCT.APPROVED || data?.state == STATUS_CSCT.PENDING_APPROVAL}
+											onClick={() => setDeleteCSCT(data?.uuid)}
+										/>
+									</div>
+								),
+							},
 						]}
 					/>
 				</DataWrapper>
@@ -223,7 +257,15 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listCSCT?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status]}
+					dependencies={[_pageSize, _keyword, _status, _state]}
+				/>
+				<Dialog
+					type='error'
+					open={!!deleteCSCT}
+					onClose={() => setDeleteCSCT('')}
+					title={'Xóa thanh toán'}
+					note={'Bạn có chắc chắn muốn xóa thanh toán này không?'}
+					onSubmit={funcDelete.mutate}
 				/>
 			</WrapperScrollbar>
 		</div>

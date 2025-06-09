@@ -35,6 +35,7 @@ export enum QUERY_KEY {
 	table_update_contractor_cat_by_contractor,
 	table_requester_contractor,
 	detail_contractor_for_admin,
+	table_pn_contract,
 
 	dropdown_branches,
 	dropdown_project,
@@ -84,6 +85,7 @@ export enum QUERY_KEY {
 	detail_task,
 	detail_user,
 	detail_contract_addium,
+	detail_csct,
 
 	tree_task,
 	count_unseen_noti,
