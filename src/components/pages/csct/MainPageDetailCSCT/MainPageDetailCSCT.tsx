@@ -93,16 +93,6 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 					},
 				]}
 				action={
-					// detailCSCT?.state === STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state === STATUS_CSCT.PENDING_APPROVAL ? (
-					// 	<div className={styles.group_btn}>
-					// 		<Button p_14_24 rounded_8 light-red onClick={() => setUuidCancel(detailCSCT?.uuid!)}>
-					// 			Từ chối
-					// 		</Button>
-					// 		<Button p_14_24 rounded_8 green onClick={() => setUuidConfirm(detailCSCT?.uuid!)}>
-					// 			Duyệt cấp số
-					// 		</Button>
-					// 	</div>
-					// ) : null
 					<div className={styles.group_btn}>
 						{detailCSCT?.state == STATUS_CSCT.NUMBER_ISSUED || detailCSCT?.state == STATUS_CSCT.REJECTED ? (
 							<Button p_14_24 rounded_8 light-red onClick={() => setUuidDelete(detailCSCT?.uuid!)}>
@@ -110,20 +100,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							</Button>
 						) : null}
 
-						<Button
-							p_14_24
-							rounded_8
-							blueRedLinear
-							// onClick={() => {
-							// 	router.replace({
-							// 		pathname: router.pathname,
-							// 		query: {
-							// 			...router.query,
-							// 			_uuidContractor: detailContractorForAdmin?.uuid,
-							// 		},
-							// 	});
-							// }}
-						>
+						<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
 							Chỉnh sửa
 						</Button>
 					</div>

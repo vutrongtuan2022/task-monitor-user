@@ -24,7 +24,7 @@ import Link from 'next/link';
 import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
-import {Edit, Trash} from 'iconsax-react';
+import {CalendarAdd, CalendarEdit, Edit, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
@@ -38,6 +38,20 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
+	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
+		queryFn: () =>
+			httpRequest({
+				http: projectServices.categoryProject({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					excludeState: null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+
 	const listCSCT = useQuery([QUERY_KEY.table_CSCT, _page, _pageSize, _keyword, _status, _state, _project], {
 		queryFn: () =>
 			httpRequest({
@@ -47,20 +61,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					keyword: (_keyword as string) || '',
 					status: STATUS_CONFIG.ACTIVE,
 					state: !!_state ? Number(_state) : null,
-				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
-
-	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
-		queryFn: () =>
-			httpRequest({
-				http: projectServices.categoryProject({
-					keyword: '',
-					status: STATUS_CONFIG.ACTIVE,
-					excludeState: null,
+					projectUuid: (_project as string) || '',
 				}),
 			}),
 		select(data) {
@@ -259,12 +260,47 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								fixedRight: true,
 								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										{/* {data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
+											<>
+												<IconCustom
+													type='edit'
+													icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
+													tooltip='Chỉnh sửa ngày cấp số'
+													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													onClick={() => {
+														router.replace({
+															pathname: router.pathname,
+															query: {
+																...router.query,
+																_action: 'edit-issue',
+															},
+														});
+													}}
+												/>
+												<IconCustom
+													type='edit'
+													icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
+													tooltip='Thêm ngày cấp số'
+													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													onClick={() => {
+														router.replace({
+															pathname: router.pathname,
+															query: {
+																...router.query,
+																_action: 'update-issue',
+															},
+														});
+													}}
+												/>
+											</>
+										) : null} */}
+
 										<IconCustom
 											type='edit'
 											icon={<Edit fontSize={20} fontWeight={600} />}
 											tooltip='Chỉnh sửa'
 											// disnable={data?.state == STATUS_CSCT.REJECTED}
-											// href={`${PATH.UpdateInfoProject}?_uuid=${data?.uuid}`}
+											href={`${PATH.CSCTUpdate}?_uuid=${data?.uuid}`}
 										/>
 										<IconCustom
 											type='delete'
