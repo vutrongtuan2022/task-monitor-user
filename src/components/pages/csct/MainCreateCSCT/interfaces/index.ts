@@ -27,6 +27,7 @@ export interface IContractByProject {
 	amount: string;
 	type: number;
 	note: string;
+	uuidContractProject: string;
 }
 
 export interface IFormCreateCSCT {
