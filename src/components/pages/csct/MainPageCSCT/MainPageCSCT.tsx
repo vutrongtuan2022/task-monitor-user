@@ -24,7 +24,7 @@ import Link from 'next/link';
 import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
-import {CalendarAdd, CalendarEdit, Edit, Trash} from 'iconsax-react';
+import {CalendarAdd, CalendarEdit, Edit, Eye, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
@@ -32,12 +32,15 @@ import projectServices from '~/services/projectServices';
 import Popup from '~/components/common/Popup';
 import FormCreateIssue from '../FormCreateIssue';
 import FormUpdateIssue from '../FormUpdateIssue';
+import {useSelector} from 'react-redux';
+import {RootState} from '~/redux/store';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 
 	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
+	const {infoUser} = useSelector((state: RootState) => state.user);
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
@@ -263,53 +266,65 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								fixedRight: true,
 								render: (data: ICSCT) => (
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
-										{data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
-											<IconCustom
-												type='edit'
-												icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
-												tooltip='Thêm ngày cấp số'
-												onClick={() => {
-													router.replace({
-														pathname: router.pathname,
-														query: {
-															...router.query,
-															_uuidCreateNoticeDate: data?.uuid,
-														},
-													});
-												}}
-											/>
-										) : null}
+										{infoUser?.userUuid === data?.user?.uuid ? (
+											<>
+												{data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
+													<IconCustom
+														type='edit'
+														icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
+														tooltip='Thêm ngày cấp số'
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_uuidCreateNoticeDate: data?.uuid,
+																},
+															});
+														}}
+													/>
+												) : null}
 
-										{data?.state === STATUS_CSCT.REJECTED ? (
-											<IconCustom
-												type='edit'
-												icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
-												tooltip='Chỉnh sửa ngày cấp số'
-												onClick={() => {
-													router.replace({
-														pathname: router.pathname,
-														query: {
-															...router.query,
-															_uuidUpdateNoticeDate: data?.uuid,
-														},
-													});
-												}}
-											/>
-										) : null}
+												{data?.state === STATUS_CSCT.REJECTED ? (
+													<IconCustom
+														type='edit'
+														icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
+														tooltip='Chỉnh sửa ngày cấp số'
+														onClick={() => {
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_uuidUpdateNoticeDate: data?.uuid,
+																},
+															});
+														}}
+													/>
+												) : null}
 
+												<IconCustom
+													type='edit'
+													icon={<Edit fontSize={20} fontWeight={600} />}
+													tooltip='Chỉnh sửa'
+													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													href={`${PATH.CSCTUpdate}?_uuidCSCT=${data?.uuid}`}
+												/>
+												<IconCustom
+													type='delete'
+													icon={<Trash fontSize={20} fontWeight={600} />}
+													tooltip='Xóa bỏ'
+													disnable={
+														data?.state == STATUS_CSCT.APPROVED || data?.state == STATUS_CSCT.PENDING_APPROVAL
+													}
+													onClick={() => setDeleteCSCT(data?.uuid)}
+												/>
+											</>
+										) : null}
 										<IconCustom
+											href={`${PATH.CSCT}/${data?.uuid}`}
 											type='edit'
-											icon={<Edit fontSize={20} fontWeight={600} />}
-											tooltip='Chỉnh sửa'
-											// disnable={data?.state == STATUS_CSCT.REJECTED}
-											href={`${PATH.CSCTUpdate}?_uuidCSCT=${data?.uuid}`}
-										/>
-										<IconCustom
-											type='delete'
-											icon={<Trash fontSize={20} fontWeight={600} />}
-											tooltip='Xóa bỏ'
-											disnable={data?.state == STATUS_CSCT.APPROVED || data?.state == STATUS_CSCT.PENDING_APPROVAL}
-											onClick={() => setDeleteCSCT(data?.uuid)}
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
 										/>
 									</div>
 								),
