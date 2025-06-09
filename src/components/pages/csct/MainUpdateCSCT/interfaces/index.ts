@@ -1,33 +1,6 @@
-export interface PropsMainUpdateCSCT {}
+import {IContractByProject} from '../../MainCreateCSCT/interfaces';
 
-export interface IContractByProject {
-	code: string;
-	state: number;
-	status: number;
-	contractorLinks: {
-		contractor: {
-			code: string;
-			name: string;
-			state: number;
-			contractorLinkUuid: string;
-			amount: number;
-			uuid: string;
-		};
-		contractorCat: {
-			id: number;
-			code: string;
-			name: string;
-			uuid: string;
-		};
-		status: number;
-		uuid: string;
-	};
-	startDate: string;
-	uuid: string;
-	amount: string;
-	type: number;
-	note: string;
-}
+export interface PropsMainUpdateCSCT {}
 
 export interface IFormUpdateCSCT {
 	projectUuid: string;
@@ -84,36 +57,32 @@ export interface IListContractCSCT {
 		state: number;
 		status: number;
 		parent: null;
-		contractorLinks: [
-			{
-				contractor: {
-					code: string;
-					name: string;
-					state: number;
-					contractorLinkUuid: null;
-					contractorCat: [
-						{
-							id: 4;
-							code: string;
-							name: string;
-							isDefault: number;
-							uuid: string;
-						}
-					];
-					amount: number;
-					uuid: string;
-				};
+		contractorLinks: {
+			contractor: {
+				code: string;
+				name: string;
+				state: number;
+				contractorLinkUuid: null;
 				contractorCat: {
 					id: number;
 					code: string;
 					name: string;
 					isDefault: number;
 					uuid: string;
-				};
-				status: number;
+				}[];
+				amount: number;
 				uuid: string;
-			}
-		];
+			};
+			contractorCat: {
+				id: number;
+				code: string;
+				name: string;
+				isDefault: number;
+				uuid: string;
+			};
+			status: number;
+			uuid: string;
+		}[];
 		startDate: string;
 		uuid: string;
 	};
@@ -123,15 +92,14 @@ export interface IListContractCSCT {
 			name: string;
 			state: number;
 			contractorLinkUuid: null;
-			contractorCat: [
-				{
-					id: number;
-					code: string;
-					name: string;
-					isDefault: number;
-					uuid: string;
-				}
-			];
+			contractorCat: {
+				id: number;
+				code: string;
+				name: string;
+				isDefault: number;
+				uuid: string;
+			}[];
+
 			amount: number;
 			uuid: string;
 		};
