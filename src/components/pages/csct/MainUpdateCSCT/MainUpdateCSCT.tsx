@@ -28,7 +28,7 @@ import {IContractByProject} from '../MainCreateCSCT/interfaces';
 function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 	const router = useRouter();
 
-	const {_uuidCSCT} = router.query;
+	const {_uuid} = router.query;
 
 	const {infoUser} = useSelector((state: RootState) => state.user);
 
@@ -45,11 +45,11 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 
 	const [form, setForm] = useState<IFormUpdateCSCT>(initForm);
 
-	useQuery<IDetailCSCT>([QUERY_KEY.detail_csct, _uuidCSCT], {
+	useQuery<IDetailCSCT>([QUERY_KEY.detail_csct, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.detailPN({
-					uuid: _uuidCSCT as string,
+					uuid: _uuid as string,
 				}),
 			}),
 		onSuccess(data) {
@@ -63,14 +63,14 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				projectMember: data?.user?.fullname || '',
 			}));
 		},
-		enabled: !!_uuidCSCT,
+		enabled: !!_uuid,
 	});
 
-	useQuery<IListContractCSCT>([QUERY_KEY.detail_list_contract_csct, _uuidCSCT], {
+	useQuery<IListContractCSCT>([QUERY_KEY.detail_list_contract_csct, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.getListPNContractByPN({
-					uuid: _uuidCSCT as string,
+					uuid: _uuid as string,
 				}),
 			}),
 		onSuccess(data) {
@@ -90,7 +90,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 					: [],
 			}));
 		},
-		enabled: !!_uuidCSCT,
+		enabled: !!_uuid,
 	});
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
@@ -138,7 +138,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				showMessageSuccess: true,
 				msgSuccess: 'Chỉnh sửa CSCT thanh toán thành công!',
 				http: pnServices.upsertPN({
-					uuid: _uuidCSCT as string,
+					uuid: _uuid as string,
 					projectUuid: form.projectUuid,
 					code: form.code,
 					numberingDate: moment(form?.numberingDate).format('YYYY-MM-DD'),
@@ -195,6 +195,13 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		}
 
 		return funcCreatePN.mutate();
+	};
+
+	const handleDelete = (index: number) => {
+		setForm((prev) => ({
+			...prev,
+			listContract: [...prev?.listContract?.slice(0, index), ...prev?.listContract?.slice(index + 1)],
+		}));
 	};
 
 	return (
@@ -424,7 +431,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 						</div>
 					</div>
 					{form?.listContract?.map((v, i) => (
-						<CSCTItemForm key={i} index={i} form={form} setForm={setForm} contract={v} />
+						<CSCTItemForm key={i} index={i} form={form} setForm={setForm} contract={v} handleDelete={() => handleDelete(i)} />
 					))}
 				</Form>
 			</div>
