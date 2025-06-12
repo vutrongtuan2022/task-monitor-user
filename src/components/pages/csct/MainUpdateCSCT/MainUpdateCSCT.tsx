@@ -197,6 +197,8 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
+	const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({
 			...prev,
@@ -370,7 +372,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 									readOnly={!form.projectUuid}
 									selectedItems={form?.listContract?.map((v) => v.uuid)}
 									disabledItems={[]}
-									options={listContract}
+									options={uniqueContracts}
 									getOptionLabel={(otp) => otp.code}
 									getOptionValue={(otp) => otp.uuid}
 									setSelectedItems={(list) => {

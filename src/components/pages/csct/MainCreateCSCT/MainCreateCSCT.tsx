@@ -157,6 +157,8 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
+	const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({
 			...prev,
@@ -328,37 +330,38 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 									}
 									showSelectedItems={false}
 									readOnly={!form.projectUuid}
-									selectedItems={form?.listContract?.map((v) => v.uuid)}
+									selectedItems={form?.listContract?.map((contract) => contract.uuid)}
 									disabledItems={[]}
-									options={listContract}
-									getOptionLabel={(otp) => otp.code}
-									getOptionValue={(otp) => otp.uuid}
-									setSelectedItems={(list) => {
-										const resolveUuids = (input: typeof list): (string | number)[] => {
+									options={uniqueContracts}
+									getOptionLabel={(contract) => contract.code}
+									getOptionValue={(contract) => contract.uuid}
+									setSelectedItems={(selectedList) => {
+										const resolveUuids = (input: typeof selectedList): (string | number)[] => {
 											if (typeof input === 'function') {
-												const prev = form.listContract.map((c) => c.uuid);
-												return input(prev);
+												const previousUuids = form.listContract.map((c) => c.uuid);
+												return input(previousUuids);
 											}
 											return input;
 										};
 
-										const uuids = resolveUuids(list);
+										const selectedUuids = resolveUuids(selectedList);
 
 										const selectedContracts = (listContract || [])
-											.filter((contract) => uuids.includes(contract.uuid))
-											?.map((m) => ({
-												...m,
+											.filter((contract) => selectedUuids.includes(contract.uuid))
+											.map((contract) => ({
+												...contract,
 												amount: '0',
 												type: TYPE_CONTRACT_PN.PAY,
 												note: '',
 											}));
 
-										setForm((prev) => ({
-											...prev,
+										setForm((prevForm) => ({
+											...prevForm,
 											listContract: selectedContracts,
 										}));
 									}}
 								/>
+
 								<Input
 									label={
 										<span>
