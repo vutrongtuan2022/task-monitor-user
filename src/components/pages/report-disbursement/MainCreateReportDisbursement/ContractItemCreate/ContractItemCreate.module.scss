@@ -116,6 +116,12 @@ $font-size-input: 16px;
 			font-weight: 500;
 			color: $color-placeholder;
 		}
+
+		&.readOnly {
+			cursor: inherit;
+			background-color: #f4f5f6;
+			border: 1px solid #e1e5ed;
+		}
 	}
 
 	.unit {
@@ -158,6 +164,12 @@ $font-size-input: 16px;
 		&::placeholder {
 			font-weight: 500;
 			color: $color-placeholder;
+		}
+
+		&.readOnly {
+			cursor: inherit;
+			background-color: #f4f5f6;
+			border: 1px solid #e1e5ed;
 		}
 	}
 

@@ -71,6 +71,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 								dayDisbursement: '',
 								contractsUuid: '',
 								note: '',
+								pnContractUuid: '',
 						  }))
 						: [],
 				}));
@@ -97,6 +98,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 							amount: price(v?.amountDisbursement),
 							disbursementDay: v?.dayDisbursement ? moment(v?.dayDisbursement).format('YYYY-MM-DD') : null,
 							note: v?.note,
+							pnContractUuid: v?.pnContract?.[0]?.uuid || '',
 						};
 					}),
 				}),

@@ -151,24 +151,26 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 												name='value'
 												type='text'
 												placeholder='Nhập cấp số chấp thuận'
-												className={styles.input}
+												className={clsx(styles.input, styles.readOnly)}
 												readOnly={true}
 												disabled={true}
-												// value={contract?.contractorLinks?.contractorCat?.name}
+												value={contract?.pnContract?.map((v) => v?.pn?.code)}
 											/>
 										</div>
 									</div>
 									<div>
-										<p className={styles.label}>Nhóm nhà thầu</p>
+										<p className={styles.label}>Nhà thầu</p>
 										<div className={styles.input_contractor}>
 											<input
 												name='value'
 												type='text'
-												placeholder='Nhập nhóm nhà thầu'
-												className={styles.input}
+												placeholder='Nhập nhà thầu'
+												className={clsx(styles.input, styles.readOnly)}
 												readOnly={true}
 												disabled={true}
-												// value={contract?.contractorLinks?.contractorCat?.name}
+												value={contract?.pnContract?.flatMap((v) =>
+													v?.contract?.contractorLinks?.map((a) => a?.contractor?.name || '')
+												)}
 											/>
 											<div className={styles.delete} onClick={() => {}}>
 												<Trash size={22} color='#EE464C' />
@@ -231,7 +233,6 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 										/>
 									</div>
 								</GridColumn>
-								<div className={styles.line}></div>
 							</div>
 						</div>
 					</>

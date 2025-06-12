@@ -28,6 +28,7 @@ const contractsFundServices = {
 				reverseAmount: number;
 				disbursementDay: string | null;
 				note: string;
+				pnContractUuid: string;
 			}[];
 		},
 		tokenAxios?: any
@@ -117,6 +118,7 @@ const contractsFundServices = {
 				reverseAmount: number;
 				disbursementDay: string | null;
 				note: string | null;
+				pnContractUuid: string;
 			}[];
 		},
 		tokenAxios?: any

@@ -144,7 +144,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 						</div>
 						<div className={styles.main}>
 							<GridColumn col_2>
-								<div>
+								{/* <div>
 									<p className={clsx(styles.label)}>Thuộc cấp số chấp thuận thanh toán</p>
 									<div className={styles.input_specification}>
 										<input
@@ -174,7 +174,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 											<Trash size={22} color='#EE464C' />
 										</div>
 									</div>
-								</div>
+								</div> */}
 								<div>
 									<div>
 										<p className={clsx(styles.label)}>Sử dụng vốn dự phòng</p>
@@ -229,7 +229,6 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 									/>
 								</div>
 							</GridColumn>
-							<div className={styles.line}></div>
 						</div>
 					</>
 				) : (
