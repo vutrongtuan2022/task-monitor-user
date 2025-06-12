@@ -5,8 +5,9 @@ import {memo} from 'react';
 import DatePicker from '~/components/common/DatePicker';
 import {convertCoin, price} from '~/common/funcs/convertCoin';
 import {TYPE_CONTRACT_PN} from '~/constants/config/enum';
+import {Trash} from 'iconsax-react';
 
-function CSCTItemForm({index, form, setForm, contract}: PropsCSCTItemForm) {
+function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTItemForm) {
 	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
 		const newData = [...form?.listContract];
 
@@ -40,6 +41,9 @@ function CSCTItemForm({index, form, setForm, contract}: PropsCSCTItemForm) {
 			<div className={styles.basic_info}>
 				<div className={styles.head}>
 					<h4>Hợp đồng {contract?.code}</h4>
+					<div className={styles.delete} onClick={handleDelete}>
+						<Trash size={22} color='#EE464C' />
+					</div>
 				</div>
 				<div className={styles.main}>
 					<GridColumn col_3>

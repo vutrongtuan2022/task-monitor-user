@@ -157,6 +157,13 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
+	const handleDelete = (index: number) => {
+		setForm((prev) => ({
+			...prev,
+			listContract: [...prev?.listContract?.slice(0, index), ...prev?.listContract?.slice(index + 1)],
+		}));
+	};
+
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcCreatePN.isLoading} />
@@ -372,7 +379,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 						</div>
 					</div>
 					{form?.listContract?.map((v, i) => (
-						<CSCTItemForm key={i} index={i} form={form} setForm={setForm} contract={v} />
+						<CSCTItemForm key={i} index={i} form={form} setForm={setForm} contract={v} handleDelete={() => handleDelete(i)} />
 					))}
 				</Form>
 			</div>

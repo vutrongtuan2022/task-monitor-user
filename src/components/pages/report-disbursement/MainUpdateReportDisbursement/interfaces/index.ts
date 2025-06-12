@@ -7,6 +7,102 @@ export interface IContractUpdateReportFund {
 	note: string;
 	releaseDate: string;
 	detailContractsDTO: {
+		pnContract: {
+			pn: {
+				code: string;
+				project: {
+					code: string;
+					name: string;
+					created: string;
+					state: number;
+					leader: {
+						uuid: string;
+						fullname: string;
+						code: string;
+					};
+					member: [];
+					branch: {
+						code: string;
+						name: string;
+						uuid: string;
+					};
+					uuid: string;
+				};
+				state: number;
+				uuid: string;
+			};
+			contract: {
+				code: string;
+				state: number;
+				status: number;
+				parent: {
+					code: string;
+					state: number;
+					status: number;
+					uuid: string;
+				};
+				contractorLinks: {
+					contractor: {
+						code: string;
+						name: string;
+						state: number;
+						contractorLinkUuid: string;
+						contractorCat: {
+							id: number;
+							code: string;
+							name: string;
+							isDefault: number | null;
+							uuid: string;
+						}[];
+						amount: number;
+						uuid: string;
+					};
+					contractorCat: {
+						id: number;
+						code: string;
+						name: string;
+						isDefault: number | null;
+						uuid: string;
+					};
+					status: number;
+					uuid: string;
+				}[];
+				startDate: string;
+				uuid: string;
+			};
+			contractor: {
+				contractor: {
+					code: string;
+					name: string;
+					state: number;
+					contractorLinkUuid: string;
+					contractorCat: {
+						id: number;
+						code: string;
+						name: string;
+						isDefault: number | null;
+						uuid: string;
+					}[];
+					amount: number;
+					uuid: string;
+				};
+				contractorCat: {
+					id: number;
+					code: string;
+					name: string;
+					isDefault: number | null;
+					uuid: string;
+				};
+				status: number;
+				uuid: string;
+			};
+			amount: number;
+			accumAmount: number;
+			type: number;
+			note: string;
+			status: number;
+			uuid: string;
+		}[];
 		totalContractor: number;
 		totalContractorCat: number;
 		advanceGuarantee: {
@@ -93,6 +189,102 @@ export interface IContractUpdateReportFund {
 		updated: string;
 		created: string;
 		code: string;
+		status: number;
+		uuid: string;
+	};
+	pnContract: {
+		pn: {
+			code: string;
+			project: {
+				code: string;
+				name: string;
+				created: string;
+				state: number;
+				leader: {
+					uuid: string;
+					fullname: string;
+					code: string;
+				};
+				member: [];
+				branch: {
+					code: string;
+					name: string;
+					uuid: string;
+				};
+				uuid: string;
+			};
+			state: number;
+			uuid: string;
+		};
+		contract: {
+			code: string;
+			state: number;
+			status: number;
+			parent: {
+				code: string;
+				state: number;
+				status: number;
+				uuid: string;
+			};
+			contractorLinks: {
+				contractor: {
+					code: string;
+					name: string;
+					state: number;
+					contractorLinkUuid: string;
+					contractorCat: {
+						id: number;
+						code: string;
+						name: string;
+						isDefault: number | null;
+						uuid: string;
+					}[];
+					amount: number;
+					uuid: string;
+				};
+				contractorCat: {
+					id: number;
+					code: string;
+					name: string;
+					isDefault: number | null;
+					uuid: string;
+				};
+				status: number;
+				uuid: string;
+			}[];
+			startDate: string;
+			uuid: string;
+		};
+		contractor: {
+			contractor: {
+				code: string;
+				name: string;
+				state: number;
+				contractorLinkUuid: string;
+				contractorCat: {
+					id: number;
+					code: string;
+					name: string;
+					isDefault: number | null;
+					uuid: string;
+				}[];
+				amount: number;
+				uuid: string;
+			};
+			contractorCat: {
+				id: number;
+				code: string;
+				name: string;
+				isDefault: number | null;
+				uuid: string;
+			};
+			status: number;
+			uuid: string;
+		};
+		amount: number;
+		accumAmount: number;
+		type: number;
+		note: string;
 		status: number;
 		uuid: string;
 	};

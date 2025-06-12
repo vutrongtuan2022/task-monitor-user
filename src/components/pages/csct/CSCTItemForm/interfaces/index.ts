@@ -5,4 +5,5 @@ export interface PropsCSCTItemForm {
 	contract: IContractByProject;
 	form: IFormCreateCSCT;
 	setForm: (any: any) => void;
+	handleDelete: () => void;
 }
