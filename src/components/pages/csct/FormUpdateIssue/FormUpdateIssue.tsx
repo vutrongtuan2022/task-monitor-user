@@ -46,7 +46,7 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Thêm ngày cấp số thành công!',
+				msgSuccess: 'Cập nhật ngày cấp số thành công!',
 				http: pnServices.updateNoticeDate({
 					uuid: _uuidUpdateNoticeDate as string,
 					noticeDate: form?.dateIssue,
