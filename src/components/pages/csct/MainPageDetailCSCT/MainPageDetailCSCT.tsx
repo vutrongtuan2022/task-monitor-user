@@ -76,7 +76,8 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		onSuccess(data) {
 			if (data) {
 				setUuidDelete('');
-				queryClient.invalidateQueries([QUERY_KEY.table_CSCT]);
+				queryClient.invalidateQueries([QUERY_KEY.table_CSCT, QUERY_KEY.detail_csct]);
+				router.back();
 			}
 		},
 	});
