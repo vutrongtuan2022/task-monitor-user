@@ -306,7 +306,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 													type='edit'
 													icon={<Edit fontSize={20} fontWeight={600} />}
 													tooltip='Chỉnh sửa'
-													// disnable={data?.state == STATUS_CSCT.REJECTED}
+													disnable={data?.state == STATUS_CSCT.APPROVED}
 													href={`${PATH.CSCTUpdate}?_uuid=${data?.uuid}`}
 												/>
 												<IconCustom

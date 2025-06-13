@@ -104,10 +104,11 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 									Xóa
 								</Button>
 							) : null}
-
-							<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
-								Chỉnh sửa
-							</Button>
+							{detailCSCT?.state !== STATUS_CSCT.APPROVED && (
+								<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
+									Chỉnh sửa
+								</Button>
+							)}
 						</div>
 					) : null
 				}

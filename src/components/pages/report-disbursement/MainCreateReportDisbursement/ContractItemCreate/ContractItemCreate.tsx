@@ -168,9 +168,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 												className={clsx(styles.input, styles.readOnly)}
 												readOnly={true}
 												disabled={true}
-												value={contract?.pnContract?.flatMap((v) =>
-													v?.contract?.contractorLinks?.map((a) => a?.contractor?.name || '')
-												)}
+												value={contract?.pnContract?.map((v) => v?.contractor?.contractor?.name || '')}
 											/>
 											<div className={styles.delete} onClick={() => {}}>
 												<Trash size={22} color='#EE464C' />
