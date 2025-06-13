@@ -44,8 +44,15 @@ function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 	});
 
 	const handleSubmit = () => {
+		const dateIssue = new Date(new Date(form.dateIssue).toDateString()).getTime();
+		const today = new Date(new Date().toDateString()).getTime();
+
 		if (!form.dateIssue) {
 			return toastWarn({msg: 'Vui lòng chọn ngày thông báo cấp vốn!'});
+		}
+
+		if (form.dateIssue && dateIssue < today) {
+			return toastWarn({msg: 'Ngày thông báo cấp vốn không được nhỏ hơn ngày hiện tại!'});
 		}
 
 		funcCreateNoticeDate.mutate();
