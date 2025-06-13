@@ -173,8 +173,8 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 											className={clsx(styles.input, styles.readOnly)}
 											readOnly={true}
 											disabled={true}
-											value={contract?.detailContractsDTO?.pnContract?.flatMap((v) =>
-												v?.contract?.contractorLinks?.map((a) => a?.contractor?.name || '')
+											value={contract?.detailContractsDTO?.pnContract?.map(
+												(v) => v?.contractor?.contractor?.name || ''
 											)}
 										/>
 										<div className={styles.delete} onClick={() => {}}>
