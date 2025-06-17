@@ -24,9 +24,14 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 			<div className={styles.basic_info}>
 				<div className={styles.head}>
 					<h4>Thông tin hợp đồng</h4>
-					<p className={styles.toggle_btn} onClick={handleToggle}>
-						{collapsed ? 'Xem chi tiết ▼ ' : 'Thu gọn ▲ '}
-					</p>
+					<div className={styles.group_button}>
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#EE464C' />
+						</div>
+						<p className={styles.toggle_btn} onClick={handleToggle}>
+							{collapsed ? 'Xem chi tiết ▼ ' : 'Thu gọn ▲ '}
+						</p>
+					</div>
 				</div>
 				{collapsed == false ? (
 					<>
@@ -144,9 +149,11 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 								</div>
 							</GridColumn>
 						</div>
+
 						<div className={styles.head}>
 							<h4>Thông tin giải ngân kỳ này</h4>
 						</div>
+
 						<div className={styles.main}>
 							<GridColumn col_2>
 								<div>
@@ -159,7 +166,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 											className={clsx(styles.input, styles.readOnly)}
 											readOnly={true}
 											disabled={true}
-											value={contract?.detailContractsDTO?.pnContract?.map((v) => v?.pn?.code)}
+											value={contract?.pnContract?.pn?.code}
 										/>
 									</div>
 								</div>
@@ -173,13 +180,11 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 											className={clsx(styles.input, styles.readOnly)}
 											readOnly={true}
 											disabled={true}
-											value={contract?.detailContractsDTO?.pnContract?.map(
-												(v) => v?.contractor?.contractor?.name || ''
-											)}
+											value={contract?.pnContract?.contractor?.contractor?.name || ''}
 										/>
-										<div className={styles.delete} onClick={() => {}}>
+										{/* <div className={styles.delete} onClick={() => {}}>
 											<Trash size={22} color='#EE464C' />
-										</div>
+										</div> */}
 									</div>
 								</div>
 

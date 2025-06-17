@@ -66,12 +66,15 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 					contracts: data?.contracts
 						? data?.contracts?.map((v: any) => ({
 								...v,
-								reverseAmount: 0,
-								amountDisbursement: 0,
-								dayDisbursement: '',
-								contractsUuid: '',
-								note: '',
-								pnContractUuid: '',
+								pnContract:
+									v?.pnContract?.map((p: any) => ({
+										...p,
+										reverseAmount: 0,
+										amountDisbursement: 0,
+										dayDisbursement: '',
+										note: '',
+										description: '',
+									})) || [],
 						  }))
 						: [],
 				}));
@@ -91,15 +94,15 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 					month: form?.month,
 					projectUuid: form?.projectUuid,
 					note: form?.description,
-					disbursementInfo: form?.contracts?.map((v) => {
-						return {
+					disbursementInfo: form?.contracts?.flatMap((v) => {
+						return v?.pnContract?.map((pn) => ({
 							contractsUuid: v?.uuid,
-							reverseAmount: price(v?.reverseAmount),
-							amount: price(v?.amountDisbursement),
-							disbursementDay: v?.dayDisbursement ? moment(v?.dayDisbursement).format('YYYY-MM-DD') : null,
-							note: v?.note,
-							pnContractUuid: v?.pnContract?.[0]?.uuid || '',
-						};
+							reverseAmount: price(pn?.reverseAmount),
+							amount: price(pn?.amountDisbursement),
+							disbursementDay: pn?.dayDisbursement ? moment(pn?.dayDisbursement).format('YYYY-MM-DD') : null,
+							note: pn?.description || '',
+							pnContractUuid: pn?.uuid || '',
+						}));
 					}),
 				}),
 			});
@@ -125,27 +128,27 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		return funcCreateContractsReportFund.mutate();
 	};
 
-	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean, subIndex?: number) => {
 		const newData = [...form?.contracts];
+		if (!newData[index]?.pnContract || subIndex === undefined) return;
 
+		const newPnContracts = [...newData[index].pnContract];
+
+		let newValue: any = value;
 		if (isConvert) {
-			if (!Number(price(value))) {
-				newData[index] = {
-					...newData[index],
-					[name]: 0,
-				};
-			}
-
-			newData[index] = {
-				...newData[index],
-				[name]: convertCoin(Number(price(value))),
-			};
-		} else {
-			newData[index] = {
-				...newData[index],
-				[name]: value,
-			};
+			const numericValue = price(value); // bỏ dấu phẩy
+			newValue = numericValue;
 		}
+
+		newPnContracts[subIndex] = {
+			...newPnContracts[subIndex],
+			[name]: newValue,
+		};
+
+		newData[index] = {
+			...newData[index],
+			pnContract: newPnContracts,
+		};
 
 		setForm((prev) => ({
 			...prev,
@@ -153,11 +156,58 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 		}));
 	};
 
+	// const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+	// 	const newData = [...form?.contracts];
+
+	// 	if (isConvert) {
+	// 		if (!Number(price(value))) {
+	// 			newData[index] = {
+	// 				...newData[index],
+	// 				[name]: 0,
+	// 			};
+	// 		}
+
+	// 		newData[index] = {
+	// 			...newData[index],
+	// 			[name]: convertCoin(Number(price(value))),
+	// 		};
+	// 	} else {
+	// 		newData[index] = {
+	// 			...newData[index],
+	// 			[name]: value,
+	// 		};
+	// 	}
+
+	// 	setForm((prev) => ({
+	// 		...prev,
+	// 		contracts: newData,
+	// 	}));
+	// };
+
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({
 			...prev,
 			contracts: [...prev?.contracts?.slice(0, index), ...prev?.contracts?.slice(index + 1)],
 		}));
+	};
+
+	const handleDeletePn = (index: number, idx: number) => {
+		setForm((prev) => {
+			const updateContracts = [...prev.contracts];
+			const updateChildren = [
+				...updateContracts[index].pnContract.slice(0, idx),
+				...updateContracts[index].pnContract.slice(idx + 1),
+			];
+			updateContracts[index] = {
+				...updateContracts[index],
+				pnContract: updateChildren,
+			};
+
+			return {
+				...prev,
+				contracts: updateContracts,
+			};
+		});
 	};
 
 	return (
@@ -299,6 +349,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 							contract={v}
 							handleChangeValue={handleChangeValue}
 							handleDelete={() => handleDelete(i)}
+							handleDeletePn={handleDeletePn}
 						/>
 					))}
 				</div>
