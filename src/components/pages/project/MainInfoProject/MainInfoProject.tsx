@@ -405,6 +405,11 @@ function MainInfoProject({}: PropsMainInfoProject) {
 									<p>Số tiền giải ngân lũy kế đến hiện tại</p>
 									<p>{convertCoin(detailProject?.accumAmount!)} VND</p>
 								</div>
+								<div className={styles.line}></div>
+								<div className={styles.item_capital}>
+									<p>Lũy kế giá trị chấp thuận thanh toán</p>
+									<p>{convertCoin(detailProject?.accumReserve!)} VND</p>
+								</div>
 							</div>
 						</div>
 					</div>

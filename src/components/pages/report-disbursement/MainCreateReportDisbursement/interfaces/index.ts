@@ -180,6 +180,10 @@ export interface IContractsReportFund {
 		note: string;
 		status: number;
 		uuid: string;
+		amountDisbursement: number;
+		dayDisbursement: string;
+		reverseAmount: number;
+		description: string;
 	}[];
 	dayDisbursement: string;
 	reverseAmount: number;

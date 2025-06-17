@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styles from './DetailContractor.module.scss';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import {PATH} from '~/constants/config';
@@ -18,6 +18,8 @@ import TabNavLink from '~/components/common/TabNavLink';
 import TableParticipating from './component/TableParticipating';
 import TableContractorCat from './component/TableContractorCat/TableContractorCat';
 import TableContractorCatPending from './component/TableContractorCatPending';
+import DisbursementReportOverview from './component/DisbursementReportOverview';
+import TableContracfund from './component/TableContracfund';
 
 function DetailContractor({}: PropsDetailContractor) {
 	const router = useRouter();
@@ -123,6 +125,11 @@ function DetailContractor({}: PropsDetailContractor) {
 									query: 'contractorCatPending',
 									title: 'Nhóm nhà thầu đợi duyệt',
 								},
+								{
+									pathname: PATH.ReportOverview,
+									query: 'disbursement',
+									title: 'Thông tin giải ngân',
+								},
 							]}
 							listKeyRemove={['_page', '_pageSize', '_keyword', '_state']}
 						/>
@@ -135,6 +142,12 @@ function DetailContractor({}: PropsDetailContractor) {
 						{!_type && <TableParticipating />}
 						{_type == 'contractorCat' && <TableContractorCat />}
 						{_type == 'contractorCatPending' && <TableContractorCatPending />}
+						{_type == 'disbursement' && (
+							<Fragment>
+								<DisbursementReportOverview />
+								<TableContracfund />
+							</Fragment>
+						)}
 					</div>
 				</div>
 			</div>

@@ -12,20 +12,26 @@ import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
 import Tippy from '@tippyjs/react';
 
-function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: PropsContractItemCreate) {
+function ContractItemCreate({index, contract, handleChangeValue, handleDelete, handleDeletePn}: PropsContractItemCreate) {
 	const [collapsed, setCollapsed] = useState(false);
 
 	const handleToggle = () => {
 		setCollapsed(!collapsed);
 	};
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.basic_info}>
 				<div className={styles.head}>
 					<h4>Thông tin hợp đồng</h4>
-					<p className={styles.toggle_btn} onClick={handleToggle}>
-						{collapsed ? 'Xem chi tiết ▼ ' : 'Thu gọn ▲ '}
-					</p>
+					<div className={styles.group_button}>
+						<div className={styles.delete} onClick={handleDelete}>
+							<Trash size={22} color='#EE464C' />
+						</div>
+						<p className={styles.toggle_btn} onClick={handleToggle}>
+							{collapsed ? 'Xem chi tiết ▼ ' : 'Thu gọn ▲ '}
+						</p>
+					</div>
 				</div>
 				{collapsed == false ? (
 					<>
@@ -142,96 +148,102 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete}: 
 							<div className={styles.head}>
 								<h4>Thông tin giải ngân kỳ này</h4>
 							</div>
-							<div className={styles.main}>
-								<GridColumn col_2>
-									<div>
-										<p className={clsx(styles.label)}>Thuộc cấp số chấp thuận thanh toán</p>
-										<div className={styles.input_specification}>
-											<input
-												name='value'
-												type='text'
-												placeholder='Nhập cấp số chấp thuận'
-												className={clsx(styles.input, styles.readOnly)}
-												readOnly={true}
-												disabled={true}
-												value={contract?.pnContract?.map((v) => v?.pn?.code)}
-											/>
-										</div>
-									</div>
-									<div>
-										<p className={styles.label}>Nhà thầu</p>
-										<div className={styles.input_contractor}>
-											<input
-												name='value'
-												type='text'
-												placeholder='Nhập nhà thầu'
-												className={clsx(styles.input, styles.readOnly)}
-												readOnly={true}
-												disabled={true}
-												value={contract?.pnContract?.map((v) => v?.contractor?.contractor?.name || '')}
-											/>
-											<div className={styles.delete} onClick={() => {}}>
-												<Trash size={22} color='#EE464C' />
-											</div>
-										</div>
-									</div>
-
-									<div>
+							{contract?.pnContract?.map((v, idx) => (
+								<div className={styles.main} key={idx}>
+									<GridColumn col_2>
 										<div>
-											<p className={clsx(styles.label)}>Sử dụng vốn dự phòng</p>
+											<p className={clsx(styles.label)}>Thuộc cấp số chấp thuận thanh toán</p>
 											<div className={styles.input_specification}>
 												<input
 													name='value'
 													type='text'
-													placeholder='Nhập Sử dụng vốn dự phòng'
-													className={styles.input}
-													value={contract?.reverseAmount}
-													onChange={(e) => handleChangeValue(index, 'reverseAmount', e.target.value, true)}
+													placeholder='Nhập cấp số chấp thuận'
+													className={clsx(styles.input, styles.readOnly)}
+													readOnly={true}
+													disabled={true}
+													value={v?.pn?.code}
 												/>
-												<div className={styles.unit}>VNĐ</div>
+											</div>
+										</div>
+										<div>
+											<p className={styles.label}>Nhà thầu</p>
+											<div className={styles.input_contractor}>
+												<input
+													name='value'
+													type='text'
+													placeholder='Nhập nhà thầu'
+													className={clsx(styles.input, styles.readOnly)}
+													readOnly={true}
+													disabled={true}
+													value={v?.contractor?.contractor?.name || ''}
+												/>
+												<div className={styles.delete} onClick={() => handleDeletePn(index, idx)}>
+													<Trash size={22} color='#EE464C' />
+												</div>
 											</div>
 										</div>
 
 										<div>
-											<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
-											<div className={styles.input_specification}>
-												<input
-													name='value'
-													type='text'
-													placeholder='Nhập Sử dụng vốn dự án'
-													className={styles.input}
-													value={contract?.amountDisbursement}
-													onChange={(e) => handleChangeValue(index, 'amountDisbursement', e.target.value, true)}
-												/>
-												<div className={styles.unit}>VNĐ</div>
+											<div>
+												<p className={clsx(styles.label)}>Sử dụng vốn dự phòng</p>
+												<div className={styles.input_specification}>
+													<input
+														name='value'
+														type='text'
+														placeholder='Nhập Sử dụng vốn dự phòng'
+														className={styles.input}
+														value={convertCoin(v?.reverseAmount)}
+														onChange={(e) =>
+															handleChangeValue(index, 'reverseAmount', e.target.value, true, idx)
+														}
+													/>
+													<div className={styles.unit}>VNĐ</div>
+												</div>
+											</div>
+
+											<div>
+												<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
+												<div className={styles.input_specification}>
+													<input
+														name='value'
+														type='text'
+														placeholder='Nhập Sử dụng vốn dự án'
+														className={styles.input}
+														value={convertCoin(v?.amountDisbursement)}
+														onChange={(e) =>
+															handleChangeValue(index, 'amountDisbursement', e.target.value, true, idx)
+														}
+													/>
+													<div className={styles.unit}>VNĐ</div>
+												</div>
+											</div>
+											<div>
+												<div className={styles.mt}>
+													<DatePicker
+														onClean={true}
+														icon={true}
+														label={<span>Ngày giải ngân</span>}
+														placeholder='Chọn ngày giải ngân'
+														value={v?.dayDisbursement}
+														onSetValue={(date) => handleChangeValue(index, 'dayDisbursement', date, false, idx)}
+														name='birthday'
+													/>
+												</div>
 											</div>
 										</div>
 										<div>
-											<div className={styles.mt}>
-												<DatePicker
-													onClean={true}
-													icon={true}
-													label={<span>Ngày giải ngân</span>}
-													placeholder='Chọn ngày giải ngân'
-													value={contract?.dayDisbursement}
-													onSetValue={(date) => handleChangeValue(index, 'dayDisbursement', date)}
-													name='birthday'
-												/>
-											</div>
+											<label className={styles.label}>Mô tả</label>
+											<textarea
+												name='description'
+												value={v?.description}
+												placeholder='Nhập mô tả'
+												className={styles.textarea}
+												onChange={(e) => handleChangeValue(index, 'description', e.target.value, false, idx)}
+											/>
 										</div>
-									</div>
-									<div>
-										<label className={styles.label}>Mô tả</label>
-										<textarea
-											name='note'
-											value={contract?.note}
-											placeholder='Nhập mô tả'
-											className={styles.textarea}
-											onChange={(e) => handleChangeValue(index, 'note', e.target.value)}
-										/>
-									</div>
-								</GridColumn>
-							</div>
+									</GridColumn>
+								</div>
+							))}
 						</div>
 					</>
 				) : (
