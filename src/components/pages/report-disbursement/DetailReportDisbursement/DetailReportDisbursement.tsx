@@ -264,7 +264,18 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										title: 'Sử dụng vốn dự án (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
 									},
-
+									{
+										title: 'Số thông báo chấp thuận thanh toán',
+										render: (data: IContractFund) => (
+											<p>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</p>
+										),
+									},
+									{
+										title: 'Ngày chấp thuận thanh toán',
+										render: (data: IContractFund) => (
+											<p>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</p>
+										),
+									},
 									{
 										title: 'Ngày giải ngân',
 										render: (data: IContractFund) => (

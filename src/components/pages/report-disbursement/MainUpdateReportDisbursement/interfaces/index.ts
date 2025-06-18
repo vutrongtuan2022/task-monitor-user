@@ -284,10 +284,14 @@ export interface IContractUpdateReportFund {
 		amount: number;
 		accumAmount: number;
 		type: number;
-		note: string;
 		status: number;
 		uuid: string;
-	};
+		contractsContractUuid: string;
+		guaranteeReverseAmount: number;
+		guaranteeAmount: number;
+		note: string;
+		releaseDate: string;
+	}[];
 }
 
 export interface IFormUpdateReportDisbursement {
