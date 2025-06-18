@@ -89,6 +89,24 @@ function TableContractFund() {
 								),
 							},
 							{
+								title: 'Số thông báo chấp thuận thanh toán',
+								render: (data: PropsTableContractFund) => (
+									<p>{data?.releasedDate ? <Moment date={data?.releasedDate} format='DD/MM/YYYY' /> : '---'}</p>
+								),
+							},
+							{
+								title: 'Ngày chấp thuận thanh toán',
+								render: (data: PropsTableContractFund) => (
+									<p>{data?.releasedDate ? <Moment date={data?.releasedDate} format='DD/MM/YYYY' /> : '---'}</p>
+								),
+							},
+							{
+								title: 'Giá trị chấp thuận thanh toán',
+								render: (data: PropsTableContractFund) => (
+									<p>{data?.releasedDate ? <Moment date={data?.releasedDate} format='DD/MM/YYYY' /> : '---'}</p>
+								),
+							},
+							{
 								title: 'Thời gian tạo',
 								render: (data: PropsTableContractFund) => (
 									<p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>

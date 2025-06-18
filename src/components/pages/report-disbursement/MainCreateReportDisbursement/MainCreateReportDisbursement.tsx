@@ -136,13 +136,13 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 
 		let newValue: any = value;
 		if (isConvert) {
-			const numericValue = price(value); // bỏ dấu phẩy
+			const numericValue = price(value);
 			newValue = numericValue;
 		}
 
 		newPnContracts[subIndex] = {
 			...newPnContracts[subIndex],
-			[name]: newValue,
+			[name]: convertCoin(Number(price(newValue))),
 		};
 
 		newData[index] = {
@@ -155,34 +155,6 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 			contracts: newData,
 		}));
 	};
-
-	// const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
-	// 	const newData = [...form?.contracts];
-
-	// 	if (isConvert) {
-	// 		if (!Number(price(value))) {
-	// 			newData[index] = {
-	// 				...newData[index],
-	// 				[name]: 0,
-	// 			};
-	// 		}
-
-	// 		newData[index] = {
-	// 			...newData[index],
-	// 			[name]: convertCoin(Number(price(value))),
-	// 		};
-	// 	} else {
-	// 		newData[index] = {
-	// 			...newData[index],
-	// 			[name]: value,
-	// 		};
-	// 	}
-
-	// 	setForm((prev) => ({
-	// 		...prev,
-	// 		contracts: newData,
-	// 	}));
-	// };
 
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({

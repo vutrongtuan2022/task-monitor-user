@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './MainUpdateReportDisbursement.module.scss';
 
 import {IFormUpdateReportDisbursement, PropsMainUpdateReportDisbursement} from './interfaces';
@@ -60,46 +60,68 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 			}),
 		onSuccess(data) {
 			if (data) {
-				setForm({
-					year: data?.year,
-					month: data?.month,
-					projectUuid: data?.project?.uuid || '',
-					description: data?.note || '',
-					contracts: data?.contracts
-						? data?.contracts?.map((v: any) => ({
-								...v,
-								guaranteeAmount: convertCoin(v?.guaranteeAmount),
-								guaranteeReverseAmount: convertCoin(v?.guaranteeReverseAmount),
-								note: v?.note,
-						  }))
-						: [],
+				const groupedMap = new Map<string, any>();
+
+				data.contracts.forEach((v: any) => {
+					const detailUuid = v?.detailContractsDTO?.uuid;
+					if (!detailUuid) return;
+
+					if (!groupedMap.has(detailUuid)) {
+						groupedMap.set(detailUuid, {
+							DetailContractsDTOUuid: detailUuid,
+							detailContractsDTO: v.detailContractsDTO,
+							pnContract: [],
+						});
+					}
+
+					if (v?.pnContract) {
+						const group = groupedMap.get(detailUuid);
+						group.pnContract.push({
+							...v.pnContract,
+							note: v?.note,
+							releaseDate: v?.releaseDate,
+							contractsContractUuid: v?.contractsContractUuid,
+							guaranteeAmount: convertCoin(v?.guaranteeAmount),
+							guaranteeReverseAmount: convertCoin(v?.guaranteeReverseAmount),
+						});
+					}
 				});
+
+				const groupedContracts = Array.from(groupedMap.values());
+				setForm((prev) => ({
+					...prev,
+					year: data.year,
+					month: data.month,
+					projectUuid: data.project?.uuid || '',
+					description: data.note || '',
+					contracts: groupedContracts,
+				}));
 			}
 		},
 		enabled: !!_uuid,
 	});
 
-	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
+	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean, subIndex?: number) => {
 		const newData = [...form?.contracts];
+		if (!newData[index]?.pnContract || subIndex === undefined) return;
 
+		const newPnContracts = [...newData[index].pnContract];
+
+		let newValue: any = value;
 		if (isConvert) {
-			if (!Number(price(value))) {
-				newData[index] = {
-					...newData[index],
-					[name]: 0,
-				};
-			}
-
-			newData[index] = {
-				...newData[index],
-				[name]: convertCoin(Number(price(value))),
-			};
-		} else {
-			newData[index] = {
-				...newData[index],
-				[name]: value,
-			};
+			const numericValue = price(value);
+			newValue = numericValue;
 		}
+
+		newPnContracts[subIndex] = {
+			...newPnContracts[subIndex],
+			[name]: convertCoin(Number(price(newValue))),
+		};
+
+		newData[index] = {
+			...newData[index],
+			pnContract: newPnContracts,
+		};
 
 		setForm((prev) => ({
 			...prev,
@@ -114,6 +136,25 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 		}));
 	};
 
+	const handleDeletePn = (index: number, idx: number) => {
+		setForm((prev) => {
+			const updateContracts = [...prev.contracts];
+			const updateChildren = [
+				...updateContracts[index].pnContract.slice(0, idx),
+				...updateContracts[index].pnContract.slice(idx + 1),
+			];
+			updateContracts[index] = {
+				...updateContracts[index],
+				pnContract: updateChildren,
+			};
+
+			return {
+				...prev,
+				contracts: updateContracts,
+			};
+		});
+	};
+
 	const funcUpdateReportFund = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -123,15 +164,17 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 				http: contractsFundServices.updateReportFund({
 					contractsFundUuid: _uuid as string,
 					note: form?.description,
-					disbursementInfo: form?.contracts?.map((v) => ({
-						contractsUuid: v?.detailContractsDTO?.uuid,
-						contractsContractUuid: v?.contractsContractUuid,
-						amount: price(v?.guaranteeAmount),
-						reverseAmount: price(v?.guaranteeReverseAmount),
-						disbursementDay: v?.releaseDate ? moment(v?.releaseDate).format('YYYY-MM-DD') : null,
-						note: v?.note,
-						pnContractUuid: v?.pnContract?.uuid,
-					})),
+					disbursementInfo: form?.contracts?.flatMap((v) => {
+						return v?.pnContract?.map((pn) => ({
+							contractsUuid: v?.detailContractsDTO?.uuid,
+							contractsContractUuid: v?.contractsContractUuid,
+							amount: price(pn?.guaranteeAmount),
+							reverseAmount: price(pn?.guaranteeReverseAmount),
+							disbursementDay: pn?.releaseDate ? moment(pn?.releaseDate).format('YYYY-MM-DD') : null,
+							note: pn?.note,
+							pnContractUuid: pn?.uuid,
+						}));
+					}),
 				}),
 			});
 		},
@@ -293,6 +336,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 							contract={v}
 							handleChangeValue={handleChangeValue}
 							handleDelete={() => handleDelete(i)}
+							handleDeletePn={handleDeletePn}
 						/>
 					))}
 				</div>

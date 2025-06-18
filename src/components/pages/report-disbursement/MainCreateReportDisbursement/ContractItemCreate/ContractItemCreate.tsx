@@ -192,7 +192,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete, h
 														type='text'
 														placeholder='Nhập Sử dụng vốn dự phòng'
 														className={styles.input}
-														value={convertCoin(v?.reverseAmount)}
+														value={v?.reverseAmount}
 														onChange={(e) =>
 															handleChangeValue(index, 'reverseAmount', e.target.value, true, idx)
 														}
@@ -209,7 +209,7 @@ function ContractItemCreate({index, contract, handleChangeValue, handleDelete, h
 														type='text'
 														placeholder='Nhập Sử dụng vốn dự án'
 														className={styles.input}
-														value={convertCoin(v?.amountDisbursement)}
+														value={v?.amountDisbursement}
 														onChange={(e) =>
 															handleChangeValue(index, 'amountDisbursement', e.target.value, true, idx)
 														}

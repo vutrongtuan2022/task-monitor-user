@@ -12,7 +12,7 @@ import {Trash} from 'iconsax-react';
 import clsx from 'clsx';
 import Tippy from '@tippyjs/react';
 
-function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: PropsContractItemUpdate) {
+function ContractItemUpdate({index, contract, handleChangeValue, handleDelete, handleDeletePn}: PropsContractItemUpdate) {
 	const [collapsed, setCollapsed] = useState(false);
 
 	const handleToggle = () => {
@@ -34,7 +34,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 					</div>
 				</div>
 				{collapsed == false ? (
-					<>
+					<div>
 						<div className={styles.main}>
 							<GridColumn col_4>
 								<div className={styles.item}>
@@ -153,93 +153,97 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 						<div className={styles.head}>
 							<h4>Thông tin giải ngân kỳ này</h4>
 						</div>
+						{contract?.pnContract?.map((v, idx) => (
+							<div className={styles.main} key={idx}>
+								<GridColumn col_2>
+									<div>
+										<p className={clsx(styles.label)}>Thuộc cấp số chấp thuận thanh toán</p>
+										<div className={styles.input_specification}>
+											<input
+												name='value'
+												type='text'
+												placeholder='Nhập cấp số chấp thuận'
+												className={clsx(styles.input, styles.readOnly)}
+												readOnly={true}
+												disabled={true}
+												value={v?.pn?.code}
+											/>
+										</div>
+									</div>
+									<div>
+										<p className={styles.label}>Nhà thầu</p>
+										<div className={styles.input_contractor}>
+											<input
+												name='value'
+												type='text'
+												placeholder='Nhập nhà thầu'
+												className={clsx(styles.input, styles.readOnly)}
+												readOnly={true}
+												disabled={true}
+												value={v?.contractor?.contractor?.name || ''}
+											/>
+											<div className={styles.delete} onClick={() => handleDeletePn(index, idx)}>
+												<Trash size={22} color='#EE464C' />
+											</div>
+										</div>
+									</div>
+									<div>
+										<p className={styles.label}>Sử dụng vốn dự phòng</p>
+										<div className={styles.input_specification}>
+											<input
+												name='value'
+												type='text'
+												placeholder='Nhập vốn dự phòng'
+												className={styles.input}
+												value={v?.guaranteeReverseAmount}
+												onChange={(e) =>
+													handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true, idx)
+												}
+											/>
+											<div className={styles.unit}>VNĐ</div>
+										</div>
 
-						<div className={styles.main}>
-							<GridColumn col_2>
-								<div>
-									<p className={clsx(styles.label)}>Thuộc cấp số chấp thuận thanh toán</p>
-									<div className={styles.input_specification}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập cấp số chấp thuận'
-											className={clsx(styles.input, styles.readOnly)}
-											readOnly={true}
-											disabled={true}
-											value={contract?.pnContract?.pn?.code}
-										/>
-									</div>
-								</div>
-								<div>
-									<p className={styles.label}>Nhà thầu</p>
-									<div className={styles.input_contractor}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập nhà thầu'
-											className={clsx(styles.input, styles.readOnly)}
-											readOnly={true}
-											disabled={true}
-											value={contract?.pnContract?.contractor?.contractor?.name || ''}
-										/>
-										{/* <div className={styles.delete} onClick={() => {}}>
-											<Trash size={22} color='#EE464C' />
-										</div> */}
-									</div>
-								</div>
+										<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
+										<div className={styles.input_specification}>
+											<input
+												name='value'
+												type='text'
+												placeholder='Nhập vốn dự án'
+												className={styles.input}
+												value={v?.guaranteeAmount}
+												onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true, idx)}
+											/>
+											<div className={styles.unit}>VNĐ</div>
+										</div>
 
-								<div>
-									<p className={styles.label}>Sử dụng vốn dự phòng</p>
-									<div className={styles.input_specification}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập vốn dự phòng'
-											className={styles.input}
-											value={contract?.guaranteeReverseAmount}
-											onChange={(e) => handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true)}
-										/>
-										<div className={styles.unit}>VNĐ</div>
+										<div className={styles.mt}>
+											<DatePicker
+												onClean={true}
+												icon={true}
+												label={<span>Ngày giải ngân</span>}
+												placeholder='Chọn ngày giải ngân'
+												value={v?.releaseDate}
+												onSetValue={(date) => handleChangeValue(index, 'releaseDate', date, false, idx)}
+												name='birthday'
+											/>
+										</div>
 									</div>
+									<div>
+										<label className={styles.label}>Mô tả</label>
+										<textarea
+											name='note'
+											value={v?.note}
+											placeholder='Nhập mô tả'
+											className={styles.textarea}
+											onChange={(e) => handleChangeValue(index, 'note', e.target.value, false, idx)}
+										/>
+									</div>
+								</GridColumn>
+							</div>
+						))}
 
-									<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
-									<div className={styles.input_specification}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập vốn dự án'
-											className={styles.input}
-											value={contract?.guaranteeAmount}
-											onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true)}
-										/>
-										<div className={styles.unit}>VNĐ</div>
-									</div>
-
-									<div className={styles.mt}>
-										<DatePicker
-											onClean={true}
-											icon={true}
-											label={<span>Ngày giải ngân</span>}
-											placeholder='Chọn ngày giải ngân'
-											value={contract?.releaseDate}
-											onSetValue={(date) => handleChangeValue(index, 'releaseDate', date)}
-											name='birthday'
-										/>
-									</div>
-								</div>
-								<div>
-									<label className={styles.label}>Mô tả</label>
-									<textarea
-										name='note'
-										value={contract?.note}
-										placeholder='Nhập mô tả'
-										className={styles.textarea}
-										onChange={(e) => handleChangeValue(index, 'note', e.target.value)}
-									/>
-								</div>
-							</GridColumn>
-						</div>
-					</>
+						{/* ))} */}
+					</div>
 				) : (
 					<div className={styles.main}>
 						<GridColumn col_4>
