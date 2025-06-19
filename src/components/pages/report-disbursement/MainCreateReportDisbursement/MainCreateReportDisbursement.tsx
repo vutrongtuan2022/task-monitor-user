@@ -142,7 +142,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 
 		newPnContracts[subIndex] = {
 			...newPnContracts[subIndex],
-			[name]: convertCoin(Number(price(newValue))),
+			[name]: newValue,
 		};
 
 		newData[index] = {

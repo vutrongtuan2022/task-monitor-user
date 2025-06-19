@@ -53,10 +53,10 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 							readonly={true}
 							label={
 								<span>
-									Ngày lấy số <span style={{color: 'red'}}>*</span>
+									Ngày ký hợp đồng <span style={{color: 'red'}}>*</span>
 								</span>
 							}
-							placeholder='Chọn ngày lấy số'
+							placeholder='Chọn ngày ký hợp đồng'
 							value={contract?.startDate}
 							onSetValue={(date) => {}}
 							name='startDate'

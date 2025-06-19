@@ -180,7 +180,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		}
 		if (form?.listContract?.length == 0) {
 			return toastWarn({
-				msg: 'Vui lòng chọn hợp động!',
+				msg: 'Vui lòng chọn hợp đồng!',
 			});
 		}
 		if (!form?.listContract.every((item) => price(item.amount) > 0)) {

@@ -18,8 +18,7 @@ import TabNavLink from '~/components/common/TabNavLink';
 import TableParticipating from './component/TableParticipating';
 import TableContractorCat from './component/TableContractorCat/TableContractorCat';
 import TableContractorCatPending from './component/TableContractorCatPending';
-import DisbursementReportOverview from './component/DisbursementReportOverview';
-import TableContracfund from './component/TableContracfund';
+import TableContractFund from './component/TableContractFund';
 
 function DetailContractor({}: PropsDetailContractor) {
 	const router = useRouter();
@@ -142,12 +141,7 @@ function DetailContractor({}: PropsDetailContractor) {
 						{!_type && <TableParticipating />}
 						{_type == 'contractorCat' && <TableContractorCat />}
 						{_type == 'contractorCatPending' && <TableContractorCatPending />}
-						{_type == 'disbursement' && (
-							<Fragment>
-								<DisbursementReportOverview />
-								<TableContracfund />
-							</Fragment>
-						)}
+						{_type == 'disbursement' && <TableContractFund />}
 					</div>
 				</div>
 			</div>

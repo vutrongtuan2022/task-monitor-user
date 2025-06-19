@@ -80,7 +80,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Xóa thanh toán thành công!',
+				msgSuccess: 'Xóa CSCT thanh toán thành công!',
 				http: pnServices.updateStatusPN({
 					uuid: deleteCSCT,
 				}),
@@ -100,7 +100,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			<div className={styles.head}>
 				<div className={styles.search_fillter}>
 					<div className={styles.search}>
-						<Search keyName='_keyword' placeholder='Tìm kiếm theo nhà thầu' />
+						<Search keyName='_keyword' placeholder='Tìm kiếm theo mã cấp số' />
 					</div>
 					<div className={styles.filter}>
 						<FilterCustom
@@ -207,7 +207,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								render: (data: ICSCT) => <p>{data?.totalContracts}</p>,
 							},
 							{
-								title: 'Tổng giá trị thanh toán',
+								title: 'Tổng giá trị thanh toán(VND)',
 								render: (data: ICSCT) => (
 									<p>
 										<span>{convertCoin(data?.accumAmount)}</span>/
@@ -342,8 +342,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					type='error'
 					open={!!deleteCSCT}
 					onClose={() => setDeleteCSCT('')}
-					title={'Xóa thanh toán'}
-					note={'Bạn có chắc chắn muốn xóa thanh toán này không?'}
+					title={'Xóa CSCT thanh toán'}
+					note={'Bạn có chắc chắn muốn xóa CSCT thanh toán này không?'}
 					onSubmit={funcDelete.mutate}
 				/>
 			</WrapperScrollbar>
