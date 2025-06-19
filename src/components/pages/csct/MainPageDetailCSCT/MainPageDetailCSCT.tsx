@@ -67,7 +67,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 			return httpRequest({
 				showMessageFailed: true,
 				showMessageSuccess: true,
-				msgSuccess: 'Xóa thanh toán thành công!',
+				msgSuccess: 'Xóa CSCT thanh toán thành công!',
 				http: pnServices.updateStatusPN({
 					uuid: uuidDelete,
 				}),
@@ -118,7 +118,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 					<div className={styles.head}>
 						<h4>Thông tin cơ bản</h4>
 						<div className={styles.state}>
-							<p>Trạng thái giải ngân:</p>
+							<p>Trạng thái:</p>
 							<StateActive
 								stateActive={detailCSCT?.state!}
 								listState={[
@@ -195,7 +195,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								</p>
 							</div>
 							<div className={styles.item}>
-								<p>Tống giá trị thanh toán (VND)</p>
+								<p>Tổng giá trị thanh toán (VND)</p>
 								<p>{convertCoin(detailCSCT?.totalAmount!)}</p>
 							</div>
 							<div className={styles.item}>
@@ -274,8 +274,8 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							type='error'
 							open={!!uuidDelete}
 							onClose={() => setUuidDelete('')}
-							title={'Xoá thanh toán'}
-							note={'Bạn có chắc chắn muốn xóa thanh toán này không?'}
+							title={'Xoá CSCT thanh toán'}
+							note={'Bạn có chắc chắn muốn xóa CSCT thanh toán này không?'}
 							onSubmit={funcDelete.mutate}
 						/>
 					</div>
