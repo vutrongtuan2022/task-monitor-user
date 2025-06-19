@@ -87,22 +87,25 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Số thông báo chấp thuận thanh toán',
-								render: (data: IContractFund) => (
-									<p>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</p>
-								),
+								render: (data: IContractFund) => <>{ data?.pnContract ? data?.pnContract?.pn?.code : '---'}</>,
 							},
 							{
 								title: 'Ngày chấp thuận thanh toán',
 								render: (data: IContractFund) => (
-									<p>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</p>
+									<p>
+										{data?.pnContract?.pn?.numberingDate ? (
+											<Moment date={data?.pnContract?.pn?.numberingDate} format='DD/MM/YYYY' />
+										) : (
+											'---'
+										)}
+									</p>
 								),
 							},
 							{
 								title: 'Giá trị chấp thuận thanh toán',
-								render: (data: IContractFund) => (
-									<p>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</p>
-								),
+								render: (data: IContractFund) => <>{ data?.pnContract ? convertCoin(data?.pnContract?.amount) : '---'}</>,
 							},
+
 							{
 								title: 'Ngày giải ngân',
 								render: (data: IContractFund) => (
@@ -119,21 +122,10 @@ function TableContracfund({}: PropsTableContracFund) {
 								title: 'Tên nhóm nhà thầu',
 								render: (data: IContractFund) => (
 									<>
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))].map(
-														(catName, i) => (
-															<li key={i}>{catName}</li>
-														)
-													)}
-												</ol>
-											}
-										>
-											<p className={styles.name}>
-												{data?.contractorInfos?.map((v) => v?.contractorCatName).join(', ')}
-											</p>
-										</Tippy>
+										{
+											data?.pnContract ? data?.pnContract.contractor.contractorCat.name : '---'
+											
+										}
 									</>
 								),
 							},
@@ -141,17 +133,11 @@ function TableContracfund({}: PropsTableContracFund) {
 								title: 'Tên nhà thầu',
 								render: (data: IContractFund) => (
 									<>
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<p className={styles.name}>{data?.contractorInfos?.map((v) => v?.contractorName).join(', ')}</p>
-										</Tippy>
+										{
+											data?.pnContract ? data?.pnContract.contractor.contractor.name : '---'
+
+											
+										}
 									</>
 								),
 							},
