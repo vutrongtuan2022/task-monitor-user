@@ -175,5 +175,19 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	contractFundByContractor: (
+		data: {
+			pageSize: number;
+			page: number;
+			keyword: string | null;
+			status: number;
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/get-contract-contract-fund-by-contractor`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsFundServices;

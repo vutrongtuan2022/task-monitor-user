@@ -272,28 +272,31 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 									},
 									{
 										title: 'Số thông báo chấp thuận thanh toán',
-										render: (data: IContractFund) => (
-											<>{data?.pnContract ? data?.pnContract.pn.code : '---'}</>
-										),
+										render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
 									},
 									{
 										title: 'Ngày chấp nhận thanh toán',
 										render: (data: IContractFund) => (
-											<>{data?.pnContract ? <Moment date={data?.pnContract.pn.numberingDate} format='DD/MM/YYYY' /> : '---'}</>
+											<>
+												{data?.pnContract ? (
+													<Moment date={data?.pnContract?.pn?.numberingDate} format='DD/MM/YYYY' />
+												) : (
+													'---'
+												)}
+											</>
 										),
 									},
 									{
 										title: 'Giá trị chấp nhận thanh toán (VND)',
-										render: (data: IContractFund) => <>{data?.pnContract ? convertCoin( data?.pnContract.amount) : '---'}</>
+										render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
 									},
 									{
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IContractFund) => (
 											<>
-
 												{
-													data?.pnContract ? data?.pnContract.contractor.contractorCat.name : '---'
-												/* <Tippy
+													data?.pnContract?.contractor?.contractorCat?.name || '---'
+													/* <Tippy
 													content={
 														<ol style={{paddingLeft: '16px'}}>
 															{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))].map(
@@ -307,7 +310,8 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 													<p className={styles.name}>
 														{data?.contractorInfos?.map((v) => v?.contractorCatName).join(', ')}
 													</p>
-												</Tippy> */}
+												</Tippy> */
+												}
 											</>
 										),
 									},
@@ -316,9 +320,9 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										render: (data: IContractFund) => (
 											<>
 												{
-													data?.pnContract ? data?.pnContract.contractor.contractor.name : '---'
-												
-												/* <Tippy
+													data?.pnContract?.contractor?.contractor?.name || '---'
+
+													/* <Tippy
 													content={
 														<ol style={{paddingLeft: '16px'}}>
 															{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map(
@@ -332,7 +336,8 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 													<p className={styles.name}>
 														{data?.contractorInfos?.map((v) => v?.contractorName).join(', ')}
 													</p>
-												</Tippy> */}
+												</Tippy> */
+												}
 											</>
 										),
 									},

@@ -87,7 +87,7 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Số thông báo chấp thuận thanh toán',
-								render: (data: IContractFund) => <>{ data?.pnContract ? data?.pnContract?.pn?.code : '---'}</>,
+								render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
 							},
 							{
 								title: 'Ngày chấp thuận thanh toán',
@@ -103,7 +103,7 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Giá trị chấp thuận thanh toán',
-								render: (data: IContractFund) => <>{ data?.pnContract ? convertCoin(data?.pnContract?.amount) : '---'}</>,
+								render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
 							},
 
 							{
@@ -120,26 +120,11 @@ function TableContracfund({}: PropsTableContracFund) {
 							},
 							{
 								title: 'Tên nhóm nhà thầu',
-								render: (data: IContractFund) => (
-									<>
-										{
-											data?.pnContract ? data?.pnContract.contractor.contractorCat.name : '---'
-											
-										}
-									</>
-								),
+								render: (data: IContractFund) => <>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>,
 							},
 							{
 								title: 'Tên nhà thầu',
-								render: (data: IContractFund) => (
-									<>
-										{
-											data?.pnContract ? data?.pnContract.contractor.contractor.name : '---'
-
-											
-										}
-									</>
-								),
+								render: (data: IContractFund) => <>{data?.pnContract?.contractor?.contractor?.name || '---'}</>,
 							},
 							{
 								title: 'Mô tả',
