@@ -87,4 +87,5 @@ export interface IDetailInfoProject {
 	realEnd: string;
 	created: string;
 	uuid: string;
+	totalAmountPN: number;
 }

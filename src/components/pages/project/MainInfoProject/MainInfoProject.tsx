@@ -408,7 +408,7 @@ function MainInfoProject({}: PropsMainInfoProject) {
 								<div className={styles.line}></div>
 								<div className={styles.item_capital}>
 									<p>Lũy kế giá trị chấp thuận thanh toán</p>
-									<p>{convertCoin(detailProject?.accumReserve!)} VND</p>
+									<p>{convertCoin(detailProject?.totalAmountPN!)} VND</p>
 								</div>
 							</div>
 						</div>

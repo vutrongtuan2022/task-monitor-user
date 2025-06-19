@@ -2,7 +2,7 @@ import {Fragment, useEffect} from 'react';
 import {RootState, store} from '~/redux/store';
 
 import {setCookie} from 'cookies-next';
-import Lottie from 'react-lottie';
+// import Lottie from 'react-lottie';
 
 import {PropsSplashScreen} from './interfaces';
 import clsx from 'clsx';
@@ -15,6 +15,7 @@ import {setIsMobile, setLoading, setRememberPassword} from '~/redux/reducer/site
 import * as loading from '../../../../public/static/anim/loadingScreen.json';
 import {setDataLoginStorage, setStateLogin, setToken} from '~/redux/reducer/auth';
 import {setInfoUser} from '~/redux/reducer/user';
+import Lottie from 'react-lottie';
 
 const defaultOptions = {
 	loop: true,
