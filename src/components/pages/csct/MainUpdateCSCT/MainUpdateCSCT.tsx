@@ -86,6 +86,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 							contractorLinks: v?.contractor,
 							startDate: v?.contract?.startDate,
 							uuid: v?.contract?.uuid,
+							code: v?.contract?.code,
 					  }))
 					: [],
 			}));
@@ -119,8 +120,6 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		},
 		enabled: !!form?.projectUuid,
 	});
-
-	console.log('listContract', form?.listContract);
 
 	useEffect(() => {
 		const totalAmount = form?.listContract?.reduce((acc, curr) => acc + price(curr.amount), 0);
@@ -370,7 +369,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 									}
 									showSelectedItems={false}
 									readOnly={!form.projectUuid}
-									selectedItems={form?.listContract?.map((v) => v.uuid)}
+									selectedItems={[...new Set(form?.listContract?.map((v) => v.uuid))]}
 									disabledItems={[]}
 									options={uniqueContracts}
 									getOptionLabel={(otp) => otp.code}
