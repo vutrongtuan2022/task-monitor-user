@@ -330,7 +330,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 									}
 									showSelectedItems={false}
 									readOnly={!form.projectUuid}
-									selectedItems={form?.listContract?.map((contract) => contract.uuid)}
+									selectedItems={[...new Set(form?.listContract?.map((contract) => contract.uuid))]}
 									disabledItems={[]}
 									options={uniqueContracts}
 									getOptionLabel={(contract) => contract.code}
