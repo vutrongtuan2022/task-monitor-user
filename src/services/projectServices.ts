@@ -188,7 +188,7 @@ const projectServices = {
 	},
 	exportProject: (
 		data: {
-			projectUuid: string[];
+			projects: string[];
 			from: string | null;
 			to: string | null;
 		},
