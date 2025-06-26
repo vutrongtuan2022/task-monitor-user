@@ -820,7 +820,15 @@ function MainPageWork({}: PropsMainPageWork) {
 							<h4>Nhập tình trạng xử lý</h4>
 						</div>
 						<div className={styles.form}>
-							<TextArea name='reason' placeholder='Nhập tình trạng' label='Mô tả tình trạng xử lý' />
+							<TextArea
+								name='reason'
+								placeholder='Nhập tình trạng'
+								label={
+									<span>
+										Mô tả tình trạng xử lý <span style={{color: 'red'}}>*</span>
+									</span>
+								}
+							/>
 							<div className={styles.group_button}>
 								<div>
 									<Button p_12_20 grey rounded_6 onClick={() => setUuidReason('')}>
