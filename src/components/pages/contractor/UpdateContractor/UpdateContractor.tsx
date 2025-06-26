@@ -148,7 +148,8 @@ function UpdateContractor({onClose}: PropsUpdateContractor) {
 					address: '',
 					code: '',
 				});
-				queryClient.invalidateQueries([QUERY_KEY.table_contractor, QUERY_KEY.detail_contractor_for_admin]);
+				queryClient.invalidateQueries([QUERY_KEY.table_contractor]);
+				queryClient.invalidateQueries([QUERY_KEY.detail_contractor_for_admin]);
 			}
 		},
 	});
