@@ -33,6 +33,7 @@ export interface IDetailCSCT {
 		uuid: string;
 	};
 	state: number;
+	approvalDate: string | null;
 	uuid: string;
 }
 
