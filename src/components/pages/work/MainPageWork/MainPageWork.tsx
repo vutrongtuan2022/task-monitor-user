@@ -718,17 +718,15 @@ function MainPageWork({}: PropsMainPageWork) {
 											/>
 										)}
 
-										{data?.progress < 100 && data?.type == TYPE_WORK.TASK ? (
-											<IconCustom
-												color='#536884'
-												icon={<ReceiptEdit fontSize={20} />}
-												tooltip='Nhập tình trạng xử lý'
-												onClick={() => {
-													setUuidReason(data?.uuid);
-													setForm((prev) => ({...prev, reason: data?.unfinishReason || ''}));
-												}}
-											/>
-										) : null}
+										<IconCustom
+											color='#536884'
+											icon={<ReceiptEdit fontSize={20} />}
+											tooltip='Nhập tình trạng xử lý'
+											onClick={() => {
+												setUuidReason(data?.uuid);
+												setForm((prev) => ({...prev, reason: data?.unfinishReason || ''}));
+											}}
+										/>
 
 										{data?.type == TYPE_WORK.TASK && (
 											<IconCustom
