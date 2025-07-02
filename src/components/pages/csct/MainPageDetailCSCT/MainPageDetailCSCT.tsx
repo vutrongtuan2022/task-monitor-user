@@ -169,27 +169,22 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>{detailCSCT?.noticeDate ? <Moment date={detailCSCT?.noticeDate} format='DD/MM/YYYY' /> : '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Số lượng hợp đồng</p>
-								<p>{detailCSCT?.totalContracts}</p>
+								<p>Ngày phê duyệt CSCTTT</p>
+								<p>{detailCSCT?.approvalDate ? <Moment date={detailCSCT?.approvalDate} format='DD/MM/YYYY' /> : '---'}</p>
 							</div>
 							<div className={styles.item}>
 								<p>Lãnh đạo phụ trách</p>
-								<p>{detailCSCT?.user?.fullname || '---'}</p>
-							</div>
-							<div className={styles.item}>
-								<p>Cán bộ phụ trách</p>
 								<p>{detailCSCT?.project?.leader?.fullname || '---'}</p>
 							</div>
 							<div className={styles.item}>
-								<p>Ngày tạo dự án</p>
-								<p>
-									{detailCSCT?.project?.created ? (
-										<Moment date={detailCSCT?.project?.created} format='DD/MM/YYYY' />
-									) : (
-										'---'
-									)}
-								</p>
+								<p>Cán bộ phụ trách</p>
+								<p>{detailCSCT?.user?.fullname || '---'}</p>
 							</div>
+							<div className={styles.item}>
+								<p>Số lượng hợp đồng</p>
+								<p>{detailCSCT?.totalContracts}</p>
+							</div>
+
 							<div className={styles.item}>
 								<p>Tổng giá trị thanh toán (VND)</p>
 								<p>{convertCoin(detailCSCT?.totalAmount!)}</p>

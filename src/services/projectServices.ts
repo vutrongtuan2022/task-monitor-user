@@ -186,6 +186,18 @@ const projectServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	exportProject: (
+		data: {
+			projects: string[];
+			from: string | null;
+			to: string | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/Project/export-project`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default projectServices;
