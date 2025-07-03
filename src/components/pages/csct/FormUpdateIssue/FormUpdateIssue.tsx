@@ -13,6 +13,7 @@ import Loading from '~/components/common/Loading';
 import {toastWarn} from '~/common/funcs/toast';
 import moment from 'moment';
 import {timeSubmit} from '~/common/funcs/optionConvert';
+import DatePicker from '~/components/common/DatePicker';
 
 function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 	const router = useRouter();
@@ -76,6 +77,7 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 
 		funcUpdateNoticeDate.mutate();
 	};
+	console.log('today', new Date(timeSubmit(new Date())!));
 	console.log('date', form?.dateIssue);
 	return (
 		<div className={styles.container}>
@@ -84,12 +86,18 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 
 			<div className={styles.form}>
 				<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-					<Input
-						placeholder='Nhập ngày cấp vốn'
-						name='dateIssue'
-						type='date'
-						value={form.dateIssue}
+					<DatePicker
+						icon={true}
 						label={<span>Chọn ngày thông báo cấp vốn</span>}
+						name='dateIssue'
+						value={form.dateIssue}
+						placeholder='Nhập ngày cấp vốn'
+						onSetValue={(date) =>
+							setForm((prev) => ({
+								...prev,
+								dateIssue: date,
+							}))
+						}
 					/>
 
 					<div className={styles.groupBtnPopup}>

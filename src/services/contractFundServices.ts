@@ -139,6 +139,8 @@ const contractsFundServices = {
 		});
 	},
 
+
+	
 	getContractFundForOverView: (
 		data: {
 			projectUuid: string;
