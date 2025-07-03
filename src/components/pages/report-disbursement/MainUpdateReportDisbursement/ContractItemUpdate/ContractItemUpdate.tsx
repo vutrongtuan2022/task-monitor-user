@@ -188,7 +188,19 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete, h
 										</div>
 									</div>
 									<div>
-										<p className={styles.label}>Sử dụng vốn dự phòng</p>
+										<p className={styles.label}>Sử dụng vốn dự án</p>
+										<div className={styles.input_specification}>
+											<input
+												name='value'
+												type='text'
+												placeholder='Nhập vốn dự án'
+												className={styles.input}
+												value={convertCoin(v?.guaranteeAmount)}
+												onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true, idx)}
+											/>
+											<div className={styles.unit}>VNĐ</div>
+										</div>
+										<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự phòng</p>
 										<div className={styles.input_specification}>
 											<input
 												name='value'
@@ -199,19 +211,6 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete, h
 												onChange={(e) =>
 													handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true, idx)
 												}
-											/>
-											<div className={styles.unit}>VNĐ</div>
-										</div>
-
-										<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
-										<div className={styles.input_specification}>
-											<input
-												name='value'
-												type='text'
-												placeholder='Nhập vốn dự án'
-												className={styles.input}
-												value={convertCoin(v?.guaranteeAmount)}
-												onChange={(e) => handleChangeValue(index, 'guaranteeAmount', e.target.value, true, idx)}
 											/>
 											<div className={styles.unit}>VNĐ</div>
 										</div>

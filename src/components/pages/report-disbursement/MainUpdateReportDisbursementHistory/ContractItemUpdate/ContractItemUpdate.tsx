@@ -183,19 +183,7 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 									</div>
 								</div> */}
 								<div>
-									<p className={styles.label}>Sử dụng vốn dự phòng</p>
-									<div className={styles.input_specification}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập vốn dự phòng'
-											className={styles.input}
-											value={contract?.guaranteeReverseAmount}
-											onChange={(e) => handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true)}
-										/>
-										<div className={styles.unit}>VNĐ</div>
-									</div>
-									<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự án</p>
+									<p className={styles.label}>Sử dụng vốn dự án</p>
 									<div className={styles.input_specification}>
 										<input
 											name='value'
@@ -207,6 +195,19 @@ function ContractItemUpdate({index, contract, handleChangeValue, handleDelete}: 
 										/>
 										<div className={styles.unit}>VNĐ</div>
 									</div>
+									<p className={clsx(styles.label, styles.mt)}>Sử dụng vốn dự phòng</p>
+									<div className={styles.input_specification}>
+										<input
+											name='value'
+											type='text'
+											placeholder='Nhập vốn dự phòng'
+											className={styles.input}
+											value={contract?.guaranteeReverseAmount}
+											onChange={(e) => handleChangeValue(index, 'guaranteeReverseAmount', e.target.value, true)}
+										/>
+										<div className={styles.unit}>VNĐ</div>
+									</div>
+
 									<div className={styles.mt}>
 										<DatePicker
 											onClean={true}
