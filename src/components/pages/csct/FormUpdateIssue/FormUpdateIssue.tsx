@@ -85,41 +85,42 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 			<h4 className={styles.title}>Ngày trên thông báo cấp vốn</h4>
 
 			<div className={styles.form}>
-				<Form form={form} setForm={setForm} onSubmit={handleSubmit}>
-					<DatePicker
-						icon={true}
-						label={<span>Chọn ngày thông báo cấp vốn</span>}
-						name='dateIssue'
-						value={form.dateIssue}
-						placeholder='Nhập ngày cấp vốn'
-						onSetValue={(date) =>
-							setForm((prev) => ({
-								...prev,
-								dateIssue: date,
-							}))
-						}
-					/>
-
-					<div className={styles.groupBtnPopup}>
-						<div>
-							<Button p_12_20 rounded_8 white_outline onClick={onClose} maxContent>
-								Hủy bỏ
-							</Button>
-						</div>
-						<div>
-							<FormContext.Consumer>
-								{({isDone}) => (
-									<Button bold rounded_8 p_12_20 disable={!isDone}>
-										Lưu lại
-									</Button>
-								)}
-							</FormContext.Consumer>
-						</div>
+				{/* <Input
+            placeholder='Nhập ngày cấp vốn'
+            name='dateIssue'
+            type='date'
+            value={form.dateIssue}
+            label={<span>Chọn ngày thông báo cấp vốn</span>}
+          /> */}
+				<DatePicker
+					onClean={true}
+					icon={true}
+					label={<span>Chọn ngày thông báo cấp vốn</span>}
+					name='dateIssue'
+					value={form.dateIssue}
+					placeholder='Nhập ngày cấp vốn'
+					onSetValue={(date) =>
+						setForm((prev) => ({
+							...prev,
+							dateIssue: date,
+						}))
+					}
+				/>
+				<div className={styles.groupBtnPopup}>
+					<div>
+						<Button p_12_20 rounded_8 white_outline onClick={onClose} maxContent>
+							Hủy bỏ
+						</Button>
 					</div>
-					<div className={styles.close} onClick={onClose}>
-						<IoClose />
+					<div>
+						<Button bold rounded_8 p_12_20 disable={!form.dateIssue} onClick={handleSubmit}>
+							Lưu lại
+						</Button>
 					</div>
-				</Form>
+				</div>
+				<div className={styles.close} onClick={onClose}>
+					<IoClose />
+				</div>
 			</div>
 		</div>
 	);
