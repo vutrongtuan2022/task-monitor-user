@@ -167,7 +167,7 @@ function MainUpdateReportDisbursement({}: PropsMainUpdateReportDisbursement) {
 					disbursementInfo: form?.contracts?.flatMap((v) => {
 						return v?.pnContract?.map((pn) => ({
 							contractsUuid: v?.detailContractsDTO?.uuid,
-							contractsContractUuid: v?.contractsContractUuid,
+							contractsContractUuid: pn?.contractsContractUuid,
 							amount: price(pn?.guaranteeAmount),
 							reverseAmount: price(pn?.guaranteeReverseAmount),
 							disbursementDay: pn?.releaseDate ? moment(pn?.releaseDate).format('YYYY-MM-DD') : null,
