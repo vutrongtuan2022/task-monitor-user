@@ -10,6 +10,7 @@ export interface PropsTableContractFund {
 		code: string;
 		uuid: string;
 	};
+	uuid: string;
 	created: string;
 	state: number;
 	note: string;
@@ -45,5 +46,5 @@ export interface PropsTableContractFund {
 		note: string;
 		uuid: string;
 		status: number;
-	}
+	};
 }

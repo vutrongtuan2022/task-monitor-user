@@ -271,11 +271,11 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										),
 									},
 									{
-										title: 'Số thông báo chấp thuận thanh toán',
+										title: 'Mã số chấp thuận thanh toán',
 										render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
 									},
 									{
-										title: 'Ngày chấp nhận thanh toán',
+										title: 'Ngày chấp thuận thanh toán',
 										render: (data: IContractFund) => (
 											<>
 												{data?.pnContract ? (
@@ -287,7 +287,7 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										),
 									},
 									{
-										title: 'Giá trị chấp nhận thanh toán (VND)',
+										title: 'Giá trị chấp thuận thanh toán (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
 									},
 									{
