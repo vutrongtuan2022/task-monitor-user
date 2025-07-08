@@ -10,17 +10,26 @@ import {httpRequest} from '~/services';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Table from '~/components/common/Table';
 import {convertCoin} from '~/common/funcs/convertCoin';
-import Moment from 'react-moment';
+import {Eye} from 'iconsax-react';
 import Pagination from '~/components/common/Pagination';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import {PATH} from '~/constants/config';
 import contractsFundServices from '~/services/contractFundServices';
+import IconCustom from '~/components/common/IconCustom';
+import PositionContainer from '~/components/common/PositionContainer';
+import DetailContractFund from '../DetailContractFund';
 
 function TableContracfund({month, year, projectUuid}: PropsTableContracFund) {
 	const [page, setPage] = useState<number>(1);
 	const [pageSize, setPageSize] = useState<number>(10);
-
+	const [uuidContractFund, setUuidContractFund] = useState<{
+		yearForDetail?: number;
+		monthForDetail?: number;
+		contractUuid: string;
+		projectUuid: string;
+		code: string;
+	} | null>(null);
 	const {data: listContractFundForOverView, isLoading} = useQuery(
 		[QUERY_KEY.table_contract_fund_for_overview, projectUuid, month, year, page, pageSize],
 		{
@@ -83,59 +92,7 @@ function TableContracfund({month, year, projectUuid}: PropsTableContracFund) {
 							},
 							{
 								title: 'Sử dụng vốn dự án (VND)',
-								render: (data: IContractFund) => <>{convertCoin(data?.amount)}</>,
-							},
-							{
-								title: 'Ngày giải ngân',
-								render: (data: IContractFund) => (
-									<>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</>
-								),
-							},
-							{
-								title: 'Ngày gửi báo cáo',
-								render: (data: IContractFund) => (
-									<>{data?.sendDate ? <Moment date={data?.sendDate} format='DD/MM/YYYY' /> : '---'}</>
-								),
-							},
-							{
-								title: 'Tên nhóm nhà thầu',
-								render: (data: IContractFund) => (
-									<>
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))].map(
-														(catName, i) => (
-															<li key={i}>{catName}</li>
-														)
-													)}
-												</ol>
-											}
-										>
-											<p className={styles.name}>
-												{data?.contractorInfos?.map((v) => v?.contractorCatName).join(', ')}
-											</p>
-										</Tippy>
-									</>
-								),
-							},
-							{
-								title: 'Tên nhà thầu',
-								render: (data: IContractFund) => (
-									<>
-										<Tippy
-											content={
-												<ol style={{paddingLeft: '16px'}}>
-													{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map((catName, i) => (
-														<li key={i}>{catName}</li>
-													))}
-												</ol>
-											}
-										>
-											<p className={styles.name}>{data?.contractorInfos?.map((v) => v?.contractorName).join(', ')}</p>
-										</Tippy>
-									</>
-								),
+								render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
 							},
 							{
 								title: 'Mô tả',
@@ -150,6 +107,29 @@ function TableContracfund({month, year, projectUuid}: PropsTableContracFund) {
 									</>
 								),
 							},
+							{
+								title: 'Tác vụ',
+								fixedRight: true,
+								render: (data: IContractFund) => (
+									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+										<IconCustom
+											type='edit'
+											icon={<Eye fontSize={20} fontWeight={600} />}
+											tooltip='Xem chi tiết'
+											
+											onClick={() =>
+												setUuidContractFund({
+													contractUuid: data?.uuid || '',
+													yearForDetail: Number(year),
+													monthForDetail: Number(month),
+													projectUuid: projectUuid,
+													code: data?.code || '',
+												})
+											}
+										/>
+									</div>
+								),
+							},
 						]}
 					/>
 				</DataWrapper>
@@ -162,6 +142,9 @@ function TableContracfund({month, year, projectUuid}: PropsTableContracFund) {
 					dependencies={[projectUuid, month, year, pageSize]}
 				/>
 			</WrapperScrollbar>
+			<PositionContainer open={!!uuidContractFund} onClose={() => setUuidContractFund(null)}>
+				<DetailContractFund onClose={() => setUuidContractFund(null)} userContractFund={uuidContractFund!} />
+			</PositionContainer>
 		</div>
 	);
 }
