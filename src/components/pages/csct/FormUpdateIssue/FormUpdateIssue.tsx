@@ -124,6 +124,8 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 			</div>
 		</div>
 	);
+
+	
 }
 
 export default memo(FormUpdateIssue);

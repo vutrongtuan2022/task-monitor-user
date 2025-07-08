@@ -61,7 +61,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 				http: projectServices.categoryProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					excludeState: null,
+					excludeState: [1,3],
 				}),
 			}),
 		select(data) {

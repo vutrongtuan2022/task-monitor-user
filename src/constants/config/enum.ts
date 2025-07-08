@@ -38,6 +38,8 @@ export enum QUERY_KEY {
 	detail_contractor_for_admin,
 	table_pn_contract,
 	table_contract_fund_by_contractor,
+	table_contractfund_detail_paged_contract_contract_fund,
+	table_contract_fund_for_overview_contractor,
 
 	dropdown_branches,
 	dropdown_project,

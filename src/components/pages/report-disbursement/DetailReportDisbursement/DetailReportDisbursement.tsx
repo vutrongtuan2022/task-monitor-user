@@ -25,6 +25,10 @@ import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
 import Link from 'next/link';
 import Dialog from '~/components/common/Dialog';
+import PositionContainer from '~/components/common/PositionContainer';
+import DetailContractFund from '../DetailContractFund';
+import IconCustom from '~/components/common/IconCustom';
+import {Eye} from 'iconsax-react';
 
 function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const router = useRouter();
@@ -33,7 +37,11 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 	const {_uuid, _page, _pageSize} = router.query;
 
 	const [openSendReport, setOpenSendReport] = useState<boolean>(false);
-
+	const [uuidContractFund, setUuidContractFund] = useState<{
+		contractUuid: string;
+		contractFundUuid: string;
+		code: string;
+	} | null>(null);
 	const {data: detailContractFund} = useQuery<IDetailContractFund>([QUERY_KEY.detail_report_disbursement, _uuid], {
 		queryFn: () =>
 			httpRequest({
@@ -257,89 +265,16 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										render: (data: IContractFund) => <>{data?.activity?.name}</>,
 									},
 									{
+										title: 'Tổng giá trị giải ngân (VND)',
+										render: (data: IContractFund) => <>{convertCoin(data?.totalAmount)}</>,
+									},
+									{
 										title: 'Sử dụng vốn dự phòng (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount)}</>,
 									},
 									{
 										title: 'Sử dụng vốn dự án (VND)',
 										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
-									},
-									{
-										title: 'Ngày giải ngân',
-										render: (data: IContractFund) => (
-											<>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</>
-										),
-									},
-									{
-										title: 'Mã số chấp thuận thanh toán',
-										render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
-									},
-									{
-										title: 'Ngày chấp thuận thanh toán',
-										render: (data: IContractFund) => (
-											<>
-												{data?.pnContract ? (
-													<Moment date={data?.pnContract?.pn?.numberingDate} format='DD/MM/YYYY' />
-												) : (
-													'---'
-												)}
-											</>
-										),
-									},
-									{
-										title: 'Giá trị chấp thuận thanh toán (VND)',
-										render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
-									},
-									{
-										title: 'Tên nhóm nhà thầu',
-										render: (data: IContractFund) => (
-											<>
-												{
-													data?.pnContract?.contractor?.contractorCat?.name || '---'
-													/* <Tippy
-													content={
-														<ol style={{paddingLeft: '16px'}}>
-															{[...new Set(data?.contractorInfos?.map((v) => v.contractorCatName))].map(
-																(catName, i) => (
-																	<li key={i}>{catName}</li>
-																)
-															)}
-														</ol>
-													}
-												>
-													<p className={styles.name}>
-														{data?.contractorInfos?.map((v) => v?.contractorCatName).join(', ')}
-													</p>
-												</Tippy> */
-												}
-											</>
-										),
-									},
-									{
-										title: 'Tên nhà thầu',
-										render: (data: IContractFund) => (
-											<>
-												{
-													data?.pnContract?.contractor?.contractor?.name || '---'
-
-													/* <Tippy
-													content={
-														<ol style={{paddingLeft: '16px'}}>
-															{[...new Set(data?.contractorInfos?.map((v) => v.contractorName))].map(
-																(catName, i) => (
-																	<li key={i}>{catName}</li>
-																)
-															)}
-														</ol>
-													}
-												>
-													<p className={styles.name}>
-														{data?.contractorInfos?.map((v) => v?.contractorName).join(', ')}
-													</p>
-												</Tippy> */
-												}
-											</>
-										),
 									},
 									{
 										title: 'Mô tả',
@@ -354,6 +289,27 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 											</>
 										),
 									},
+									{
+										title: 'Tác vụ',
+										fixedRight: true,
+										render: (data: IContractFund) => (
+											<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+												<IconCustom
+													type='edit'
+													icon={<Eye fontSize={20} fontWeight={600} />}
+													tooltip='Xem chi tiết'
+													
+													onClick={() =>
+														setUuidContractFund({
+															contractFundUuid: _uuid as string,
+															contractUuid: data?.uuid || '',
+															code: data?.code || '',
+														})
+													}
+												/>
+											</div>
+										),
+									},
 								]}
 							/>
 						</DataWrapper>
@@ -364,6 +320,9 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 							dependencies={[_pageSize, _uuid]}
 						/>
 					</WrapperScrollbar>
+					<PositionContainer open={!!uuidContractFund} onClose={() => setUuidContractFund(null)}>
+						<DetailContractFund onClose={() => setUuidContractFund(null)} userContractFund={uuidContractFund!} />
+					</PositionContainer>
 				</div>
 			</div>
 
