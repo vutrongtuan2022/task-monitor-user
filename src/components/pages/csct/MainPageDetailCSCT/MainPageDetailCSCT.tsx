@@ -238,10 +238,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										title: 'Tên nhà thầu',
 										render: (data: IContractsPN) => <>{data?.contractor?.contractor?.name || '---'}</>,
 									},
-									{
-										title: 'Giá trị đề nghị thanh toán (VND)',
-										render: (data: IContractsPN) => <>{convertCoin(data?.amount)}</>,
-									},
+
 									{
 										title: 'Loại thanh toán',
 										render: (data: IContractsPN) => (
@@ -249,6 +246,28 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 												{data?.type === 1 && 'Thanh toán'}
 												{data?.type === 2 && 'Tạm ứng'}
 											</>
+										),
+									},
+									{
+										title: 'Số tiền tạm ứng (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.advanceAmount ? convertCoin(data?.advanceAmount) : '---'}</>
+										),
+									},
+									{
+										title: 'Tổng số tiền TT (VND)',
+										render: (data: IContractsPN) => <>{data?.amount ? convertCoin(data?.amount) : '---'}</>,
+									},
+									{
+										title: 'Số tiền còn phải TT (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.remainingAmount ? convertCoin(data?.remainingAmount) : '---'}</>
+										),
+									},
+									{
+										title: 'Số tiền khấu trừ tạm ứng (VND)',
+										render: (data: IContractsPN) => (
+											<>{data?.totalReverseAmount ? convertCoin(data?.totalReverseAmount) : '--'}</>
 										),
 									},
 									{
