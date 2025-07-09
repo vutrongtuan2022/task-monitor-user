@@ -191,5 +191,33 @@ const contractsFundServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	contractfundDetailPagedContractContractfund: (
+		data: {
+			pageSize: number;
+			page: number;
+			contractUuid: string;
+			contractFundUuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/contractfund-detail-paged-contract-contractfund`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	listDetailContractContractFundReportOverview: (
+		data: {
+			pageSize: number;
+			page: number;
+			projectUuid: string;
+			contractUuid: string;
+			month?: number | null;
+			year?: number | null;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/ContractFund/get-page-list-detail-contract-contractfund-overview`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 export default contractsFundServices;
