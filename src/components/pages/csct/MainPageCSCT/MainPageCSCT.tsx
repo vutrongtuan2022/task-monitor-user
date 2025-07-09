@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 
 import {ICSCT, PropsMainPageCSCT} from './interfaces';
 import styles from './MainPageCSCT.module.scss';
@@ -24,7 +24,7 @@ import Link from 'next/link';
 import Moment from 'react-moment';
 import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
-import {CalendarAdd, CalendarEdit, Edit, Eye, Trash} from 'iconsax-react';
+import {CalendarAdd, CalendarEdit, DirectboxSend, Edit, Eye, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
@@ -34,15 +34,20 @@ import FormCreateIssue from '../FormCreateIssue';
 import FormUpdateIssue from '../FormUpdateIssue';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/redux/store';
+import {useReactToPrint} from 'react-to-print';
+import TemplateCSCTTT from '~/pdf-template/TemplateCSCTTT';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
+	const contentToPrint = useRef<HTMLDivElement>(null);
 
-	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
 	const {infoUser} = useSelector((state: RootState) => state.user);
 
+	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
+
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
+	const [dataToPrint, setDataToPrint] = useState<ICSCT | null>(null);
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -92,6 +97,15 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				queryClient.invalidateQueries([QUERY_KEY.table_CSCT]);
 			}
 		},
+	});
+
+	const handlePrintExportPdf = useReactToPrint({
+		content: () => contentToPrint.current,
+		documentTitle: 'Thong_bao_chap_thuan_thanh_toan',
+		onAfterPrint: () => {
+			setDataToPrint(null);
+		},
+		removeAfterPrint: true,
 	});
 
 	return (
@@ -268,7 +282,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 									<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
 										{infoUser?.userUuid === data?.user?.uuid ? (
 											<>
-												{data?.state === STATUS_CSCT.NUMBER_ISSUED ? (
+												{data?.state === STATUS_CSCT.NUMBER_ISSUED && (
 													<IconCustom
 														type='edit'
 														icon={<CalendarAdd fontSize={20} fontWeight={600} color='#2970FF' />}
@@ -283,9 +297,9 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 															});
 														}}
 													/>
-												) : null}
+												)}
 
-												{data?.state === STATUS_CSCT.REJECTED ? (
+												{data?.state === STATUS_CSCT.REJECTED && (
 													<IconCustom
 														type='edit'
 														icon={<CalendarEdit fontSize={20} fontWeight={600} color='#06D7A0' />}
@@ -300,7 +314,21 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 															});
 														}}
 													/>
-												) : null}
+												)}
+
+												{data?.state == STATUS_CSCT.APPROVED && (
+													<IconCustom
+														type='edit'
+														icon={<DirectboxSend fontSize={20} fontWeight={600} color='#06D7A0' />}
+														tooltip='Xuất chấp nhận thanh toán'
+														onClick={() => {
+															setDataToPrint(data);
+															setTimeout(() => {
+																handlePrintExportPdf();
+															}, 200);
+														}}
+													/>
+												)}
 
 												<IconCustom
 													type='edit'
@@ -417,6 +445,11 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					}}
 				/>
 			</Popup>
+
+			{/* Print or export pdf */}
+			<div style={{display: 'none'}}>
+				<TemplateCSCTTT ref={contentToPrint} csct={dataToPrint} />
+			</div>
 		</div>
 	);
 }

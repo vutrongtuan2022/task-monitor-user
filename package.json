@@ -34,7 +34,8 @@
 		"react-toastify": "^10.0.5",
 		"sass": "^1.72.0",
 		"typescript": "5.4.2",
-		"xlsx": "^0.18.5"
+		"xlsx": "^0.18.5",
+		"react-to-print": "^2.15.1"
 	},
 	"devDependencies": {
 		"@types/md5": "^2.3.5",
