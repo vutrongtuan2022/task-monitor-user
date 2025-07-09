@@ -81,6 +81,9 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 							...v,
 							uuidContractProject: v?.uuid,
 							amount: convertCoin(v?.amount),
+							remainingAmount: convertCoin(v?.remainingAmount),
+							totalReverseAmount: convertCoin(v?.totalReverseAmount),
+							advanceAmount: convertCoin(v?.advanceAmount),
 							type: v?.type || TYPE_CONTRACT_PN.PAY,
 							note: v?.note || '',
 							contractorLinks: v?.contractor,
@@ -122,7 +125,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 	});
 
 	useEffect(() => {
-		const totalAmount = form?.listContract?.reduce((acc, curr) => acc + price(curr.amount), 0);
+		const totalAmount = form?.listContract?.reduce((acc, curr) => acc + price(curr.amount) + price(curr.advanceAmount), 0);
 
 		setForm((prev) => ({
 			...prev,
@@ -147,6 +150,9 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 						contractUuid: v?.uuid,
 						contractorLinkUuid: v?.contractorLinks?.uuid,
 						amount: price(v.amount),
+						totalReverseAmount: price(v.totalReverseAmount),
+						remainingAmount: price(v.remainingAmount),
+						advanceAmount: price(v.advanceAmount),
 						type: v?.type,
 						note: v?.note,
 					})),
@@ -162,6 +168,10 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 	});
 
 	const handleSubmit = async () => {
+		const hasInvalidPayContract = form?.listContract?.every((item) => item.type === TYPE_CONTRACT_PN.PAY && price(item.amount) <= 0);
+		const hasInvalidAdvanceContract = form?.listContract?.every(
+			(item) => item.type === TYPE_CONTRACT_PN.ADVANCE && price(item.advanceAmount) <= 0
+		);
 		if (!form?.projectUuid) {
 			return toastWarn({
 				msg: 'Vui lòng chỉ chọn dự án!',
@@ -182,9 +192,15 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				msg: 'Vui lòng chọn hợp đồng!',
 			});
 		}
-		if (!form?.listContract.every((item) => price(item.amount) > 0)) {
+		if (hasInvalidPayContract) {
 			return toastWarn({
-				msg: 'Giá trị thanh toán phải lớn hơn 0!',
+				msg: 'Giá trị tổng số tiền thanh toán hợp đồng phải lớn hơn 0!',
+			});
+		}
+
+		if (hasInvalidAdvanceContract) {
+			return toastWarn({
+				msg: 'Giá trị số tiền tạm ứng phải lớn hơn 0!',
 			});
 		}
 		if (!form?.listContract.every((item) => item.note)) {

@@ -42,7 +42,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 				http: projectServices.categoryProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					excludeState: STATE_PROJECT.FINISH,
+					excludeState: [STATE_PROJECT.FINISH],
 				}),
 			}),
 		select(data) {

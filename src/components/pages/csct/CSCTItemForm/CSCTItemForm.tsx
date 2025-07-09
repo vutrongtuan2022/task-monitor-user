@@ -11,7 +11,16 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 	const handleChangeValue = (index: number, name: string, value: any, isConvert?: boolean) => {
 		const newData = [...form?.listContract];
 
-		if (isConvert) {
+		if (name === 'type') {
+			newData[index] = {
+				...newData[index],
+				type: value,
+				advanceAmount: value === TYPE_CONTRACT_PN.PAY ? '' : newData[index].advanceAmount,
+				remainingAmount: value === TYPE_CONTRACT_PN.ADVANCE ? '' : newData[index].remainingAmount,
+				totalReverseAmount: value === TYPE_CONTRACT_PN.ADVANCE ? '' : newData[index].totalReverseAmount,
+				amount: value === TYPE_CONTRACT_PN.ADVANCE ? '' : newData[index].amount,
+			};
+		} else if (isConvert) {
 			if (!Number(price(value))) {
 				newData[index] = {
 					...newData[index],
@@ -34,6 +43,48 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 			...prev,
 			listContract: newData,
 		}));
+	};
+
+	const handleRemainingAmount = (value: string | number) => {
+		const newRemainingAmount = price(value);
+		const totalReverseAmount = price(contract.totalReverseAmount);
+
+		const newAmount = newRemainingAmount + totalReverseAmount;
+
+		setForm((prev: any) => {
+			const newListContract = [...prev.listContract];
+			newListContract[index] = {
+				...newListContract[index],
+				remainingAmount: convertCoin(newRemainingAmount),
+				amount: convertCoin(newAmount),
+			};
+
+			return {
+				...prev,
+				listContract: newListContract,
+			};
+		});
+	};
+
+	const handleTotalReverseAmount = (value: string | number) => {
+		const newTotalReverseAmount = price(value);
+		const remainingAmount = price(contract.remainingAmount);
+
+		const newAmount = remainingAmount + newTotalReverseAmount;
+
+		setForm((prev: any) => {
+			const newListContract = [...prev.listContract];
+			newListContract[index] = {
+				...newListContract[index],
+				totalReverseAmount: convertCoin(newTotalReverseAmount),
+				amount: convertCoin(newAmount),
+			};
+
+			return {
+				...prev,
+				listContract: newListContract,
+			};
+		});
 	};
 
 	return (
@@ -93,57 +144,132 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 								/>
 							</div>
 						</div>
-						<div>
-							<p className={styles.label}>
-								Giá trị đề nghị thanh toán <span style={{color: 'red'}}>*</span>
-							</p>
-							<div className={styles.input_specification}>
-								<input
-									name='value'
-									type='text'
-									placeholder='Nhập giá trị đề nghị thanh toán'
-									className={styles.input}
-									value={contract?.amount}
-									onChange={(e) => handleChangeValue(index, 'amount', e.target.value, true)}
-								/>
-								<div className={styles.unit}>VNĐ</div>
-							</div>
-						</div>
-						<div>
-							<p className={styles.label}>
-								Phân loại <span style={{color: 'red'}}>*</span>
-								<div className={styles.group_radio}>
-									<div className={styles.item_radio}>
-										<input
-											id={`type_pay_${index}`}
-											className={styles.input_radio}
-											type='radio'
-											value={contract.type}
-											checked={contract.type == TYPE_CONTRACT_PN.PAY}
-											onChange={() => handleChangeValue(index, 'type', TYPE_CONTRACT_PN.PAY)}
-										/>
-										<label className={styles.input_lable} htmlFor={`type_pay_${index}`}>
-											Thanh toán
-										</label>
-									</div>
+					</GridColumn>
+					<div className={styles.mt}>
+						<p className={styles.label}>
+							Phân loại <span style={{color: 'red'}}>*</span>
+							<div className={styles.group_radio}>
+								<div className={styles.item_radio}>
+									<input
+										id={`type_pay_${index}`}
+										className={styles.input_radio}
+										type='radio'
+										value={contract.type}
+										checked={contract.type == TYPE_CONTRACT_PN.PAY}
+										onChange={() => handleChangeValue(index, 'type', TYPE_CONTRACT_PN.PAY)}
+									/>
+									<label className={styles.input_lable} htmlFor={`type_pay_${index}`}>
+										Thanh toán
+									</label>
+								</div>
 
-									<div className={styles.item_radio}>
+								<div className={styles.item_radio}>
+									<input
+										id={`type_advance_${index}`}
+										className={styles.input_radio}
+										type='radio'
+										value={contract.type}
+										checked={contract.type == TYPE_CONTRACT_PN.ADVANCE}
+										onChange={() => handleChangeValue(index, 'type', TYPE_CONTRACT_PN.ADVANCE)}
+									/>
+									<label className={styles.input_lable} htmlFor={`type_advance_${index}`}>
+										Tạm ứng
+									</label>
+								</div>
+							</div>
+						</p>
+					</div>
+					<div className={styles.mt}>
+						{contract.type == TYPE_CONTRACT_PN.PAY && (
+							<GridColumn col_3>
+								<div>
+									<p className={styles.label}>
+										Số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
+									</p>
+									<div className={styles.input_specification}>
 										<input
-											id={`type_advance_${index}`}
-											className={styles.input_radio}
-											type='radio'
-											value={contract.type}
-											checked={contract.type == TYPE_CONTRACT_PN.ADVANCE}
-											onChange={() => handleChangeValue(index, 'type', TYPE_CONTRACT_PN.ADVANCE)}
+											name='value'
+											type='text'
+											placeholder='Nhập số tiền còn phải thanh toán'
+											className={styles.input}
+											value={contract?.remainingAmount}
+											onChange={(e) => handleRemainingAmount(e.target.value)}
 										/>
-										<label className={styles.input_lable} htmlFor={`type_advance_${index}`}>
-											Tạm ứng
-										</label>
+										<div className={styles.unit}>VNĐ</div>
 									</div>
 								</div>
-							</p>
-						</div>
-					</GridColumn>
+								<div>
+									<p className={styles.label}>
+										Số tiền khấu trừ tạm ứng <span style={{color: 'red'}}>*</span>
+									</p>
+									<div className={styles.input_specification}>
+										<input
+											name='value'
+											type='text'
+											placeholder='Nhập số tiền khấu trừ tạm ứng'
+											className={styles.input}
+											value={contract?.totalReverseAmount}
+											onChange={(e) => handleTotalReverseAmount(e.target.value)}
+										/>
+										<div className={styles.unit}>VNĐ</div>
+									</div>
+								</div>
+								{/* <div>
+									<p className={styles.label}>
+										Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+									</p>
+									<div className={styles.input_specification}>
+										<input
+											name='value'
+											type='text'
+											placeholder='Nhập tổng số tiền thanh toán'
+											className={styles.input}
+											value={contract?.amount}
+											readOnly={true}
+											onChange={(e) => handleChangeValue(index, 'amount', e.target.value, true)}
+										/>
+										<div className={styles.unit}>VNĐ</div>
+									</div>
+								</div> */}
+								<div>
+									<p className={styles.label}>
+										Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+									</p>
+									<div className={styles.input_specification}>
+										<input
+											name='value'
+											type='text'
+											placeholder='Nhập tổng số tiền thanh toán'
+											className={styles.input}
+											readOnly={true}
+											disabled={true}
+											value={contract?.amount}
+											onChange={(e) => handleChangeValue(index, 'amount', e.target.value, true)}
+										/>
+										<div className={styles.unit}>VNĐ</div>
+									</div>
+								</div>
+							</GridColumn>
+						)}
+						{contract.type == TYPE_CONTRACT_PN.ADVANCE && (
+							<div>
+								<p className={styles.label}>
+									Số tiền tạm ứng <span style={{color: 'red'}}>*</span>
+								</p>
+								<div className={styles.input_specification}>
+									<input
+										name='value'
+										type='text'
+										placeholder='Nhập số tiền tạm ứng'
+										className={styles.input}
+										value={contract?.advanceAmount}
+										onChange={(e) => handleChangeValue(index, 'advanceAmount', e.target.value, true)}
+									/>
+									<div className={styles.unit}>VNĐ</div>
+								</div>
+							</div>
+						)}
+					</div>
 					<div className={styles.mt}>
 						<div>
 							<p className={styles.label}>

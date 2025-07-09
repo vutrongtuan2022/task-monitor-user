@@ -60,6 +60,9 @@ const pnServices = {
 				contractorLinkUuid: string;
 				contractUuid: string;
 				amount: number;
+				totalReverseAmount: number;
+				remainingAmount: number;
+				advanceAmount: number;
 				type: number;
 				note: string;
 			}[];
