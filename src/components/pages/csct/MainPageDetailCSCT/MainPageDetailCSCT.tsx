@@ -197,7 +197,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>LKSCT đến hiện tại (VND)</p>
 								<p>{convertCoin(detailCSCT?.accumAmount!)}</p>
 							</div>
-							{detailCSCT?.state === STATUS_CSCT.REJECTED && (
+							{(detailCSCT?.state === STATUS_CSCT.REJECTED || detailCSCT?.state === STATUS_CSCT.PENDING_APPROVAL) && (
 								<div className={styles.item}>
 									<p>Lý do từ chối</p>
 									<p>{detailCSCT?.rejectReason || '---'}</p>
@@ -238,7 +238,6 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 										title: 'Tên nhà thầu',
 										render: (data: IContractsPN) => <>{data?.contractor?.contractor?.name || '---'}</>,
 									},
-
 									{
 										title: 'Loại thanh toán',
 										render: (data: IContractsPN) => (
