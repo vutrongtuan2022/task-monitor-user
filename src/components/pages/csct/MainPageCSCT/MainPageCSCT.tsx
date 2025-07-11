@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
 import {ICSCT, PropsMainPageCSCT} from './interfaces';
 import styles from './MainPageCSCT.module.scss';
@@ -34,20 +34,19 @@ import FormCreateIssue from '../FormCreateIssue';
 import FormUpdateIssue from '../FormUpdateIssue';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/redux/store';
-import {useReactToPrint} from 'react-to-print';
-import TemplateCSCTTT from '~/pdf-template/TemplateCSCTTT';
+import {Packer} from 'docx';
+import {generateCSCTDocx} from '~/word-template/TemplateCSCTTT/TemplateCSCTTT';
+import saveAs from 'file-saver';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-	const contentToPrint = useRef<HTMLDivElement>(null);
 
 	const {infoUser} = useSelector((state: RootState) => state.user);
 
 	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
-	const [dataToPrint, setDataToPrint] = useState<ICSCT | null>(null);
 
 	const {data: listProject} = useQuery([QUERY_KEY.dropdown_project], {
 		queryFn: () =>
@@ -99,14 +98,13 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 		},
 	});
 
-	const handlePrintExportPdf = useReactToPrint({
-		content: () => contentToPrint.current,
-		documentTitle: 'Thong_bao_chap_thuan_thanh_toan',
-		onAfterPrint: () => {
-			setDataToPrint(null);
-		},
-		removeAfterPrint: true,
-	});
+	const handleExport = async (dataExport: ICSCT) => {
+		const doc = generateCSCTDocx(dataExport);
+
+		Packer.toBlob(doc).then((blob) => {
+			saveAs(blob, 'Thong_bao_chap_thuan_thanh_toan.docx');
+		});
+	};
 
 	return (
 		<div className={styles.container}>
@@ -193,12 +191,12 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 						column={[
 							{
 								title: 'STT',
-								render: (data: ICSCT, index: number) => <p>{index + 1}</p>,
+								render: (_: ICSCT, index: number) => <p>{index + 1}</p>,
 							},
 							{
 								title: 'Mã cấp số',
 								fixedLeft: true,
-								render: (data: ICSCT, index: number) => (
+								render: (data: ICSCT, _: number) => (
 									<Tippy content='Xem chi tiết'>
 										<Link href={`${PATH.CSCT}/${data?.uuid}`} className={styles.link}>
 											{data?.code || '---'}
@@ -322,10 +320,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 														icon={<DirectboxSend fontSize={20} fontWeight={600} color='#06D7A0' />}
 														tooltip='Xuất chấp nhận thanh toán'
 														onClick={() => {
-															setDataToPrint(data);
-															setTimeout(() => {
-																handlePrintExportPdf();
-															}, 200);
+															handleExport(data);
 														}}
 													/>
 												)}
@@ -445,11 +440,6 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 					}}
 				/>
 			</Popup>
-
-			{/* Print or export pdf */}
-			<div style={{display: 'none'}}>
-				<TemplateCSCTTT ref={contentToPrint} csct={dataToPrint} />
-			</div>
 		</div>
 	);
 }
