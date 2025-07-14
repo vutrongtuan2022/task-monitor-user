@@ -85,25 +85,16 @@ function TableContracfund({}: PropsTableContracFund) {
 								render: (data: IContractFund) => <>{data?.activity?.name || '---'}</>,
 							},
 							{
+								title: 'Tổng giá trị giải ngân (VND)',
+								render: (data: IContractFund) => <>{convertCoin(data?.totalAmount) || 0}</>,
+							},
+							{
 								title: 'Sử dụng vốn dự phòng (VND)',
 								render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount) || 0}</>,
 							},
 							{
 								title: 'Sử dụng vốn dự án (VND)',
 								render: (data: IContractFund) => <>{convertCoin(data?.projectAmount) || 0}</>,
-							},
-							{
-								title: 'Mô tả',
-								render: (data: IContractFund) => (
-									<>
-										{(data?.note && (
-											<Tippy content={data?.note}>
-												<p className={styles.name}>{data?.note || '---'}</p>
-											</Tippy>
-										)) ||
-											'---'}
-									</>
-								),
 							},
 							{
 								title: 'Tác vụ',
@@ -114,7 +105,6 @@ function TableContracfund({}: PropsTableContracFund) {
 											type='edit'
 											icon={<Eye fontSize={20} fontWeight={600} />}
 											tooltip='Xem chi tiết'
-											
 											onClick={() =>
 												setUuidContractFund({
 													contractUuid: data?.uuid || '',
@@ -137,8 +127,8 @@ function TableContracfund({}: PropsTableContracFund) {
 				/>
 			</WrapperScrollbar>
 			<PositionContainer open={!!uuidContractFund} onClose={() => setUuidContractFund(null)}>
-							<DetailContractFund onClose={() => setUuidContractFund(null)} userContractFund={uuidContractFund!} />
-						</PositionContainer>
+				<DetailContractFund onClose={() => setUuidContractFund(null)} userContractFund={uuidContractFund!} />
+			</PositionContainer>
 		</div>
 	);
 }
