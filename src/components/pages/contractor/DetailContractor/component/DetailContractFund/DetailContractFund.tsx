@@ -13,33 +13,29 @@ import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import contractsFundServices from '~/services/contractFundServices';
+import Tippy from '@tippyjs/react';
 
 function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund) {
 	const router = useRouter();
 
 	const {_page, _pageSize} = router.query;
 	const {data: listContractFundDetail} = useQuery(
-		[
-			QUERY_KEY.table_contractfund_detail_paged_contract_contract_fund,
-			_page,
-			_pageSize,
-			userContractFund?.contractUuid,
-			userContractFund?.contractFundUuid,
-		],
+		[QUERY_KEY.table_contract_fund_detail_contractor, _page, _pageSize, userContractFund?.uuid],
 		{
 			queryFn: () =>
 				httpRequest({
-					http: contractsFundServices.contractfundDetailPagedContractContractfund({
+					http: contractsFundServices.detailContractFundFundPaged({
 						page: Number(_page) || 1,
 						pageSize: Number(_pageSize) || 100,
-						contractUuid: userContractFund.contractUuid,
-						contractFundUuid: userContractFund.contractFundUuid,
+						keyword: '',
+						status: STATUS_CONFIG.ACTIVE,
+						uuid: userContractFund?.uuid,
 					}),
 				}),
 			select(data) {
 				return data;
 			},
-			enabled: !!userContractFund?.contractUuid && !!userContractFund?.contractFundUuid,
+			enabled: !!userContractFund?.uuid,
 		}
 	);
 	console.log(listContractFundDetail);
@@ -57,7 +53,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 			<div className={styles.main}>
 				<div className={styles.head}>
 					<h4>
-						Danh sách lịch sử cho hợp đồng {userContractFund?.code} <span style={{color: 'red'}}>*</span>
+						Danh sách lịch sử giải ngân {userContractFund?.releasedMonthYear} <span style={{color: 'red'}}>*</span>
 					</h4>
 				</div>
 				<div className={styles.main_table}>
@@ -75,24 +71,30 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										title: 'STT',
 										render: (data: IDetailContractFund, index: number) => <>{index + 1}</>,
 									},
-
+									{
+										title: 'Mã hợp đồng',
+										render: (data: IDetailContractFund) => <>{data?.code || '---'}</>,
+									},
+									{
+										title: 'Tên công việc',
+										render: (data: IDetailContractFund) => (
+											<Tippy content={data?.activity?.name}>
+												<p className={styles.name}>{data?.activity?.name || '---'}</p>
+											</Tippy>
+										),
+									},
 									{
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>
-											// <>
-											// 	{data?.releasedMonth && data?.releasedYear
-											// 		? `Tháng ${data?.releasedMonth} - ${data?.releasedYear}`
-											// 		: !data?.releasedMonth && data?.releasedYear
-											// 		? `Năm ${data?.releasedYear}`
-											// 		: '---'}
-											// </>
 										),
 									},
 									{
 										title: 'Tên nhà thầu',
 										render: (data: IDetailContractFund) => (
-											<>{data?.pnContract?.contractor?.contractor?.name || '---'}</>
+											<Tippy content={data?.activity?.name}>
+												<p className={styles.name}>{data?.pnContract.contractor?.contractor.name || '---'}</p>
+											</Tippy>
 										),
 									},
 									{
