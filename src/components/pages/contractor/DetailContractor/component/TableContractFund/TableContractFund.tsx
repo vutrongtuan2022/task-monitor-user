@@ -1,32 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {IContractFund, PropsTableContractFund} from './interfaces';
 import styles from './TableContractFund.module.scss';
 import Moment from 'react-moment';
-import {QUERY_KEY, STATUS_CONFIG} from '~/constants/config/enum';
-import {PATH} from '~/constants/config';
+import {QUERY_KEY, STATE_REPORT_DISBURSEMENT, STATUS_CONFIG} from '~/constants/config/enum';
 import {useQuery} from '@tanstack/react-query';
 import {useRouter} from 'next/router';
 import {httpRequest} from '~/services';
 import {convertCoin} from '~/common/funcs/convertCoin';
-import contractsFundServices from '~/services/contractFundServices';
 import WrapperScrollbar from '~/components/layouts/WrapperScrollbar';
 import Table from '~/components/common/Table';
 import Pagination from '~/components/common/Pagination';
-import Tippy from '@tippyjs/react';
+import {Eye} from 'iconsax-react';
 import DataWrapper from '~/components/common/DataWrapper';
 import Noti from '~/components/common/DataWrapper/components/Noti';
-import Link from 'next/link';
-
+import IconCustom from '~/components/common/IconCustom';
+import contractorServices from '~/services/contractorServices';
+import StateActive from '~/components/common/StateActive';
+import PositionContainer from '~/components/common/PositionContainer';
+import DetailContractFund from '../DetailContractFund';
 function TableContractFund({}: PropsTableContractFund) {
 	const router = useRouter();
 
 	const {_uuid, _page, _pageSize} = router.query;
-
+	const [uuidContractFund, setUuidContractFund] = useState<{
+		uuid: string;
+		releasedMonthYear: string;
+	} | null>(null);
 	const {data: listContractFund} = useQuery([QUERY_KEY.table_contract_fund_by_contractor, _page, _pageSize, _uuid], {
 		queryFn: () =>
 			httpRequest({
-				http: contractsFundServices.contractFundByContractor({
+				http: contractorServices.getPagedContractFundByContractor({
 					page: Number(_page) || 1,
 					pageSize: Number(_pageSize) || 10,
 					keyword: '',
@@ -62,74 +66,107 @@ function TableContractFund({}: PropsTableContractFund) {
 										render: (data: IContractFund, index: number) => <>{index + 1}</>,
 									},
 									{
-										title: 'Số hợp đồng',
-										fixedLeft: true,
+										title: 'Báo cáo tháng',
 										render: (data: IContractFund) => (
-											<Tippy content='Chi tiết hợp đồng'>
-												<Link
-													href={`${PATH.ContractReportDisbursement}/${data?.uuid}?_uuidContract=${_uuid}`}
-													className={styles.link}
-												>
-													{data?.code}
-												</Link>
-											</Tippy>
+											<>
+												{data?.releasedMonth && data?.releasedYear
+													? `Tháng ${data?.releasedMonth} - ${data?.releasedYear}`
+													: !data?.releasedMonth && data?.releasedYear
+													? `Năm ${data?.releasedYear}`
+													: '---'}
+											</>
 										),
 									},
 									{
 										title: 'Tên dự án',
-										render: (data: IContractFund) => (
-											<>{data?.pnContract?.pn?.project?.name || data?.activity?.project?.name}</>
-										),
+										render: (data: IContractFund) => <>{data?.project.name || '---'}</>,
 									},
+
 									{
-										title: 'Tên công việc',
-										render: (data: IContractFund) => <>{data?.activity?.name}</>,
+										title: 'Tổng giá trị giải ngân (VND)',
+										render: (data: IContractFund) => <>{convertCoin(data?.totalAmount) || '---'}</>,
 									},
 									{
 										title: 'Sử dụng vốn dự phòng (VND)',
-										render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount)}</>,
+										render: (data: IContractFund) => <>{convertCoin(data?.reverseAmount) || '---'}</>,
 									},
 									{
 										title: 'Sử dụng vốn dự án (VND)',
-										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
+										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount) || '---'}</>,
 									},
+
 									{
-										title: 'Ngày giải ngân',
+										title: 'Thời gian tạo',
 										render: (data: IContractFund) => (
-											<>{data?.releaseDate ? <Moment date={data?.releaseDate} format='DD/MM/YYYY' /> : '---'}</>
+											<p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>
 										),
 									},
 									{
-										title: 'Số thông báo chấp thuận thanh toán',
-										render: (data: IContractFund) => <>{data?.pnContract?.pn?.code || '---'}</>,
-									},
-									{
-										title: 'Ngày chấp nhận thanh toán',
+										title: 'Trạng thái',
 										render: (data: IContractFund) => (
-											<>
-												{data?.pnContract ? (
-													<Moment date={data?.pnContract?.pn?.numberingDate} format='DD/MM/YYYY' />
-												) : (
-													'---'
-												)}
-											</>
+											<StateActive
+												stateActive={data?.state}
+												listState={[
+													{
+														state: STATE_REPORT_DISBURSEMENT.REJECTED,
+														text: 'Bị từ chối',
+														textColor: '#FFFFFF',
+														backgroundColor: '#F37277',
+													},
+													{
+														state: STATE_REPORT_DISBURSEMENT.REPORTED,
+														text: 'Đã báo cáo',
+														textColor: '#FFFFFF',
+														backgroundColor: '#4BC9F0',
+													},
+													{
+														state: STATE_REPORT_DISBURSEMENT.APPROVED,
+														text: 'Đã duyệt',
+														textColor: '#FFFFFF',
+														backgroundColor: '#06D7A0',
+													},
+													{
+														state: STATE_REPORT_DISBURSEMENT.NOT_REPORT,
+														text: 'Chưa báo cáo',
+														textColor: '#FFFFFF',
+														backgroundColor: '#FF852C',
+													},
+												]}
+											/>
 										),
 									},
 									{
-										title: 'Giá trị chấp nhận thanh toán (VND)',
-										render: (data: IContractFund) => <>{convertCoin(data?.pnContract?.amount) || '---'}</>,
-									},
-									{
-										title: 'Mô tả',
+										title: 'Tác vụ',
+										fixedRight: true,
 										render: (data: IContractFund) => (
-											<>
-												{(data?.note && (
-													<Tippy content={data?.note}>
-														<p className={styles.name}>{data?.note || '---'}</p>
-													</Tippy>
-												)) ||
-													'---'}
-											</>
+											<div style={{display: 'flex', alignItems: 'center', gap: '4px'}}>
+												<IconCustom
+													type='edit'
+													icon={<Eye fontSize={20} fontWeight={600} />}
+													tooltip='Xem chi tiết'
+													// onClick={() => {
+													// 	router.replace({
+													// 		pathname: router.pathname,
+													// 		query: {
+													// 			...router.query,
+													// 			_uuidContractFund: data?.uuid,
+													// 		},
+													// 	});
+													// }}
+													onClick={() =>
+														setUuidContractFund({
+															releasedMonthYear:
+																data?.releasedMonth && data?.releasedYear
+																	? `tháng ${data.releasedMonth}/${data.releasedYear}`
+																	: data?.releasedYear
+																	? `năm ${data.releasedYear}`
+																	: '',
+
+															uuid: data?.uuid || '',
+														})
+													}
+												/>
+											</div>
 										),
 									},
 								]}
@@ -142,6 +179,9 @@ function TableContractFund({}: PropsTableContractFund) {
 							dependencies={[_pageSize, _uuid]}
 						/>
 					</WrapperScrollbar>
+					<PositionContainer open={!!uuidContractFund} onClose={() => setUuidContractFund(null)}>
+						<DetailContractFund onClose={() => setUuidContractFund(null)} userContractFund={uuidContractFund!} />
+					</PositionContainer>
 				</div>
 			</div>
 		</div>

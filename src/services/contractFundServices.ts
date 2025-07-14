@@ -104,6 +104,7 @@ const contractsFundServices = {
 			keyword: string | null;
 			status: number;
 			uuid: string;
+			contractUuid?: string;
 		},
 		tokenAxios?: any
 	) => {
@@ -153,8 +154,6 @@ const contractsFundServices = {
 		});
 	},
 
-
-	
 	getContractFundForOverView: (
 		data: {
 			projectUuid: string;

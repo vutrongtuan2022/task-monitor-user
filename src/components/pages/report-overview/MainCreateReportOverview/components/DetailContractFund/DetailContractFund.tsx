@@ -44,7 +44,11 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 			select(data) {
 				return data;
 			},
-			enabled: !!userContractFund?.contractUuid && !!userContractFund?.monthForDetail && !!userContractFund?.yearForDetail && !!userContractFund?.projectUuid,
+			enabled:
+				!!userContractFund?.contractUuid &&
+				!!userContractFund?.monthForDetail &&
+				!!userContractFund?.yearForDetail &&
+				!!userContractFund?.projectUuid,
 		}
 	);
 	console.log(listContractFundDetail);
@@ -85,7 +89,6 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.contractor?.contractorCat?.name || '---'}</>
-											
 										),
 									},
 									{
@@ -135,13 +138,13 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									{
 										title: 'Giá trị CTTT',
 										render: (data: IDetailContractFund) => (
-											<p>
-												{data?.pnContract?.amount ? (
-													<Moment date={data?.pnContract?.amount} format='DD/MM/YYYY' />
-												) : (
-													'---'
-												)}
-											</p>
+											<>
+												{convertCoin(
+													data?.pnContract.amount == null
+														? data?.pnContract.advanceAmount
+														: data?.pnContract.amount
+												) || '---'}
+											</>
 										),
 									},
 									{

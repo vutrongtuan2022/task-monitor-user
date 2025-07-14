@@ -1,10 +1,7 @@
 export interface PropsDetailContractFund {
 	userContractFund: {
-		yearForDetail?: number;
-		monthForDetail?: number;
-		contractUuid: string;
-		projectUuid: string;
-		code: string;
+		uuid: string;
+		releasedMonthYear: string;
 	};
 	onClose: () => void;
 }
