@@ -78,7 +78,7 @@ function MainCreateReportOverview({}: PropsMainCreateReportOverview) {
 			<Breadcrumb
 				listUrls={[
 					{
-						path: PATH.ReportDisbursement,
+						path: PATH.ReportOverview,
 						title: 'Báo cáo tổng hợp',
 					},
 					{

@@ -27,6 +27,9 @@ export interface IContractByProject {
 	amount: string;
 	type: number;
 	note: string;
+	remainingAmount: string;
+	totalReverseAmount: string;
+	advanceAmount: string;
 	uuidContractProject: string;
 }
 
