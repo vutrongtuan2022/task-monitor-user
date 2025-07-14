@@ -277,19 +277,6 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 										render: (data: IContractFund) => <>{convertCoin(data?.projectAmount)}</>,
 									},
 									{
-										title: 'Mô tả',
-										render: (data: IContractFund) => (
-											<>
-												{(data?.note && (
-													<Tippy content={data?.note}>
-														<p className={styles.name}>{data?.note || '---'}</p>
-													</Tippy>
-												)) ||
-													'---'}
-											</>
-										),
-									},
-									{
 										title: 'Tác vụ',
 										fixedRight: true,
 										render: (data: IContractFund) => (
@@ -298,7 +285,6 @@ function DetailReportDisbursement({}: PropsDetailReportDisbursement) {
 													type='edit'
 													icon={<Eye fontSize={20} fontWeight={600} />}
 													tooltip='Xem chi tiết'
-													
 													onClick={() =>
 														setUuidContractFund({
 															contractFundUuid: _uuid as string,
