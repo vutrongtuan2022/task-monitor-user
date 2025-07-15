@@ -12,6 +12,7 @@ import Loading from '~/components/common/Loading';
 import {useRouter} from 'next/router';
 import DatePicker from '~/components/common/DatePicker';
 import {toastWarn} from '~/common/funcs/toast';
+import moment from 'moment';
 
 function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 	const router = useRouter();
@@ -28,7 +29,7 @@ function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 				msgSuccess: 'Thêm ngày cấp số thành công!',
 				http: pnServices.updateNoticeDate({
 					uuid: _uuidCreateNoticeDate as string,
-					noticeDate: form?.dateIssue,
+					noticeDate: moment(form?.dateIssue).format('YYYY-MM-DD'),
 				}),
 			});
 		},
@@ -56,53 +57,53 @@ function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 		}
 
 		funcCreateNoticeDate.mutate();
+		console.log();
 	};
 
-
 	return (
-      <div className={styles.container}>
-		<Loading loading={funcCreateNoticeDate.isLoading} />
-        <h4 className={styles.title}>Ngày trên thông báo cấp vốn</h4>
+		<div className={styles.container}>
+			<Loading loading={funcCreateNoticeDate.isLoading} />
+			<h4 className={styles.title}>Ngày trên thông báo cấp vốn</h4>
 
-        <div className={styles.form}>
-          {/* <Input
+			<div className={styles.form}>
+				{/* <Input
             placeholder='Nhập ngày cấp vốn'
             name='dateIssue'
             type='date'
             value={form.dateIssue}
             label={<span>Chọn ngày thông báo cấp vốn</span>}
           /> */}
-          <DatePicker
-		  	onClean={true}
-            icon={true}
-            label={<span>Chọn ngày thông báo cấp vốn</span>}
-            name='dateIssue'
-            value={form.dateIssue}
-            placeholder='Nhập ngày cấp vốn'
-            onSetValue={(date) =>
-              setForm((prev) => ({
-                ...prev,
-                dateIssue: date,
-              }))
-            }
-          />
-          <div className={styles.groupBtnPopup}>
-            <div>
-              <Button p_12_20 rounded_8 white_outline onClick={onClose} maxContent>
-                Hủy bỏ
-              </Button>
-            </div>
-            <div>
-                  <Button bold rounded_8 p_12_20 disable={!form.dateIssue} onClick={handleSubmit}>
-                    Lưu lại
-                  </Button>
-            </div>
-          </div>
-          <div className={styles.close} onClick={onClose}>
-            <IoClose />
-          </div>
-        </div>
-      </div>
+				<DatePicker
+					onClean={true}
+					icon={true}
+					label={<span>Chọn ngày thông báo cấp vốn</span>}
+					name='dateIssue'
+					value={form.dateIssue}
+					placeholder='Nhập ngày cấp vốn'
+					onSetValue={(date) =>
+						setForm((prev) => ({
+							...prev,
+							dateIssue: date,
+						}))
+					}
+				/>
+				<div className={styles.groupBtnPopup}>
+					<div>
+						<Button p_12_20 rounded_8 white_outline onClick={onClose} maxContent>
+							Hủy bỏ
+						</Button>
+					</div>
+					<div>
+						<Button bold rounded_8 p_12_20 disable={!form.dateIssue} onClick={handleSubmit}>
+							Lưu lại
+						</Button>
+					</div>
+				</div>
+				<div className={styles.close} onClick={onClose}>
+					<IoClose />
+				</div>
+			</div>
+		</div>
 	);
 }
 
