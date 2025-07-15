@@ -231,6 +231,10 @@ export const ListOptionTimePicker: {
 	value: number;
 }[] = [
 	{
+		name: 'Tất cả',
+		value: TYPE_DATE.ALL,
+	},
+	{
 		name: 'Hôm nay',
 		value: TYPE_DATE.TODAY,
 	},
