@@ -16,6 +16,7 @@ import {
 	EmptyWalletTick,
 } from 'iconsax-react';
 import {TYPE_DATE, TYPE_SPECIAL} from './enum';
+import {IconType} from 'react-icons';
 
 export const MAXIMUM_FILE = 10; //MB
 
@@ -97,13 +98,16 @@ export enum PATH {
 	CSCTUpdate = '/csct/update',
 }
 
-export const Menu: {
+export interface IMenuItem {
 	title: string;
-	path: string;
-	isSpecial?: TYPE_SPECIAL;
+	path?: string;
 	pathActive?: string;
-	icon: any;
-}[] = [
+	isSpecial?: TYPE_SPECIAL;
+	icon: IconType | any;
+	children?: IMenuItem[];
+}
+
+export const Menu: IMenuItem[] = [
 	// {
 	// 	title: 'Tổng quan',
 	// 	path: PATH.Home,
@@ -111,9 +115,58 @@ export const Menu: {
 	// 	icon: ElementEqual,
 	// },
 	{
+		title: 'Quản lý',
+		icon: DocumentText1,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+		children: [
+			{
+				title: 'Quản lý quy trình',
+				path: PATH.Task,
+				pathActive: PATH.Task,
+				icon: ReceiptItem,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý chi nhánh',
+				path: PATH.Branch,
+				pathActive: PATH.Branch,
+				icon: Data,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhóm nhà thầu',
+				path: PATH.GroupContractor,
+				pathActive: PATH.GroupContractor,
+				icon: Buildings2,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhà thầu',
+				path: PATH.Contractor,
+				pathActive: PATH.Contractor,
+				icon: Receipt21,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhân viên',
+				path: PATH.User,
+				pathActive: PATH.User,
+				icon: UserOctagon,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý tài khoản',
+				path: PATH.Account,
+				pathActive: PATH.Account,
+				icon: TagUser,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+		],
+	},
+	{
 		title: 'Dự án của bạn ',
 		path: PATH.Project,
-		pathActive: '/project',
+		pathActive: PATH.Project,
 		icon: DocumentText1,
 		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
@@ -154,54 +207,13 @@ export const Menu: {
 		isSpecial: TYPE_SPECIAL.CONFIRM_CONTRACTOR,
 	},
 	{
-		title: 'Quản lý quy trình',
-		path: PATH.Task,
-		pathActive: PATH.Task,
-		icon: ReceiptItem,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
-	{
 		title: 'CSCT thanh toán',
 		path: PATH.CSCT,
 		pathActive: PATH.CSCT,
 		icon: EmptyWalletTick,
 		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
-	{
-		title: 'Quản lý chi nhánh',
-		path: PATH.Branch,
-		pathActive: PATH.Branch,
-		icon: Data,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
-	{
-		title: 'Quản lý nhóm nhà thầu',
-		path: PATH.GroupContractor,
-		pathActive: PATH.GroupContractor,
-		icon: Buildings2,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
-	{
-		title: 'Quản lý nhà thầu',
-		path: PATH.Contractor,
-		pathActive: PATH.Contractor,
-		icon: Receipt21,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
-	{
-		title: 'Quản lý nhân viên',
-		path: PATH.User,
-		pathActive: PATH.User,
-		icon: UserOctagon,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
-	{
-		title: 'Quản lý tài khoản',
-		path: PATH.Account,
-		pathActive: PATH.Account,
-		icon: TagUser,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-	},
+
 	{
 		title: 'Duyệt yêu cầu',
 		path: PATH.ContractorApproval,
