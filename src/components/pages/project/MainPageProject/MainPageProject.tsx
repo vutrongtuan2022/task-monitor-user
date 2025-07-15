@@ -17,7 +17,7 @@ import IconCustom from '~/components/common/IconCustom';
 import {Edit, Trash} from 'iconsax-react';
 import Progress from '~/components/common/Progress';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT, SORT_TYPE} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CONFIG, STATE_PROJECT, SORT_TYPE, TYPE_DATE, TYPE_ACCOUNT} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
 import FilterCustom from '~/components/common/FilterCustom';
 import Loading from '~/components/common/Loading';
@@ -30,6 +30,9 @@ import projectServices from '~/services/projectServices';
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from 'react-icons/ti';
 import Popup from '~/components/common/Popup';
 import FormExportExcel from '../FormExportExcel';
+import moment from 'moment';
+import FilterDateRange from '~/components/common/FilterDateRange';
+import userServices from '~/services/userServices';
 
 enum COLUMN_SORT_PROJECT {
 	PROGRESS = 1,
@@ -50,9 +53,12 @@ function MainPageProject({}: PropsMainPageProject) {
 		column: null,
 		type: null,
 	});
-	const {_page, _pageSize, _keyword, _status, _managerUuid, _state} = router.query;
+	const [typeDate, setTypeDate] = useState<TYPE_DATE>(TYPE_DATE.TODAY);
+	const [date, setDate] = useState<{from: Date | null; to: Date | null} | null>(null);
 
-	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid, sort], {
+	const {_page, _pageSize, _keyword, _status, _managerUuid, _state, from, to} = router.query;
+
+	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid, sort, from, to], {
 		queryFn: () =>
 			httpRequest({
 				http: projectServices.listProject({
@@ -66,6 +72,22 @@ function MainPageProject({}: PropsMainPageProject) {
 						column: sort.column,
 						type: sort.type,
 					},
+					timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+				}),
+			}),
+		select(data) {
+			return data;
+		},
+	});
+	const listManager = useQuery([QUERY_KEY.dropdown_manager], {
+		queryFn: () =>
+			httpRequest({
+				http: userServices.categoryUser({
+					keyword: '',
+					status: STATUS_CONFIG.ACTIVE,
+					roleUuid: '',
+					type: TYPE_ACCOUNT.MANAGER,
 				}),
 			}),
 		select(data) {
@@ -109,17 +131,39 @@ function MainPageProject({}: PropsMainPageProject) {
 		});
 	};
 
-	const handleCloseExport = () => {
-		setExportPopupOpen(false);
-	};
+	const exportExcel = useMutation({
+		mutationFn: () => {
+			return httpRequest({
+				http: projectServices.exportProject({
+					page: Number(_page) || 1,
+					pageSize: Number(_pageSize) || 10,
+					keyword: (_keyword as string) || '',
+					status: STATUS_CONFIG.ACTIVE,
+					state: !!_state ? Number(_state) : null,
+					managerUuid: (_managerUuid as string) || '',
+					sort: {
+						column: sort.column,
+						type: sort.type,
+					},
+					timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+				}),
+			});
+		},
+		onSuccess(data) {
+			if (data) {
+				window.open(`${process.env.NEXT_PUBLIC_PATH_EXPORT}/${data}`, '_blank');
+			}
+		},
+	});
 
-	const handleOpenExport = () => {
-		setExportPopupOpen(true);
+	const handleExportExcel = () => {
+		return exportExcel.mutate();
 	};
 
 	return (
 		<div className={styles.container}>
-			<Loading loading={funcDeleteProject.isLoading} />
+			<Loading loading={funcDeleteProject.isLoading || exportExcel.isLoading} />
 			<div className={styles.head}>
 				<div className={styles.main_search}>
 					<div className={styles.search}>
@@ -146,10 +190,28 @@ function MainPageProject({}: PropsMainPageProject) {
 								},
 							]}
 						/>
+						<FilterCustom
+							isSearch
+							name='	Lãnh đạo phụ trách'
+							query='_managerUuid'
+							listFilter={listManager?.data?.map((v: any) => ({
+								id: v?.uuid,
+								name: v?.fullname,
+							}))}
+						/>
+
+						<FilterDateRange
+							title='Thời gian dự tính'
+							styleRounded={true}
+							date={date}
+							setDate={setDate}
+							typeDate={typeDate}
+							setTypeDate={setTypeDate}
+						/>
 					</div>
 				</div>
 				<div className={styles.btn}>
-					<Button rounded_8 w_fit p_8_16 green bold onClick={handleOpenExport}>
+					<Button rounded_8 w_fit p_8_16 green bold onClick={handleExportExcel}>
 						<Image src={icons.exportExcel} alt='icon down' width={20} height={20} />
 						Xuất file Excel
 					</Button>
@@ -315,7 +377,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listProject?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state]}
+					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state, from, to]}
 				/>
 			</WrapperScrollbar>
 			<Dialog
@@ -326,9 +388,6 @@ function MainPageProject({}: PropsMainPageProject) {
 				note={'Bạn có chắc chắn muốn xóa dự án này?'}
 				onSubmit={funcDeleteProject.mutate}
 			/>
-			<Popup open={exportPopupOpen} onClose={handleCloseExport}>
-				<FormExportExcel onClose={handleCloseExport} />
-			</Popup>
 		</div>
 	);
 }
