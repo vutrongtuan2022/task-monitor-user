@@ -118,7 +118,7 @@ export const Menu: IMenuItem[] = [
 	{
 		title: 'Dự án của bạn ',
 		path: PATH.Project,
-		pathActive: PATH.Project,
+		pathActive: '/project',
 		icon: DocumentText1,
 		isSpecial: TYPE_SPECIAL.NORMAL,
 	},
