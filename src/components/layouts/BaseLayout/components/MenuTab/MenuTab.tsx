@@ -222,7 +222,7 @@ function MenuTab() {
 							href={item.path!}
 							key={item.title}
 							className={clsx(styles.itemMenu, {
-								[styles.active]: checkActive(item.pathActive ?? item.path),
+								[styles.active]: checkActive(item.path) || checkActive(item.pathActive),
 								[styles.small]: !context?.showFull,
 							})}
 							onClick={() => {
