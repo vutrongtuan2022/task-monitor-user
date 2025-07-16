@@ -50,7 +50,7 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 				msgSuccess: 'Cập nhật ngày cấp số thành công!',
 				http: pnServices.updateNoticeDate({
 					uuid: _uuidUpdateNoticeDate as string,
-					noticeDate: form?.dateIssue,
+					noticeDate: moment(form?.dateIssue).format('YYYY-MM-DD'),
 				}),
 			});
 		},
@@ -124,8 +124,6 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 			</div>
 		</div>
 	);
-
-	
 }
 
 export default memo(FormUpdateIssue);
