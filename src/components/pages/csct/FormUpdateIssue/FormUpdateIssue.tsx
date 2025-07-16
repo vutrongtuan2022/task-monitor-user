@@ -77,8 +77,7 @@ function FormUpdateIssue({onClose}: PropsFormUpdateIssue) {
 
 		funcUpdateNoticeDate.mutate();
 	};
-	console.log('today', new Date(timeSubmit(new Date())!));
-	console.log('date', form?.dateIssue);
+
 	return (
 		<div className={styles.container}>
 			<Loading loading={funcUpdateNoticeDate.isLoading} />

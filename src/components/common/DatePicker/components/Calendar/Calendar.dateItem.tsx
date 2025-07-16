@@ -12,15 +12,7 @@ interface props {
 	onChoose: (any: any) => void;
 }
 
-function DateItem({
-	date,
-	status,
-	time,
-	isActive,
-	disable,
-	onClick,
-	onChoose,
-}: props) {
+function DateItem({date, status, time, isActive, disable, onClick, onChoose}: props) {
 	const handleClick = () => {
 		if (!disable) {
 			onChoose(time);
