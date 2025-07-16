@@ -1,4 +1,4 @@
-@import '../../../../../styles/color';
+@import "../../../../../styles/color";
 
 .calendar {
 	min-width: 300px;
@@ -8,7 +8,9 @@
 	background-color: #ffff;
 	border-radius: 10px;
 	padding-bottom: 5px;
-	box-shadow: 1.07582px 0px 10.7582px rgba(171, 165, 165, 0.15), 1.07582px 6.45494px 10.7582px rgba(202, 194, 194, 0.2);
+	box-shadow:
+		1.07582px 0px 10.7582px rgba(171, 165, 165, 0.15),
+		1.07582px 6.45494px 10.7582px rgba(202, 194, 194, 0.2);
 	color: #000;
 
 	.month {

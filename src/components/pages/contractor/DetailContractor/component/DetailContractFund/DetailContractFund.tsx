@@ -38,7 +38,6 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 			enabled: !!userContractFund?.uuid,
 		}
 	);
-	console.log(listContractFundDetail);
 
 	return (
 		<div className={styles.container}>

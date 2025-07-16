@@ -51,7 +51,6 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 				!!userContractFund?.projectUuid,
 		}
 	);
-	console.log(listContractFundDetail);
 
 	return (
 		<div className={styles.container}>

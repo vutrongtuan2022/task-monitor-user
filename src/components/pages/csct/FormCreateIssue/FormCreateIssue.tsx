@@ -57,7 +57,6 @@ function FormCreateIssue({onClose}: PropsFormCreateIssue) {
 		}
 
 		funcCreateNoticeDate.mutate();
-		console.log();
 	};
 
 	return (
