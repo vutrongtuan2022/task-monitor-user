@@ -114,55 +114,7 @@ export const Menu: IMenuItem[] = [
 	// 	pathActive: PATH.Home,
 	// 	icon: ElementEqual,
 	// },
-	{
-		title: 'Quản lý',
-		icon: DocumentText1,
-		isSpecial: TYPE_SPECIAL.SENIOR,
-		children: [
-			{
-				title: 'Quản lý quy trình',
-				path: PATH.Task,
-				pathActive: PATH.Task,
-				icon: ReceiptItem,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-			{
-				title: 'Quản lý chi nhánh',
-				path: PATH.Branch,
-				pathActive: PATH.Branch,
-				icon: Data,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-			{
-				title: 'Quản lý nhóm nhà thầu',
-				path: PATH.GroupContractor,
-				pathActive: PATH.GroupContractor,
-				icon: Buildings2,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-			{
-				title: 'Quản lý nhà thầu',
-				path: PATH.Contractor,
-				pathActive: PATH.Contractor,
-				icon: Receipt21,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-			{
-				title: 'Quản lý nhân viên',
-				path: PATH.User,
-				pathActive: PATH.User,
-				icon: UserOctagon,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-			{
-				title: 'Quản lý tài khoản',
-				path: PATH.Account,
-				pathActive: PATH.Account,
-				icon: TagUser,
-				isSpecial: TYPE_SPECIAL.SENIOR,
-			},
-		],
-	},
+
 	{
 		title: 'Dự án của bạn ',
 		path: PATH.Project,
@@ -221,6 +173,55 @@ export const Menu: IMenuItem[] = [
 		icon: TickCircle,
 		isSpecial: TYPE_SPECIAL.SENIOR,
 	},
+	{
+		title: 'Danh mục quản lý',
+		icon: DocumentText1,
+		isSpecial: TYPE_SPECIAL.SENIOR,
+		children: [
+			{
+				title: 'Quản lý quy trình',
+				path: PATH.Task,
+				pathActive: PATH.Task,
+				icon: ReceiptItem,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý chi nhánh',
+				path: PATH.Branch,
+				pathActive: PATH.Branch,
+				icon: Data,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhóm nhà thầu',
+				path: PATH.GroupContractor,
+				pathActive: PATH.GroupContractor,
+				icon: Buildings2,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhà thầu',
+				path: PATH.Contractor,
+				pathActive: PATH.Contractor,
+				icon: Receipt21,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý nhân viên',
+				path: PATH.User,
+				pathActive: PATH.User,
+				icon: UserOctagon,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+			{
+				title: 'Quản lý tài khoản',
+				path: PATH.Account,
+				pathActive: PATH.Account,
+				icon: TagUser,
+				isSpecial: TYPE_SPECIAL.SENIOR,
+			},
+		],
+	},
 ];
 
 export const KEY_STORE = 'task-monitor-user';
@@ -229,6 +230,10 @@ export const ListOptionTimePicker: {
 	name: string;
 	value: number;
 }[] = [
+	{
+		name: 'Tất cả',
+		value: TYPE_DATE.ALL,
+	},
 	{
 		name: 'Hôm nay',
 		value: TYPE_DATE.TODAY,
