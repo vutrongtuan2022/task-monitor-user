@@ -56,30 +56,33 @@ function MainPageProject({}: PropsMainPageProject) {
 	const [typeDate, setTypeDate] = useState<TYPE_DATE>(TYPE_DATE.TODAY);
 	const [date, setDate] = useState<{from: Date | null; to: Date | null} | null>(null);
 
-	const {_page, _pageSize, _keyword, _status, _managerUuid, _state, from, to} = router.query;
+	const {_page, _pageSize, _keyword, _status, _managerUuid, _state} = router.query;
 
-	const listProject = useQuery([QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid, sort, from, to], {
-		queryFn: () =>
-			httpRequest({
-				http: projectServices.listProject({
-					page: Number(_page) || 1,
-					pageSize: Number(_pageSize) || 10,
-					keyword: (_keyword as string) || '',
-					status: STATUS_CONFIG.ACTIVE,
-					state: !!_state ? Number(_state) : null,
-					managerUuid: (_managerUuid as string) || '',
-					sort: {
-						column: sort.column,
-						type: sort.type,
-					},
-					timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
-					timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+	const listProject = useQuery(
+		[QUERY_KEY.table_list_user, _page, _pageSize, _state, _keyword, _status, _managerUuid, sort, date?.from, date?.to],
+		{
+			queryFn: () =>
+				httpRequest({
+					http: projectServices.listProject({
+						page: Number(_page) || 1,
+						pageSize: Number(_pageSize) || 10,
+						keyword: (_keyword as string) || '',
+						status: STATUS_CONFIG.ACTIVE,
+						state: !!_state ? Number(_state) : null,
+						managerUuid: (_managerUuid as string) || '',
+						sort: {
+							column: sort.column,
+							type: sort.type,
+						},
+						timeStart: date?.from ? moment(date.from).startOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+						timeEnd: date?.to ? moment(date.to).endOf('day').format('YYYY-MM-DDTHH:mm:ss') : null,
+					}),
 				}),
-			}),
-		select(data) {
-			return data;
-		},
-	});
+			select(data) {
+				return data;
+			},
+		}
+	);
 	const listManager = useQuery([QUERY_KEY.dropdown_manager], {
 		queryFn: () =>
 			httpRequest({
@@ -377,7 +380,7 @@ function MainPageProject({}: PropsMainPageProject) {
 					currentPage={Number(_page) || 1}
 					pageSize={Number(_pageSize) || 10}
 					total={listProject?.data?.pagination?.totalCount}
-					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state, from, to]}
+					dependencies={[_pageSize, _keyword, _status, _managerUuid, _state, date?.from, date?.to]}
 				/>
 			</WrapperScrollbar>
 			<Dialog
