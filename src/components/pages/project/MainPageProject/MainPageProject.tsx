@@ -215,8 +215,8 @@ function MainPageProject({}: PropsMainPageProject) {
 							setTypeDate={setTypeDate}
 							showOptionAll={true}
 						/> */}
-						<FilterDateOne title='Thời gian từ' styleRounded={true} date={dateStart} onSetDate={setDateStart} />
-						<FilterDateOne title='Thời gian đến' styleRounded={true} date={dateEnd} onSetDate={setDateEnd} />
+						<FilterDateOne title='Thời gian bắt đầu dự tính' styleRounded={true} date={dateStart} onSetDate={setDateStart} />
+						<FilterDateOne title='Thời gian kết thúc dự tính' styleRounded={true} date={dateEnd} onSetDate={setDateEnd} />
 					</div>
 				</div>
 				<div className={styles.btn}>
