@@ -11,7 +11,7 @@ interface props {
 	show?: boolean;
 	blockOldDay?: boolean;
 	futureDayblock?: number;
-	value: any;
+	value?: any;
 }
 
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
