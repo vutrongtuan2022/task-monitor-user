@@ -223,7 +223,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								render: (data: ICSCT) => (
 									<p>
 										<span>{convertCoin(data?.accumAmount)}</span>/
-										<span style={{color: '#005994'}}>{convertCoin(data?.totalAmount)}</span>
+										<span style={{color: '#005994'}}>{convertCoin(data?.totalRemainingAmount)}</span>
 									</p>
 								),
 							},
@@ -235,10 +235,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								title: 'Cán bộ chuyên quản',
 								render: (data: ICSCT) => <>{data?.user?.fullname || '---'}</>,
 							},
-							{
-								title: 'Tỷ lệ giải ngân/Giá trị CSCTTT',
-								render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
-							},
+							// {
+							// 	title: 'Tỷ lệ giải ngân/Giá trị CSCTTT',
+							// 	render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
+							// },
 							{
 								title: 'Trạng thái',
 								render: (data: ICSCT) => (

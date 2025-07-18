@@ -45,18 +45,18 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 		}));
 	};
 
-	const handleRemainingAmount = (value: string | number) => {
-		const newRemainingAmount = price(value);
-		const totalReverseAmount = price(contract.totalReverseAmount);
+	const handleAmount = (value: string | number) => {
+		const newAmount = price(value || 0);
+		const totalReverseAmount = price(contract.totalReverseAmount || 0);
 
-		const newAmount = newRemainingAmount + totalReverseAmount;
+		const newRemainingAmount = newAmount - totalReverseAmount;
 
 		setForm((prev: any) => {
 			const newListContract = [...prev.listContract];
 			newListContract[index] = {
 				...newListContract[index],
-				remainingAmount: convertCoin(newRemainingAmount),
 				amount: convertCoin(newAmount),
+				remainingAmount: convertCoin(newRemainingAmount),
 			};
 
 			return {
@@ -67,17 +67,17 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 	};
 
 	const handleTotalReverseAmount = (value: string | number) => {
-		const newTotalReverseAmount = price(value);
-		const remainingAmount = price(contract.remainingAmount);
+		const newTotalReverseAmount = price(value || 0);
+		const amount = price(contract.amount || 0);
 
-		const newAmount = remainingAmount + newTotalReverseAmount;
+		const newRemainingAmount = amount - newTotalReverseAmount;
 
 		setForm((prev: any) => {
 			const newListContract = [...prev.listContract];
 			newListContract[index] = {
 				...newListContract[index],
 				totalReverseAmount: convertCoin(newTotalReverseAmount),
-				amount: convertCoin(newAmount),
+				remainingAmount: convertCoin(newRemainingAmount),
 			};
 
 			return {
@@ -184,20 +184,21 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 							<GridColumn col_3>
 								<div>
 									<p className={styles.label}>
-										Số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
+										Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
 									</p>
 									<div className={styles.input_specification}>
 										<input
 											name='value'
 											type='text'
-											placeholder='Nhập số tiền còn phải thanh toán'
+											placeholder='Nhập tổng số tiền thanh toán'
 											className={styles.input}
-											value={contract?.remainingAmount}
-											onChange={(e) => handleRemainingAmount(e.target.value)}
+											value={contract?.amount}
+											onChange={(e) => handleAmount(e.target.value)}
 										/>
 										<div className={styles.unit}>VNĐ</div>
 									</div>
 								</div>
+
 								<div>
 									<p className={styles.label}>
 										Số tiền khấu trừ tạm ứng <span style={{color: 'red'}}>*</span>
@@ -214,37 +215,20 @@ function CSCTItemForm({index, form, setForm, contract, handleDelete}: PropsCSCTI
 										<div className={styles.unit}>VNĐ</div>
 									</div>
 								</div>
-								{/* <div>
-									<p className={styles.label}>
-										Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
-									</p>
-									<div className={styles.input_specification}>
-										<input
-											name='value'
-											type='text'
-											placeholder='Nhập tổng số tiền thanh toán'
-											className={styles.input}
-											value={contract?.amount}
-											readOnly={true}
-											onChange={(e) => handleChangeValue(index, 'amount', e.target.value, true)}
-										/>
-										<div className={styles.unit}>VNĐ</div>
-									</div>
-								</div> */}
 								<div>
 									<p className={styles.label}>
-										Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+										Số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
 									</p>
 									<div className={styles.input_specification}>
 										<input
 											name='value'
 											type='text'
-											placeholder='Nhập tổng số tiền thanh toán'
-											className={styles.input}
+											placeholder='Nhập số tiền còn phải thanh toán'
 											readOnly={true}
 											disabled={true}
-											value={contract?.amount}
-											onChange={(e) => handleChangeValue(index, 'amount', e.target.value, true)}
+											className={styles.input}
+											value={contract?.remainingAmount}
+											onChange={(e) => handleChangeValue(index, 'remainingAmount', e.target.value, true)}
 										/>
 										<div className={styles.unit}>VNĐ</div>
 									</div>

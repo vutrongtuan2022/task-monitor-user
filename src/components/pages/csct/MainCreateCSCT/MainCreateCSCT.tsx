@@ -38,6 +38,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		projectMember: infoUser?.fullname!,
 		listContract: [],
 		totalAmount: '0',
+		totalRemaining: '0',
 	};
 
 	const [form, setForm] = useState<IFormCreateCSCT>(initForm);
@@ -91,6 +92,15 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		}));
 	}, [form?.listContract]);
 
+	useEffect(() => {
+		const totalRemaining = form?.listContract?.reduce((acc, curr) => acc + price(curr.remainingAmount) + price(curr.advanceAmount), 0);
+
+		setForm((prev) => ({
+			...prev,
+			totalRemaining: convertCoin(totalRemaining),
+		}));
+	}, [form?.listContract]);
+
 	const funcCreatePN = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -103,6 +113,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 					code: form.code,
 					numberingDate: moment(form?.numberingDate).format('YYYY-MM-DD'),
 					totalAmount: price(form.totalAmount),
+					totalRemainingAmount: price(form?.totalRemaining),
 					contracts: form?.listContract?.map((v) => ({
 						uuid: '',
 						contractUuid: v?.uuid,
@@ -376,23 +387,42 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 										}));
 									}}
 								/>
-
-								<Input
-									label={
-										<span>
-											Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập tổng số tiền thanh toán'
-									type='text'
-									isMoney
-									name='totalAmount'
-									value={form?.totalAmount}
-									isRequired={true}
-									readOnly={true}
-									blur={true}
-									unit='VND'
-								/>
+								<div className={styles.col_2}>
+									<Input
+										label={
+											<span>
+												Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+											</span>
+										}
+										placeholder='Nhập tổng số tiền thanh toán'
+										type='text'
+										isMoney
+										name='totalAmount'
+										value={form?.totalAmount}
+										isRequired={true}
+										readOnly={true}
+										blur={true}
+										unit='VND'
+									/>
+									<div>
+										<Input
+											label={
+												<span>
+													Tổng số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
+												</span>
+											}
+											placeholder='Nhập Tổng số tiền còn phải thanh toán'
+											type='text'
+											isMoney
+											name='totalRemaining'
+											value={form?.totalRemaining}
+											isRequired={true}
+											readOnly={true}
+											blur={true}
+											unit='VND'
+										/>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
