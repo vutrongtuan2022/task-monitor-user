@@ -121,6 +121,16 @@ const pnServices = {
 			cancelToken: tokenAxios,
 		});
 	},
+	PNForExport: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/PN/pn-for-export`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
 };
 
 export default pnServices;
