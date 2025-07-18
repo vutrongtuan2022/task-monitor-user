@@ -2,6 +2,7 @@ export interface PropsMainPageCSCT {}
 
 export interface ICSCT {
 	totalAmount: number;
+	totalRemainingAmount: number;
 	accumAmount: number;
 	percent: number;
 	totalContracts: number;

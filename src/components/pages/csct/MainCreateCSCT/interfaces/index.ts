@@ -42,4 +42,5 @@ export interface IFormCreateCSCT {
 	projectMember: string;
 	listContract: IContractByProject[];
 	totalAmount: string;
+	totalRemaining: string;
 }

@@ -56,6 +56,7 @@ const pnServices = {
 			code: string;
 			numberingDate: string;
 			totalAmount: number;
+			totalRemainingAmount: number;
 			contracts: {
 				contractorLinkUuid: string;
 				contractUuid: string;
