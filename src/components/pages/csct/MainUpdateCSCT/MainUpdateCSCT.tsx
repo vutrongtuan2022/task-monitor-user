@@ -41,6 +41,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 		projectMember: infoUser?.fullname!,
 		listContract: [],
 		totalAmount: '0',
+		totalRemaining: '0',
 	};
 
 	const [form, setForm] = useState<IFormUpdateCSCT>(initForm);
@@ -84,6 +85,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 							remainingAmount: convertCoin(v?.remainingAmount),
 							totalReverseAmount: convertCoin(v?.totalReverseAmount),
 							advanceAmount: convertCoin(v?.advanceAmount),
+							totalRemaining: convertCoin(v?.totalRemainingAmount),
 							type: v?.type || TYPE_CONTRACT_PN.PAY,
 							note: v?.note || '',
 							contractorLinks: v?.contractor,
@@ -132,6 +134,14 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 			totalAmount: convertCoin(totalAmount),
 		}));
 	}, [form?.listContract]);
+	useEffect(() => {
+		const totalRemaining = form?.listContract?.reduce((acc, curr) => acc + price(curr.remainingAmount) + price(curr.advanceAmount), 0);
+
+		setForm((prev) => ({
+			...prev,
+			totalRemaining: convertCoin(totalRemaining),
+		}));
+	}, [form?.listContract]);
 
 	const funcCreatePN = useMutation({
 		mutationFn: () => {
@@ -145,6 +155,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 					code: form.code,
 					numberingDate: moment(form?.numberingDate).format('YYYY-MM-DD'),
 					totalAmount: price(form.totalAmount),
+					totalRemainingAmount: price(form?.totalRemaining),
 					contracts: form?.listContract?.map((v) => ({
 						uuid: v?.uuidContractProject || '',
 						contractUuid: v?.uuid,
@@ -168,10 +179,11 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 	});
 
 	const handleSubmit = async () => {
-		const hasInvalidPayContract = form?.listContract?.every((item) => item.type === TYPE_CONTRACT_PN.PAY && price(item.amount) <= 0);
-		const hasInvalidAdvanceContract = form?.listContract?.every(
+		const hasInvalidPayContract = form?.listContract?.some((item) => item.type === TYPE_CONTRACT_PN.PAY && price(item.amount) <= 0);
+		const hasInvalidAdvanceContract = form?.listContract?.some(
 			(item) => item.type === TYPE_CONTRACT_PN.ADVANCE && price(item.advanceAmount) <= 0
 		);
+
 		if (!form?.projectUuid) {
 			return toastWarn({
 				msg: 'Vui lòng chỉ chọn dự án!',
@@ -203,6 +215,7 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 				msg: 'Giá trị số tiền tạm ứng phải lớn hơn 0!',
 			});
 		}
+
 		if (!form?.listContract.every((item) => item.note)) {
 			return toastWarn({
 				msg: 'Vui lòng nhập nội dung thanh toán!',
@@ -428,22 +441,42 @@ function MainUpdateCSCT({}: PropsMainUpdateCSCT) {
 										}));
 									}}
 								/>
-								<Input
-									label={
-										<span>
-											Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
-										</span>
-									}
-									placeholder='Nhập tổng số tiền thanh toán'
-									type='text'
-									isMoney
-									name='totalAmount'
-									value={form?.totalAmount}
-									isRequired={true}
-									readOnly={true}
-									blur={true}
-									unit='VND'
-								/>
+								<div className={styles.col_2}>
+									<Input
+										label={
+											<span>
+												Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+											</span>
+										}
+										placeholder='Nhập tổng số tiền thanh toán'
+										type='text'
+										isMoney
+										name='totalAmount'
+										value={form?.totalAmount}
+										isRequired={true}
+										readOnly={true}
+										blur={true}
+										unit='VND'
+									/>
+									<div>
+										<Input
+											label={
+												<span>
+													Tổng số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
+												</span>
+											}
+											placeholder='Nhập Tổng số tiền còn phải thanh toán'
+											type='text'
+											isMoney
+											name='totalRemaining'
+											value={form?.totalRemaining}
+											isRequired={true}
+											readOnly={true}
+											blur={true}
+											unit='VND'
+										/>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

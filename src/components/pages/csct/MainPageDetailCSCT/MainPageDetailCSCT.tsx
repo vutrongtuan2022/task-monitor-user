@@ -190,6 +190,10 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>{convertCoin(detailCSCT?.totalAmount!)}</p>
 							</div>
 							<div className={styles.item}>
+								<p>Tổng giá số tiền còn phải thanh toán (VND)</p>
+								<p>{convertCoin(detailCSCT?.totalRemainingAmount!)}</p>
+							</div>
+							<div className={styles.item}>
 								<p>LKSCTTT theo năm (VND)</p>
 								<p>{convertCoin(detailCSCT?.accumAmountInYear!)}</p>
 							</div>
