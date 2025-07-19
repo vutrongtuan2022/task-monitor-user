@@ -145,9 +145,9 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										render: (data: IDetailContractFund) => (
 											<>
 												{convertCoin(
-													data?.pnContract.type == 2
-														? data?.pnContract.advanceAmount
-														: data?.pnContract.remainingAmount
+													data?.pnContract?.type == 2
+														? data?.pnContract?.advanceAmount
+														: data?.pnContract?.remainingAmount
 												) || '---'}
 											</>
 										),
