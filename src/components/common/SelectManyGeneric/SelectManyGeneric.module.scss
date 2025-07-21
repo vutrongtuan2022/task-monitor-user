@@ -229,7 +229,7 @@ $border-radius: 8px;
 		color: #777e90;
 		cursor: pointer;
 		user-select: none;
-		font-size: $font-size;
+		font-size: 16px;
 		font-weight: 500;
 	}
 
@@ -237,7 +237,7 @@ $border-radius: 8px;
 		width: 100%;
 		cursor: pointer;
 		user-select: none;
-		font-size: $font-size;
+		font-size: 14px;
 		font-weight: 500;
 
 		&.disable {
@@ -352,7 +352,7 @@ $border-radius: 8px;
 	gap: 6px;
 
 	.subItem {
-		font-size: 13px;
+		font-size: 12px;
 		color: #3772ff;
 		padding: 2px 4px;
 		border-radius: 4px;
@@ -382,7 +382,7 @@ $border-radius: 8px;
 
 .inlineSubItem {
 	display: inline-block;
-	font-size: 13px;
+	font-size: 12px;
 	color: #3772ff;
 	border-radius: 4px;
 }
