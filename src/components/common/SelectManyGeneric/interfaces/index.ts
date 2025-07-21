@@ -19,4 +19,6 @@ export interface PropsSelectManyGeneric<OptionType> {
 	getOptionLabel: (option: OptionType) => string;
 	getOptionValue: (option: OptionType) => string | number;
 	onRemove?: (item: string | number) => void;
+	getItemSubContent?: (option: OptionType) => React.ReactNode[];
+	renderMultiItemSubContent?: (option: OptionType) => React.ReactNode;
 }

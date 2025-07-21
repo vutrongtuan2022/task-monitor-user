@@ -183,7 +183,42 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
-	const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+	console.log('listContract', listContract);
+
+	// const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+
+	const uniqueContracts = listContract?.reduce<any[]>((acc, current) => {
+		const existingIndex = acc.findIndex((c) => c.uuid === current.uuid);
+
+		const currentCat = current.contractorLinks.contractorCat;
+		const currentCats = currentCat ? [currentCat] : [];
+
+		if (existingIndex === -1) {
+			acc.push({
+				...current,
+				contractorLinks: {
+					...current.contractorLinks,
+					contractorCats: currentCats,
+				},
+			});
+		} else {
+			const existing = acc[existingIndex];
+
+			const existingCats = existing.contractorLinks.contractorCats || [];
+
+			const mergedCats = [...existingCats, ...currentCats.filter((cat) => !existingCats.some((eCat: any) => eCat.uuid === cat.uuid))];
+
+			acc[existingIndex] = {
+				...existing,
+				contractorLinks: {
+					...existing.contractorLinks,
+					contractorCats: mergedCats,
+				},
+			};
+		}
+
+		return acc;
+	}, []);
 
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({
@@ -191,6 +226,8 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 			listContract: [...prev?.listContract?.slice(0, index), ...prev?.listContract?.slice(index + 1)],
 		}));
 	};
+
+	console.log('uniqueContracts', uniqueContracts);
 
 	return (
 		<div className={styles.container}>
@@ -385,6 +422,21 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 											...prevForm,
 											listContract: selectedContracts,
 										}));
+									}}
+									getItemSubContent={(contract) =>
+										contract.contractorLinks.contractorCats?.map((cat: any) => (
+											<span key={cat.uuid}>
+												{cat.code} - {cat.name}
+											</span>
+										)) || []
+									}
+									renderMultiItemSubContent={(contract) => {
+										const contractorCats = contract.contractorLinks?.contractorCats || [];
+										return (
+											<div>
+												Số lượng nhà thầu: <>{contractorCats.length}</>
+											</div>
+										);
 									}}
 								/>
 								<div className={styles.col_2}>
