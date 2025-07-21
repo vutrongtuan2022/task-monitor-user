@@ -494,20 +494,18 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 					// Lọc những nhóm nhà thầu trùng nhau.
 					new Paragraph({
 						alignment: AlignmentType.CENTER,
-						spacing: {},
 						children: [
 							new TextRun({
-								text: `V/v Chấp thuận tạm ứng/thanh toán hợp đồng ${[
-									pn?.pnContracts
-										?.filter(
-											(p, index, self) =>
-												p?.contractor?.contractorCat?.uuid &&
-												self.findIndex(
-													(s) => s?.contractor?.contractorCat?.uuid === p?.contractor?.contractorCat?.uuid
-												) === index
-										)
-										?.map((p) => p?.contractor?.contractorCat?.name),
-								]?.join(', ')}`,
+								text: `V/v Chấp thuận tạm ứng/thanh toán hợp đồng ${pn?.pnContracts
+									?.filter(
+										(p, index, self) =>
+											p?.contractor?.contractorCat?.uuid &&
+											self.findIndex(
+												(s) => s?.contractor?.contractorCat?.uuid === p?.contractor?.contractorCat?.uuid
+											) === index
+									)
+									?.map((p) => p?.contractor?.contractorCat?.name)
+									?.join(', ')}`,
 								bold: true,
 							}),
 						],
