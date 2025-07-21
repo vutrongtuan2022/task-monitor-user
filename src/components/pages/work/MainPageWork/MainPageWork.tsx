@@ -717,25 +717,26 @@ function MainPageWork({}: PropsMainPageWork) {
 												}}
 											/>
 										)}
-
-										<IconCustom
-											color='#536884'
-											icon={<ReceiptEdit fontSize={20} />}
-											tooltip='Nhập tình trạng xử lý'
-											onClick={() => {
-												setUuidReason(data?.uuid);
-												setForm((prev) => ({...prev, reason: data?.unfinishReason || ''}));
-											}}
-										/>
-
-										{data?.type == TYPE_WORK.TASK && (
-											<IconCustom
-												color='#005994'
-												icon={<Eye fontSize={20} fontWeight={600} />}
-												tooltip='Xem chi tiết'
-												href={`${PATH.Work}/${data?.activity?.uuid}`}
-											/>
+										{data?.type === TYPE_WORK.TASK && (
+											<>
+												<IconCustom
+													color='#536884'
+													icon={<ReceiptEdit fontSize={20} />}
+													tooltip='Nhập tình trạng xử lý'
+													onClick={() => {
+														setUuidReason(data?.uuid);
+														setForm((prev) => ({...prev, reason: data?.unfinishReason || ''}));
+													}}
+												/>
+												<IconCustom
+													color='#005994'
+													icon={<Eye fontSize={20} fontWeight={600} />}
+													tooltip='Xem chi tiết'
+													href={`${PATH.Work}/${data?.activity?.uuid}`}
+												/>
+											</>
 										)}
+
 										{!data?.isInWorkflow && 'Phát sinh' ? (
 											<IconCustom
 												color='#005994'

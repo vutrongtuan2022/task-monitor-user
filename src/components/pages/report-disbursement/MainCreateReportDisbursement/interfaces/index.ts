@@ -108,6 +108,8 @@ export interface IContractsReportFund {
 			};
 			state: number;
 			uuid: string;
+			numberingDate: string;
+			noticeDate: string;
 		};
 		contract: {
 			code: string;
@@ -184,6 +186,9 @@ export interface IContractsReportFund {
 		dayDisbursement: string;
 		reverseAmount: number;
 		description: string;
+		totalReverseAmount: number;
+		remainingAmount: number;
+		advanceAmount: number;
 	}[];
 	dayDisbursement: string;
 	reverseAmount: number;

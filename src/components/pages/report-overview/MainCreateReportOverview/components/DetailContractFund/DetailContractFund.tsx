@@ -116,7 +116,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									},
 
 									{
-										title: 'CSCTTT',
+										title: 'Số CTTT',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.pn?.code || '---'}</>
 											// <p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>
