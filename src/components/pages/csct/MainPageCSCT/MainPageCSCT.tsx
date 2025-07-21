@@ -22,7 +22,6 @@ import StateActive from '~/components/common/StateActive';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import Moment from 'react-moment';
-import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
 import {CalendarAdd, CalendarEdit, DirectboxSend, Edit, Eye, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
@@ -456,6 +455,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				}}
 			>
 				<FormExportCSCT
+					uuidCSCT={_uuidExportCSCT as string}
 					onClose={() => {
 						const {_uuidExportCSCT, ...rest} = router.query;
 

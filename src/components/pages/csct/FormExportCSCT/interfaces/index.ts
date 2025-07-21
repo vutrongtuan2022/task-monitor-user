@@ -1,4 +1,5 @@
 export interface PropsFormExportCSCT {
+	uuidCSCT: string;
 	onClose: () => void;
 }
 

@@ -2,7 +2,6 @@ import Button from '~/components/common/Button';
 import styles from './FormExportCSCT.module.scss';
 import {IPNForExport, PropsFormExportCSCT} from './interfaces';
 import {IoClose} from 'react-icons/io5';
-import {useRouter} from 'next/router';
 import {useQuery} from '@tanstack/react-query';
 import {QUERY_KEY} from '~/constants/config/enum';
 import {httpRequest} from '~/services';
@@ -19,21 +18,17 @@ export enum TYPE_PN_EXPORT {
 	THANH_TOAN_TAM_UNG,
 }
 
-function FormExportCSCT({onClose}: PropsFormExportCSCT) {
-	const router = useRouter();
-
-	const {_uuidExportCSCT} = router.query;
-
+function FormExportCSCT({uuidCSCT, onClose}: PropsFormExportCSCT) {
 	const [form, setForm] = useState<{code: string; type: TYPE_PN_EXPORT}>({
 		code: '',
 		type: TYPE_PN_EXPORT.THANH_TOAN,
 	});
 
-	const {data: pnExport} = useQuery<IPNForExport>([QUERY_KEY.detail_pn_for_export, _uuidExportCSCT], {
+	const {data: pnExport} = useQuery<IPNForExport>([QUERY_KEY.detail_pn_for_export, uuidCSCT], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.PNForExport({
-					uuid: _uuidExportCSCT as string,
+					uuid: uuidCSCT as string,
 				}),
 			}),
 		onSuccess(data) {
@@ -45,7 +40,7 @@ function FormExportCSCT({onClose}: PropsFormExportCSCT) {
 		select(data) {
 			return data;
 		},
-		enabled: !!_uuidExportCSCT,
+		enabled: !!uuidCSCT,
 	});
 
 	const handleSubmit = () => {
