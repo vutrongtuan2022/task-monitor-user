@@ -599,7 +599,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						indent: {firstLine: 720},
 						children: [
 							new TextRun({
-								text: `4. Tổng giá trị chấp thuận tạm ứng/thanh toán: ${pn?.totalRemainingAmount}`,
+								text: `4. Tổng giá trị chấp thuận tạm ứng/thanh toán: ${convertCoin(pn?.totalRemainingAmount)}`,
 							}),
 						],
 					}),
@@ -609,7 +609,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						spacing: {before: 100},
 						children: [
 							new TextRun({
-								text: `(Bằng chữ: ${numberToWords(pn?.totalRemainingAmount)} )`,
+								text: `(Bằng chữ: ${numberToWords(pn?.totalRemainingAmount)} ).`,
 								italics: true,
 							}),
 						],
