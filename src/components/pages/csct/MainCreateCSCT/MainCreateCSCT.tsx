@@ -183,8 +183,6 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
-	console.log('listContract', listContract);
-
 	// const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
 
 	const uniqueContracts = listContract?.reduce<any[]>((acc, current) => {
@@ -226,8 +224,6 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 			listContract: [...prev?.listContract?.slice(0, index), ...prev?.listContract?.slice(index + 1)],
 		}));
 	};
-
-	console.log('uniqueContracts', uniqueContracts);
 
 	return (
 		<div className={styles.container}>
@@ -430,14 +426,14 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 											</span>
 										)) || []
 									}
-									renderMultiItemSubContent={(contract) => {
-										const contractorCats = contract.contractorLinks?.contractorCats || [];
-										return (
-											<div>
-												Số lượng nhà thầu: <>{contractorCats.length}</>
-											</div>
-										);
-									}}
+									// renderMultiItemSubContent={(contract) => {
+									// 	const contractorCats = contract.contractorLinks?.contractorCats || [];
+									// 	return (
+									// 		<div>
+									// 			Số lượng nhà thầu: <>{contractorCats.length}</>
+									// 		</div>
+									// 	);
+									// }}
 								/>
 								<div className={styles.col_2}>
 									<Input
