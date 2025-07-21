@@ -88,7 +88,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						pnContract?.type == TYPE_CONTRACT_PN.PAY
 							? numberToWords(pnContract?.remainingAmount)
 							: numberToWords(pnContract?.advanceAmount)
-					} ).`,
+					}).`,
 					italics: true,
 				}),
 			],
@@ -427,9 +427,8 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 												children: [
 													new TextRun({text: 'Số: ', size: 24}),
 													new TextRun({
-														text: `${pn?.codeDOC}./TV-XDCB-${pn?.codeDOCNumber}`,
+														text: `${pn?.codeDOC}/XL-XDCB-${pn?.codeDOCNumber}`,
 														size: 24,
-														italics: true,
 													}),
 												],
 											}),
