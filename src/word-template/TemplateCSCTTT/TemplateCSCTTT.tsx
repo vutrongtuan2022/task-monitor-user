@@ -608,7 +608,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						spacing: {before: 100},
 						children: [
 							new TextRun({
-								text: `(Bằng chữ: ${numberToWords(pn?.totalRemainingAmount)} ).`,
+								text: `(Bằng chữ: ${numberToWords(pn?.totalRemainingAmount)}).`,
 								italics: true,
 							}),
 						],
