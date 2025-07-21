@@ -44,7 +44,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						text: `${toRomanLowerCase(index + 1)}. Hợp đồng số ${contract?.code} ngày ${moment(contract?.startDate).format(
 							'DD/MM/YYYY'
 						)} giữa Ngân hàng TMCP Công thương Việt Nam – ${pn?.project?.branch?.name} và ${contract?.contractorLinks
-							?.map((contractor) => `${contractor?.contractor?.name} V/v ${contractor.contractorCat?.name} `)
+							?.map((contractor) => `${contractor?.contractor?.name} V/v ${contractor.contractorCat?.name}`)
 							?.join(' - ')}.`,
 					}),
 				],
@@ -61,7 +61,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 				new TextRun({
 					text: `${toRomanLowerCase(index + 1)}. Hợp đồng số ${pnContract?.contract?.code} ngày ${moment(
 						pnContract?.contract?.startDate
-					).format('DD/MM/YYYY')} V/v ${pnContract.contractor?.contractorCat?.name}.`,
+					).format('DD/MM/YYYY')} V/v ${pnContract.contractor?.contractorCat?.name}:`,
 				}),
 			],
 		}),
@@ -88,7 +88,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 						pnContract?.type == TYPE_CONTRACT_PN.PAY
 							? numberToWords(pnContract?.remainingAmount)
 							: numberToWords(pnContract?.advanceAmount)
-					} )`,
+					} ).`,
 					italics: true,
 				}),
 			],
@@ -99,7 +99,7 @@ export const generateCSCTDocx = ({type, pn}: {type: TYPE_PN_EXPORT; pn: IPNForEx
 			indent: {firstLine: 720},
 			children: [
 				new TextRun({
-					text: `- Nội dung tạm ứng/thanh toán: ${pnContract?.note || '...'}`,
+					text: `- Nội dung tạm ứng/thanh toán: ${pnContract?.note || '...'}.`,
 				}),
 			],
 		}),
