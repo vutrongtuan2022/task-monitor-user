@@ -110,7 +110,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							)}
 							{detailCSCT?.state == STATUS_CSCT.APPROVED && (
 								<Button p_14_24 rounded_8 blueRedLinear onClick={() => setOpenExport(true)}>
-									Xuất chấp nhận thanh toán
+									Xuất chấp thuận thanh toán
 								</Button>
 							)}
 						</div>

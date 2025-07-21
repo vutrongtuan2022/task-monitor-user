@@ -308,7 +308,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 													<IconCustom
 														type='edit'
 														icon={<DirectboxSend fontSize={20} fontWeight={600} color='#06D7A0' />}
-														tooltip='Xuất chấp nhận thanh toán'
+														tooltip='Xuất chấp thuận thanh toán'
 														onClick={() => {
 															router.replace({
 																pathname: router.pathname,
