@@ -3,6 +3,7 @@ export interface IDetailCSCT {
 	accumAmountInYear: number;
 	status: number;
 	totalAmount: number;
+	totalRemainingAmount: number;
 	accumAmount: number;
 	percent: number;
 	totalContracts: number;

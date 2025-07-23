@@ -22,7 +22,6 @@ import StateActive from '~/components/common/StateActive';
 import Tippy from '@tippyjs/react';
 import Link from 'next/link';
 import Moment from 'react-moment';
-import Progress from '~/components/common/Progress';
 import IconCustom from '~/components/common/IconCustom';
 import {CalendarAdd, CalendarEdit, DirectboxSend, Edit, Eye, Trash} from 'iconsax-react';
 import {convertCoin} from '~/common/funcs/convertCoin';
@@ -34,9 +33,7 @@ import FormCreateIssue from '../FormCreateIssue';
 import FormUpdateIssue from '../FormUpdateIssue';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/redux/store';
-import {Packer} from 'docx';
-import {generateCSCTDocx} from '~/word-template/TemplateCSCTTT/TemplateCSCTTT';
-import saveAs from 'file-saver';
+import FormExportCSCT from '../FormExportCSCT';
 
 function MainPageCSCT({}: PropsMainPageCSCT) {
 	const router = useRouter();
@@ -44,7 +41,8 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 
 	const {infoUser} = useSelector((state: RootState) => state.user);
 
-	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate} = router.query;
+	const {_page, _pageSize, _keyword, _status, _state, _project, _uuidCreateNoticeDate, _uuidUpdateNoticeDate, _uuidExportCSCT} =
+		router.query;
 
 	const [deleteCSCT, setDeleteCSCT] = useState<string>('');
 
@@ -97,14 +95,6 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 			}
 		},
 	});
-
-	const handleExport = async (dataExport: ICSCT) => {
-		const doc = generateCSCTDocx(dataExport);
-
-		Packer.toBlob(doc).then((blob) => {
-			saveAs(blob, 'Thong_bao_chap_thuan_thanh_toan.docx');
-		});
-	};
 
 	return (
 		<div className={styles.container}>
@@ -223,7 +213,7 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								render: (data: ICSCT) => (
 									<p>
 										<span>{convertCoin(data?.accumAmount)}</span>/
-										<span style={{color: '#005994'}}>{convertCoin(data?.totalAmount)}</span>
+										<span style={{color: '#005994'}}>{convertCoin(data?.totalRemainingAmount)}</span>
 									</p>
 								),
 							},
@@ -235,10 +225,10 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 								title: 'Cán bộ chuyên quản',
 								render: (data: ICSCT) => <>{data?.user?.fullname || '---'}</>,
 							},
-							{
-								title: 'Tỷ lệ giải ngân/Giá trị CSCTTT',
-								render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
-							},
+							// {
+							// 	title: 'Tỷ lệ giải ngân/Giá trị CSCTTT',
+							// 	render: (data: ICSCT) => <Progress percent={data?.percent} width={80} />,
+							// },
 							{
 								title: 'Trạng thái',
 								render: (data: ICSCT) => (
@@ -318,9 +308,15 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 													<IconCustom
 														type='edit'
 														icon={<DirectboxSend fontSize={20} fontWeight={600} color='#06D7A0' />}
-														tooltip='Xuất chấp nhận thanh toán'
+														tooltip='Xuất chấp thuận thanh toán'
 														onClick={() => {
-															handleExport(data);
+															router.replace({
+																pathname: router.pathname,
+																query: {
+																	...router.query,
+																	_uuidExportCSCT: data?.uuid,
+																},
+															});
 														}}
 													/>
 												)}
@@ -426,6 +422,42 @@ function MainPageCSCT({}: PropsMainPageCSCT) {
 				<FormUpdateIssue
 					onClose={() => {
 						const {_uuidUpdateNoticeDate, ...rest} = router.query;
+
+						router.replace(
+							{
+								pathname: router.pathname,
+								query: {
+									...rest,
+								},
+							},
+							undefined,
+							{shallow: true, scroll: false}
+						);
+					}}
+				/>
+			</Popup>
+
+			<Popup
+				open={!!_uuidExportCSCT}
+				onClose={() => {
+					const {_uuidExportCSCT, ...rest} = router.query;
+
+					router.replace(
+						{
+							pathname: router.pathname,
+							query: {
+								...rest,
+							},
+						},
+						undefined,
+						{shallow: true, scroll: false}
+					);
+				}}
+			>
+				<FormExportCSCT
+					uuidCSCT={_uuidExportCSCT as string}
+					onClose={() => {
+						const {_uuidExportCSCT, ...rest} = router.query;
 
 						router.replace(
 							{

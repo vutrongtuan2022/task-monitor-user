@@ -197,13 +197,15 @@ $border-radius: 8px;
 	}
 }
 
+.option_row {
+	border-bottom: 1px solid #e1e5ed;
+}
+
 .option {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	padding: 8px 12px;
-
-	border-bottom: 1px solid #e1e5ed;
 
 	&.notBorder {
 		border-bottom: 1px solid transparent;
@@ -227,7 +229,7 @@ $border-radius: 8px;
 		color: #777e90;
 		cursor: pointer;
 		user-select: none;
-		font-size: $font-size;
+		font-size: 16px;
 		font-weight: 500;
 	}
 
@@ -235,7 +237,7 @@ $border-radius: 8px;
 		width: 100%;
 		cursor: pointer;
 		user-select: none;
-		font-size: $font-size;
+		font-size: 14px;
 		font-weight: 500;
 
 		&.disable {
@@ -317,4 +319,75 @@ $border-radius: 8px;
 			transform: scale(0.9);
 		}
 	}
+}
+
+.arrow {
+	transition: 0.3s;
+	width: 16px;
+	height: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	&:hover {
+		color: $color-focus;
+	}
+
+	&.open {
+		transform: rotate(90deg);
+	}
+}
+
+.subContent {
+	margin-left: 40px;
+	margin-bottom: 10px;
+	border-left: 2px solid #e6e8ec;
+	background-color: #f9fafb;
+	border-radius: 4px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+
+	.subItem {
+		font-size: 12px;
+		color: #3772ff;
+		padding: 2px 4px;
+		border-radius: 4px;
+		transition: background-color 0.2s ease, color 0.2s ease;
+	}
+}
+
+.label_check_item_row {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	cursor: pointer;
+	user-select: none;
+	font-size: $font-size;
+	font-weight: 500;
+
+	&.disable {
+		cursor: default;
+		user-select: none;
+		color: $color-disable;
+
+		span {
+			color: $color-disable;
+		}
+	}
+}
+
+.inlineSubItem {
+	display: inline-block;
+	font-size: 12px;
+	color: #3772ff;
+	border-radius: 4px;
+}
+.customMultiSubWrapper {
+	display: inline-block;
+	font-size: 13px;
+	border-radius: 4px;
 }

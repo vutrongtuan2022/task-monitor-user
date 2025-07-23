@@ -1,0 +1,144 @@
+@import '../../../../styles/variables';
+
+.container {
+	position: relative;
+	width: 700px;
+	border-radius: 20px;
+	background: #fff;
+	box-shadow: 0px 3px 46px 0px rgba(175, 190, 211, 0.2);
+}
+
+.title {
+	padding: 24px;
+	color: #2f3d50;
+	font-size: 26px;
+	font-weight: 700;
+}
+
+.form {
+	background: #f4f5f6;
+	padding: 24px;
+	border-radius: 0 0 20px 20px;
+}
+
+.close {
+	position: absolute;
+	right: 32px;
+	top: 32px;
+	cursor: pointer;
+	user-select: none;
+	font-size: 24px;
+	color: #9ea5c0;
+	transition: 0.3s;
+
+	&:active {
+		transform: scale(0.9);
+	}
+}
+
+.gennder {
+	margin-top: 16px;
+
+	.group_radio {
+		margin-top: 8px;
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	.input_radio {
+		appearance: none;
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		position: relative;
+		cursor: pointer;
+		border: 2px solid #777e90;
+	}
+
+	.input_radio:checked {
+		background-color: inherit;
+		border: 2px solid #3772ff;
+	}
+
+	.input_radio:checked::before {
+		content: '';
+		display: block;
+		width: 11px;
+		height: 11px;
+		background-color: #3772ff;
+		border: 1px solid #3772ff;
+		border-radius: 50%;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.input_lable {
+		display: block;
+		color: var(--dark-2);
+		font-size: 14px;
+		font-weight: 500;
+		margin-bottom: 0;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.item_radio {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+}
+
+.groupBtnPopup {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 24px;
+}
+
+@media (max-width: $widthTablet) {
+	.title {
+		padding: 20px;
+	}
+
+	.form {
+		padding: 20px;
+	}
+
+	.mt {
+		margin-top: 20px;
+	}
+
+	.group_button {
+		padding: 20px;
+	}
+}
+
+@media (max-width: $widthMobile) {
+	.container {
+		width: 100vw;
+		height: 100vh;
+		border-radius: 0;
+		padding: 16px 24px;
+	}
+
+	.title {
+		padding: 16px;
+	}
+
+	.form {
+		padding: 16px;
+	}
+
+	.mt {
+		margin-top: 16px;
+	}
+
+	.group_button {
+		padding: 16px;
+	}
+}

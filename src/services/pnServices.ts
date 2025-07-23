@@ -56,6 +56,7 @@ const pnServices = {
 			code: string;
 			numberingDate: string;
 			totalAmount: number;
+			totalRemainingAmount: number;
 			contracts: {
 				contractorLinkUuid: string;
 				contractUuid: string;
@@ -118,6 +119,16 @@ const pnServices = {
 		tokenAxios?: any
 	) => {
 		return axiosClient.post(`/PN/get-list-pn-contract-by-pn`, data, {
+			cancelToken: tokenAxios,
+		});
+	},
+	PNForExport: (
+		data: {
+			uuid: string;
+		},
+		tokenAxios?: any
+	) => {
+		return axiosClient.post(`/PN/pn-for-export`, data, {
 			cancelToken: tokenAxios,
 		});
 	},

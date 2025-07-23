@@ -42,7 +42,7 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 				http: projectServices.categoryProject({
 					keyword: '',
 					status: STATUS_CONFIG.ACTIVE,
-					excludeState: [STATE_PROJECT.FINISH,STATE_PROJECT.PREPARE],
+					excludeState: [STATE_PROJECT.FINISH, STATE_PROJECT.PREPARE],
 				}),
 			}),
 		select(data) {
@@ -70,10 +70,10 @@ function MainCreateReportDisbursement({}: PropsMainCreateReportDisbursement) {
 									v?.pnContract?.map((p: any) => ({
 										...p,
 										reverseAmount: 0,
-										amountDisbursement: 0,
-										dayDisbursement: '',
+										amountDisbursement: p?.type == 1 ? p?.remainingAmount : p?.advanceAmount ?? 0,
+										dayDisbursement: p?.pn?.noticeDate ?? '',
 										note: '',
-										description: '',
+										description: p?.note ?? '',
 									})) || [],
 						  }))
 						: [],

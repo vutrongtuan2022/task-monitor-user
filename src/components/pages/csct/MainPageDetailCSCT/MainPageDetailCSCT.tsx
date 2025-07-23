@@ -4,7 +4,7 @@ import {IContractsPN, IDetailCSCT, PropsMainPageDetailCSCT} from './interfaces';
 import {PATH} from '~/constants/config';
 import GridColumn from '~/components/layouts/GridColumn';
 import StateActive from '~/components/common/StateActive';
-import {QUERY_KEY, STATE_CONTRACT_WORK, STATUS_CONFIG, STATUS_CSCT} from '~/constants/config/enum';
+import {QUERY_KEY, STATUS_CSCT} from '~/constants/config/enum';
 import {convertCoin} from '~/common/funcs/convertCoin';
 import {useRouter} from 'next/router';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -22,6 +22,8 @@ import Dialog from '~/components/common/Dialog';
 import Loading from '~/components/common/Loading';
 import {useSelector} from 'react-redux';
 import {RootState} from '~/redux/store';
+import Popup from '~/components/common/Popup';
+import FormExportCSCT from '../FormExportCSCT';
 
 function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const router = useRouter();
@@ -31,6 +33,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 	const {_uuid} = router.query;
 
 	const [uuidDelete, setUuidDelete] = useState<string>('');
+	const [openExport, setOpenExport] = useState<boolean>(false);
 
 	const {data: detailCSCT} = useQuery<IDetailCSCT>([QUERY_KEY.detail_csct, _uuid], {
 		queryFn: () =>
@@ -45,7 +48,7 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 		enabled: !!_uuid,
 	});
 
-	const {data: ListPNContract, isLoading} = useQuery([QUERY_KEY.table_pn_contract, _uuid], {
+	const {data: listPNContract, isLoading} = useQuery([QUERY_KEY.table_pn_contract, _uuid], {
 		queryFn: () =>
 			httpRequest({
 				http: pnServices.getListPNContractByPN({
@@ -103,6 +106,11 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							{detailCSCT?.state !== STATUS_CSCT.APPROVED && (
 								<Button p_14_24 rounded_8 blueRedLinear href={`${PATH.CSCTUpdate}?_uuid=${detailCSCT?.uuid}`}>
 									Chỉnh sửa
+								</Button>
+							)}
+							{detailCSCT?.state == STATUS_CSCT.APPROVED && (
+								<Button p_14_24 rounded_8 blueRedLinear onClick={() => setOpenExport(true)}>
+									Xuất chấp thuận thanh toán
 								</Button>
 							)}
 						</div>
@@ -190,6 +198,10 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 								<p>{convertCoin(detailCSCT?.totalAmount!)}</p>
 							</div>
 							<div className={styles.item}>
+								<p>Tổng giá số tiền còn phải thanh toán (VND)</p>
+								<p>{convertCoin(detailCSCT?.totalRemainingAmount!)}</p>
+							</div>
+							<div className={styles.item}>
 								<p>LKSCTTT theo năm (VND)</p>
 								<p>{convertCoin(detailCSCT?.accumAmountInYear!)}</p>
 							</div>
@@ -211,9 +223,9 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 						<h4>Danh sách hợp đồng</h4>
 					</div>
 					<div className={styles.main_table}>
-						<DataWrapper loading={isLoading} data={ListPNContract || []}>
+						<DataWrapper loading={isLoading} data={listPNContract || []}>
 							<Table
-								data={ListPNContract || []}
+								data={listPNContract || []}
 								column={[
 									{
 										title: 'STT',
@@ -297,6 +309,10 @@ function MainPageDetailCSCT({}: PropsMainPageDetailCSCT) {
 							note={'Bạn có chắc chắn muốn xóa CSCT thanh toán này không?'}
 							onSubmit={funcDelete.mutate}
 						/>
+
+						<Popup open={openExport} onClose={() => setOpenExport(false)}>
+							<FormExportCSCT uuidCSCT={_uuid as string} onClose={() => setOpenExport(false)} />
+						</Popup>
 					</div>
 				</div>
 			</div>

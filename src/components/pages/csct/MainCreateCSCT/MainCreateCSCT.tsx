@@ -38,6 +38,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		projectMember: infoUser?.fullname!,
 		listContract: [],
 		totalAmount: '0',
+		totalRemaining: '0',
 	};
 
 	const [form, setForm] = useState<IFormCreateCSCT>(initForm);
@@ -91,6 +92,15 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		}));
 	}, [form?.listContract]);
 
+	useEffect(() => {
+		const totalRemaining = form?.listContract?.reduce((acc, curr) => acc + price(curr.remainingAmount) + price(curr.advanceAmount), 0);
+
+		setForm((prev) => ({
+			...prev,
+			totalRemaining: convertCoin(totalRemaining),
+		}));
+	}, [form?.listContract]);
+
 	const funcCreatePN = useMutation({
 		mutationFn: () => {
 			return httpRequest({
@@ -103,6 +113,7 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 					code: form.code,
 					numberingDate: moment(form?.numberingDate).format('YYYY-MM-DD'),
 					totalAmount: price(form.totalAmount),
+					totalRemainingAmount: price(form?.totalRemaining),
 					contracts: form?.listContract?.map((v) => ({
 						uuid: '',
 						contractUuid: v?.uuid,
@@ -172,7 +183,40 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 		return funcCreatePN.mutate();
 	};
 
-	const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+	// const uniqueContracts = listContract?.filter((contract, index, self) => index === self.findIndex((c) => c.uuid === contract.uuid));
+
+	const uniqueContracts = listContract?.reduce<any[]>((acc, current) => {
+		const existingIndex = acc.findIndex((c) => c.uuid === current.uuid);
+
+		const currentCat = current.contractorLinks.contractorCat;
+		const currentCats = currentCat ? [currentCat] : [];
+
+		if (existingIndex === -1) {
+			acc.push({
+				...current,
+				contractorLinks: {
+					...current.contractorLinks,
+					contractorCats: currentCats,
+				},
+			});
+		} else {
+			const existing = acc[existingIndex];
+
+			const existingCats = existing.contractorLinks.contractorCats || [];
+
+			const mergedCats = [...existingCats, ...currentCats.filter((cat) => !existingCats.some((eCat: any) => eCat.uuid === cat.uuid))];
+
+			acc[existingIndex] = {
+				...existing,
+				contractorLinks: {
+					...existing.contractorLinks,
+					contractorCats: mergedCats,
+				},
+			};
+		}
+
+		return acc;
+	}, []);
 
 	const handleDelete = (index: number) => {
 		setForm((prev) => ({
@@ -375,24 +419,58 @@ function MainCreateCSCT({}: PropsMainCreateCSCT) {
 											listContract: selectedContracts,
 										}));
 									}}
-								/>
-
-								<Input
-									label={
-										<span>
-											Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
-										</span>
+									getItemSubContent={(contract) =>
+										contract.contractorLinks.contractorCats?.map((cat: any) => (
+											<span key={cat.uuid}>
+												{cat.code} - {cat.name}
+											</span>
+										)) || []
 									}
-									placeholder='Nhập tổng số tiền thanh toán'
-									type='text'
-									isMoney
-									name='totalAmount'
-									value={form?.totalAmount}
-									isRequired={true}
-									readOnly={true}
-									blur={true}
-									unit='VND'
+									// renderMultiItemSubContent={(contract) => {
+									// 	const contractorCats = contract.contractorLinks?.contractorCats || [];
+									// 	return (
+									// 		<div>
+									// 			Số lượng nhà thầu: <>{contractorCats.length}</>
+									// 		</div>
+									// 	);
+									// }}
 								/>
+								<div className={styles.col_2}>
+									<Input
+										label={
+											<span>
+												Tổng số tiền thanh toán <span style={{color: 'red'}}>*</span>
+											</span>
+										}
+										placeholder='Nhập tổng số tiền thanh toán'
+										type='text'
+										isMoney
+										name='totalAmount'
+										value={form?.totalAmount}
+										isRequired={true}
+										readOnly={true}
+										blur={true}
+										unit='VND'
+									/>
+									<div>
+										<Input
+											label={
+												<span>
+													Tổng số tiền còn phải thanh toán <span style={{color: 'red'}}>*</span>
+												</span>
+											}
+											placeholder='Nhập Tổng số tiền còn phải thanh toán'
+											type='text'
+											isMoney
+											name='totalRemaining'
+											value={form?.totalRemaining}
+											isRequired={true}
+											readOnly={true}
+											blur={true}
+											unit='VND'
+										/>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

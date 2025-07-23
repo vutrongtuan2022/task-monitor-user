@@ -11,12 +11,14 @@ export interface IFormUpdateCSCT {
 	projectMember: string;
 	listContract: IContractByProject[];
 	totalAmount: string;
+	totalRemaining: string;
 }
 
 export interface IDetailCSCT {
 	accumAmountInYear: number;
 	status: number;
 	totalAmount: number;
+	totalRemainingAmount: number;
 	accumAmount: number;
 	percent: number;
 	totalContracts: number;

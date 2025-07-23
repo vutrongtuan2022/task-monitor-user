@@ -75,7 +75,10 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										title: 'STT',
 										render: (data: IDetailContractFund, index: number) => <>{index + 1}</>,
 									},
-
+									{
+										title: 'Mã hợp đồng',
+										render: (data: IDetailContractFund) => <>{data?.pnContract?.contract?.code || '---'}</>,
+									},
 									{
 										title: 'Tên nhóm nhà thầu',
 										render: (data: IDetailContractFund) => (
@@ -111,7 +114,7 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 									},
 
 									{
-										title: 'CSCTTT',
+										title: 'Số CTTT',
 										render: (data: IDetailContractFund) => (
 											<>{data?.pnContract?.pn?.code || '---'}</>
 											// <p>{data?.created ? <Moment date={data?.created} format='DD/MM/YYYY' /> : '---'}</p>
@@ -140,7 +143,9 @@ function DetailContractFund({onClose, userContractFund}: PropsDetailContractFund
 										render: (data: IDetailContractFund) => (
 											<>
 												{convertCoin(
-													data?.pnContract.type == 2 ? data?.pnContract.advanceAmount : data?.pnContract.amount
+													data?.pnContract?.type == 2
+														? data?.pnContract?.advanceAmount
+														: data?.pnContract?.remainingAmount
 												) || '---'}
 											</>
 										),
