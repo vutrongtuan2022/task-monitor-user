@@ -21,6 +21,11 @@ import {TYPE_ACCOUNT} from '~/constants/config/enum';
 import md5 from 'md5';
 import {setDataLoginStorage, setStateLogin, setToken} from '~/redux/reducer/auth';
 import {setInfoUser} from '~/redux/reducer/user';
+import {Packer} from 'docx';
+import saveAs from 'file-saver';
+import {NvThietKe} from '~/word-template/NvThietKe';
+import {TtPheDuyetDtKhlcntChuanBi} from '~/word-template/TtPheDuyetDtKhlcntChuanBi';
+import {PheDuyetQuyetToanDa} from '~/word-template/PheDuyetQuyetToanDa';
 
 function FormLogin({}: PropsFormLogin) {
 	const router = useRouter();
@@ -93,6 +98,19 @@ function FormLogin({}: PropsFormLogin) {
 		return login.mutate();
 	};
 
+	const handleSubmit = () => {
+		// const doc = TtPheDuyetDtKhlcntChuanBi();
+
+		// Packer.toBlob(doc).then((blob) => {
+		// 	saveAs(blob, 'Trinh_Phe_Duyet_Du_An.docx');
+		// });
+		const doc = PheDuyetQuyetToanDa();
+
+		Packer.toBlob(doc).then((blob) => {
+			saveAs(blob, 'Phe_Duyet_Quyet_Toan_Du_An.docx');
+		});
+	};
+
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleLogin}>
 			<Loading loading={login.isLoading} />
@@ -131,6 +149,7 @@ function FormLogin({}: PropsFormLogin) {
 								</Button>
 							)}
 						</FormContext.Consumer>
+						<Button onClick={handleSubmit}>test</Button>
 					</div>
 				</div>
 			</div>
