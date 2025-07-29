@@ -21,11 +21,6 @@ import {TYPE_ACCOUNT} from '~/constants/config/enum';
 import md5 from 'md5';
 import {setDataLoginStorage, setStateLogin, setToken} from '~/redux/reducer/auth';
 import {setInfoUser} from '~/redux/reducer/user';
-import {Packer} from 'docx';
-import saveAs from 'file-saver';
-import {NvThietKe} from '~/word-template/NvThietKe';
-import {TtPheDuyetDtKhlcntChuanBi} from '~/word-template/TtPheDuyetDtKhlcntChuanBi';
-import {PheDuyetQuyetToanDa} from '~/word-template/PheDuyetQuyetToanDa';
 
 function FormLogin({}: PropsFormLogin) {
 	const router = useRouter();
