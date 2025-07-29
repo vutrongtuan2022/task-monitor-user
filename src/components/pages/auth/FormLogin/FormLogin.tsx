@@ -98,19 +98,6 @@ function FormLogin({}: PropsFormLogin) {
 		return login.mutate();
 	};
 
-	const handleSubmit = () => {
-		// const doc = TtPheDuyetDtKhlcntChuanBi();
-
-		// Packer.toBlob(doc).then((blob) => {
-		// 	saveAs(blob, 'Trinh_Phe_Duyet_Du_An.docx');
-		// });
-		const doc = PheDuyetQuyetToanDa();
-
-		Packer.toBlob(doc).then((blob) => {
-			saveAs(blob, 'Phe_Duyet_Quyet_Toan_Du_An.docx');
-		});
-	};
-
 	return (
 		<Form form={form} setForm={setForm} onSubmit={handleLogin}>
 			<Loading loading={login.isLoading} />
@@ -149,7 +136,6 @@ function FormLogin({}: PropsFormLogin) {
 								</Button>
 							)}
 						</FormContext.Consumer>
-						<Button onClick={handleSubmit}>test</Button>
 					</div>
 				</div>
 			</div>
